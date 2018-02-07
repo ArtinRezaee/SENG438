@@ -7,14 +7,9 @@ import java.security.InvalidParameterException;
 
 public class ShiftTest1 {	
 	
-	@Test
+	@Test(expected = InvalidParameterException.class)
 	public void BaseIsNull() {
-		try {
-			Range.shift(null, 2);
-		}
-		catch(Exception err) {
-			assertEquals("Shift did not throw expected error: ", InvalidParameterException.class, err.getClass());
-		}
+		Range.shift(null, 2);
 	}
 	
 	@Test
