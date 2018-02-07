@@ -8,6 +8,16 @@ import java.security.InvalidParameterException;
 public class ShiftTest1 {	
 	
 	@Test
+	public void BaseIsNull() {
+		try {
+			Range.shift(null, 2);
+		}
+		catch(Exception err) {
+			assertEquals("Shift did not throw expected error: ", InvalidParameterException.class, err.getClass());
+		}
+	}
+	
+	@Test
 	public void NonCrossShiftRight() {	
 		assertEquals("Non zero crossing shifting right: ", new Range(7, 12), Range.shift(new Range(5, 10), 2.0));
 	}
