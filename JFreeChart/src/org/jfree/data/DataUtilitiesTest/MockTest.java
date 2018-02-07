@@ -1,4 +1,4 @@
-package org.jfree.data.values2D;
+package org.jfree.data.DataUtilitiesTest;
 
 import static org.junit.Assert.*;
 import org.junit.*;
