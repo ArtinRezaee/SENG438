@@ -141,4 +141,36 @@ public class RowTotalTest {
 		
 		assertEquals(6.0, DataUtilities.calculateRowTotal(values, 1), .000000001d);
 	}
+	
+	@Test
+	public void IndexOutOfBounds() {
+		Mockery mockingContext = new Mockery(); 
+		final Values2D values = mockingContext.mock(Values2D.class);
+		
+		mockingContext.checking(new Expectations() { 
+			{
+				mockingContext.checking(new Expectations() { 
+					{
+						one(values).getColumnCount(); 
+						will(returnValue(2));
+						
+						one(values).getRowCount(); 
+						will(returnValue(1));
+						
+						one(values).getValue(2, 0);
+						will(returnValue(null));
+						
+						one(values).getValue(2, 1); 
+						will(returnValue(null));
+						
+						one(values).getValue(2, 2); 
+						will(returnValue(null));
+						
+					} 
+				});
+			} 
+		});
+				
+		assertEquals(0.0, DataUtilities.calculateRowTotal(values, 2), .000000001d);
+	}
 }
