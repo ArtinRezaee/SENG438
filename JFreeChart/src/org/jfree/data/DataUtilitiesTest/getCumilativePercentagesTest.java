@@ -10,7 +10,6 @@ import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.Test;
 
-import junit.framework.Assert;
 
 public class getCumilativePercentagesTest{
 	
