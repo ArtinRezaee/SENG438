@@ -13,7 +13,6 @@ public class MockTest {
 	public void calculateColumnTotalForTwoValues() { 
 		Mockery mockingContext = new Mockery(); 
 		final Values2D values = mockingContext.mock(Values2D.class);
-		
 		mockingContext.checking(new Expectations() { 
 			{
 				one(values).getRowCount(); 
