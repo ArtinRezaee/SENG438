@@ -14,22 +14,17 @@ public class ExpandTest {
 	public static void setUpBeforeClass() throws Exception {
 	}
 
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
 
 	@Before
 	public void setUp() throws Exception {
 	}
 
-	@After
-	public void tearDown() throws Exception {
-	}
 
-	@Test(expected = InvalidParameterException.class)
+
+	@Test(expected = IllegalArgumentException.class)
 	public void expandNullRangeTest() {
 		range = null;
-		Range.expand(range, 0.25, 0.50);
+		Range.expand(null, 0.25, 0.50);
 	}
 	
 	@Test
@@ -45,7 +40,7 @@ public class ExpandTest {
 		range = new Range(2, 6);
 		range2 = new Range(1, 4);
 		assertEquals("After expand() using a negative upper margin, the upper bound did not shift left.",
-				Range.expand(range, 0.25, -0.50), range2);
+				Range.expand(range, 0.75, -0.20), range2);
 	}
 	
 	@Test
@@ -64,5 +59,15 @@ public class ExpandTest {
 		assertEquals("After expand() using 0 for both margins, range did not stay the same.",
 				Range.expand(range, 0, 0), range2);
 	}
+	
+	@After
+	public void tearDown() throws Exception {
+	}
+	
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
+	}
+	
+	
 
 }
