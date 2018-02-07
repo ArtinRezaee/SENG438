@@ -31,14 +31,9 @@ public class ShiftWithAllowZeroCrossingTest {
 	public void tearDown() throws Exception {
 	}
 	
-	@Test
+	@Test (expected = InvalidParameterException.class)
 	public void shiftWithNullBaseTest() {
-		try {
-			Range.shift(range, 5, false);
-		}
-		catch(Exception err) {
-			assertEquals("Shift did not throw expected error: ", InvalidParameterException.class, err.getClass());
-		}
+		Range.shift(null, 5, false);
 	}
 
 	@Test
