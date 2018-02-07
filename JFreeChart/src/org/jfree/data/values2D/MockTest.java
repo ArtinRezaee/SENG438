@@ -35,7 +35,7 @@ public class MockTest {
 		
 		
 		// verify
-		assertEquals(result, 13, .000000001d);
+		assertEquals(result, 133, .000000001d);
 	} 
 
 }
