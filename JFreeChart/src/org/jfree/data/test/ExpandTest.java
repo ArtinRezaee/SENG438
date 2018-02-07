@@ -38,7 +38,7 @@ public class ExpandTest {
 	@Test
 	public void expandNegativeUpperMarginTest() {
 		range = new Range(2, 6);
-		range2 = new Range(1, 4);
+		range2 = new Range(-1, 5.20);
 		assertEquals("After expand() using a negative upper margin, the upper bound did not shift left.",
 				Range.expand(range, 0.75, -0.20), range2);
 	}

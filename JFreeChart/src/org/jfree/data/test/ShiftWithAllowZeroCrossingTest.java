@@ -2,6 +2,8 @@ package org.jfree.data.test;
 
 import static org.junit.Assert.*;
 
+import java.security.InvalidParameterException;
+
 import org.jfree.data.Range;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -9,7 +11,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class ShiftWithAllowZeroCrossing {
+public class ShiftWithAllowZeroCrossingTest {
 	
 	private Range range, range2;
 
@@ -27,6 +29,16 @@ public class ShiftWithAllowZeroCrossing {
 
 	@After
 	public void tearDown() throws Exception {
+	}
+	
+	@Test
+	public void shiftWithNullBaseTest() {
+		try {
+			Range.shift(range, 5, false);
+		}
+		catch(Exception err) {
+			assertEquals("Shift did not throw expected error: ", InvalidParameterException.class, err.getClass());
+		}
 	}
 
 	@Test
