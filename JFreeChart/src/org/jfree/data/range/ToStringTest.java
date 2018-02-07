@@ -1,17 +1,18 @@
-package org.jfree.data.test;
+package org.jfree.data.range;
 
 import static org.junit.Assert.*;
 
 import org.jfree.data.Range;
 import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class LowerBoundTest{
-	
+import junit.framework.Assert;
+
+public class ToStringTest{
+
 	private Range exampleRange;
 
 	@BeforeClass
@@ -24,8 +25,8 @@ public class LowerBoundTest{
 	}
 	
 	@Test
-	public void test() {
-		Assert.assertEquals("The lower values are not equal", 2.0, this.exampleRange.getLowerBound(),.000000001d);
+	public void toStringTest() {
+		assertEquals("The two stings are not equal", "Range[2.0,10.0]" , this.exampleRange.toString());
 	}
 	
 	@After
