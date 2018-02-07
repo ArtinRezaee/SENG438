@@ -22,22 +22,12 @@ public class CombineTest {
 	}
 	
 	@Test
-	public void RangesAreContinous() {	
-		try {
-			assertEquals("The combined Ranges of [0,2] and [2,3] should be [2,3]", new Range(0, 3), Range.combine(new Range(0, 2), new Range(2, 3)));
-		}
-		catch(Exception err) {
-			fail("Assert failed with error: " + err.getMessage());
-		}
+	public void RangesAreContinous() {			
+		assertEquals("The combined Ranges of [0,2] and [2,3] should be [0,3]", new Range(0, 3), Range.combine(new Range(0, 2), new Range(2, 3)));		
 	}
 	
 	@Test
-	public void RangesAreNotContinous() {
-		try {
-			assertEquals("The combined Ranges of [0,2] and [10,20] should be [0,20]", new Range(0, 20), Range.combine(new Range(0, 2), new Range(10, 20)));	
-		}
-		catch(Exception err) {
-			fail("Assert failed with error: " + err.getMessage());
-		}
+	public void RangesAreNotContinous() {		
+		assertEquals("The combined Ranges of [0,2] and [10,20] should be [0,20]", new Range(0, 20), Range.combine(new Range(0, 2), new Range(10, 20)));	
 	}
 }

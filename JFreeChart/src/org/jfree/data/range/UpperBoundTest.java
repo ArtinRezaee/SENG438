@@ -33,7 +33,7 @@ public class UpperBoundTest {
 	@Test
 	public void UsingZero() {
 		Range testRange = new Range(0, 10);
-		assertEquals("Central value should be 10.0", 10.0, testRange.getUpperBound(), .000000001d);
+		assertEquals("Upper bound should be 10.0", 10.0, testRange.getUpperBound(), .000000001d);
 	}
 
 }
