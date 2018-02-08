@@ -10,10 +10,16 @@ import java.security.InvalidParameterException;
 
 public class RowTotalTest {
 
-	@Test(expected = InvalidParameterException.class)
+	@Test
 	public void DataIsNull() { 
-		DataUtilities.calculateRowTotal(null, 0);		
-	} 
+		try {
+			DataUtilities.calculateRowTotal(null, 0);		
+			fail("When Values2D is null, method should throw exception.");
+		}
+		catch(Exception err) {
+			assertEquals("Exception thrown should be", InvalidParameterException.class, err.getClass());
+		}
+	}
 
 	@Test
 	public void EmptyArrayZeroCol() {

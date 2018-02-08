@@ -10,9 +10,15 @@ import java.security.InvalidParameterException;
 
 public class ColumnTotalTest {
 	
-	@Test(expected = InvalidParameterException.class)
+	@Test
 	public void DataIsNull() { 
-		DataUtilities.calculateColumnTotal(null, 0);		
+		try {
+			DataUtilities.calculateColumnTotal(null, 0);		
+			fail("When Values2D is null, method should throw exception.");
+		}
+		catch(Exception err) {
+			assertEquals("Exception thrown should be", InvalidParameterException.class, err.getClass());
+		}
 	} 
 
 	@Test
