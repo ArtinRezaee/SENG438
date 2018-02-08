@@ -2,29 +2,15 @@ package org.jfree.data.range;
 
 import static org.junit.Assert.*;
 import org.jfree.data.Range;
-import org.junit.*;
 import org.junit.Test;
 
 public class HashCodeTest {
 
 	private Range range, range2;
 	
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
-
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
-
+	/**
+	 * Tests the method hashcode whether two similar ranges will produce the same hashcode
+	 */
 	@Test
 	public void hashcodeForTwoSimilarRangesTest() {
 		range = new Range(0, 10);
@@ -32,6 +18,9 @@ public class HashCodeTest {
 		assertEquals("Hashcode for two similar ranges are not the same.", range2.hashCode(), range.hashCode());
 	}
 	
+	/**
+	 * Tests the method hashcode whether two different ranges will produce different hashcode
+	 */
 	@Test
 	public void hashcodeForTwoDifferentRangestest() {
 		range = new Range(0, 10);

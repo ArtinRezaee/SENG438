@@ -16,44 +16,31 @@ import java.lang.annotation.*;
 import java.security.InvalidParameterException;
 
 public class CreateNumberArrayTest {
-	
-	private DataUtilities dataUtility;
+
 	double [] doubleArray, doubleArray2 = {3.0, 2.0, 1.0, 4.5};
 	Number [] numberArray, numberArray2 = {3.0, 2.0, 1.0, 4.5};
-
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
-
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
 	
+	/**
+	 * Tests whether the create number array method will throw an InvalidParameterException
+	 *  when null is given for its parameter which is not an array of double
+	 */
 	@Test
 	public void createNumberArrayWithNullTest() {
 		try {
 			numberArray = DataUtilities.createNumberArray(null);
-			fail("Test should have failed");
+			fail("Cannot pass null as a paramter");
 		}
-		catch(IllegalArgumentException e) {
-			
+		catch(Exception e) {
+			assertEquals("Null does not throw "
+					+ "an InvalidParameterException",InvalidParameterException.class,e.getClass());
 		}
 	}
 	
-	@Test (expected = InvalidParameterException.class)
-	public void createNumberArrayWithAnyOtherObjectTest() {
-		numberArray = DataUtilities.createNumberArray(null);	
-	}
-	
-	
+	/**
+	 * Tests whether the create number array method will create a Number array 
+	 * with the same values when passing in a parameter that
+	 * is an array of double
+	 */
 	@Test 
 	public void createNumberArrayWithValidDoubleArrayTest() {
 		numberArray = DataUtilities.createNumberArray(doubleArray2);
