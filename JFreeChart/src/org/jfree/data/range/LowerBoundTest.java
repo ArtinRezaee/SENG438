@@ -18,11 +18,18 @@ public class LowerBoundTest{
 	public static void setUpBeforeClass() throws Exception {
 	}
 	
+	/**
+	 * create a range of 2-10 for each test
+	 * @throws Exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		exampleRange = new Range(2.0, 10.0);
 	}
 	
+	/**
+	 * Checks if the correct lower bound of the range is returned
+	 */
 	@Test
 	public void test() {
 		Assert.assertEquals("The lower values are not equal", 2.0, this.exampleRange.getLowerBound(),.000000001d);

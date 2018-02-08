@@ -14,6 +14,9 @@ import junit.framework.Assert;
 
 public class getCumilativePercentagesTest{
 	
+	/**
+	 * Test if a null parameter will result the method to fail
+	 */
 	@Test
 	public void nullCumalativePercentageTest() {
 		try {
@@ -24,12 +27,17 @@ public class getCumilativePercentagesTest{
 		}
 	}
 	
+	/**
+	 * Test if a null parameter will cause the method to throw and InvalidPrameterException
+	 */
 	@Test(expected = InvalidParameterException.class)
 	public void nullCumilativePercentageExceptionTest() {
 		DataUtilities.getCumulativePercentages(null);
 	}
 	
-	
+	/**
+	 * Test if the correct cumulative percentage of an all positive KeyedValues is returned 
+	 */
 	@Test
 	public void AllPositiveCumilativePercentageTest() {
 		Mockery mockingContext1 = new Mockery(); 
@@ -91,6 +99,9 @@ public class getCumilativePercentagesTest{
 	}
 	
 	
+	/**
+	 * Test if the correct cumulative percentage of KeyedValues with both positive and negative values is returned
+	 */
 	@Test
 	public void MixedCumilativePercentageTest() {
 		Mockery mockingContext1 = new Mockery(); 

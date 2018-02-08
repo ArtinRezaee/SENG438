@@ -19,11 +19,18 @@ public class ToStringTest{
 	public static void setUpBeforeClass() throws Exception {
 	}
 	
+	/**
+	 * Creates a range for each test
+	 * @throws Exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		exampleRange = new Range(2.0, 10.0);
 	}
 	
+	/**
+	 * Test if the correct string representation of the range is returned. 
+	 */
 	@Test
 	public void toStringTest() {
 		assertEquals("The two stings are not equal", "Range[2.0,10.0]" , this.exampleRange.toString());
