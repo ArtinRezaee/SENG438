@@ -3,26 +3,22 @@ package org.jfree.data.range;
 import static org.junit.Assert.*;
 
 import org.jfree.data.Range;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class ConstrainTest{
 	
 	private Range range;
-
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-
+	
 	@Before
 	public void setUp() throws Exception {
 		range = new Range(0.0, 10.0);
 	}
 	
+	/**
+	 * Tests the method constrain whether a number lower than the lower bound of the range will return the
+	 * the closest value of the range
+	 */
 	@Test
 	public void constrainNumberLowerThanLowerBoundTest() {
 		assertEquals("The constrain method does not return the closest value within the range"
@@ -30,6 +26,10 @@ public class ConstrainTest{
 				.000000001d);
 	}
 	
+	/**
+	 * Tests the method constrain whether a number higher than the upper bound of the range will return
+	 * the closest value of the range if passed as a parameter
+	 */
 	@Test
 	public void constrainNumberHigherThanUpperBoundTest() {
 		assertEquals("The constrain method does not return the closest value within the range"
@@ -37,6 +37,9 @@ public class ConstrainTest{
 				.000000001d);
 	}
 	
+	/**
+	 * Tests the method constrain whether a number within the range returns the parameter passed in
+	 */
 	@Test
 	public void constrainNumberInRangeTest() {
 		assertEquals("The constrain method does not return the parameter itself"
@@ -44,6 +47,10 @@ public class ConstrainTest{
 				.000000001d);
 	}
 	
+	/**
+	 * Tests the method constrain whether the upper boundary value passed as the parameter
+	 * will return itself
+	 */
 	@Test
 	public void constrainUpperBoundaryTest() {
 		assertEquals("The constrain method does not return the value of the Upper Bound"
@@ -51,19 +58,15 @@ public class ConstrainTest{
 				.000000001d);
 	}
 	
+	/**
+	 * Tests the method constrain whether the lower boundary value passed as the parameter
+	 * will return itself
+	 */
 	@Test
 	public void constrainLowerBoundaryTest() {
 		assertEquals("The constrain method does not return the value of the Lower Bound"
 				+ "if it was passed as a parameter.", 0.0, range.constrain(0.0),
 				.000000001d);
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
-	
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
 	}
 
 	

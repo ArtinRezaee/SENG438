@@ -25,38 +25,27 @@ public class CreateNumberArray2DTest {
 			{3.0, 6.0, 9.0, 12.0}
 		};
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
-
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
 	
+	/**
+	 * Tests whether the create number array 2D method will throw an InvalidParameterException
+	 *  when null is given for its parameter which is not an array of double
+	 */
 	@Test
 	public void createNumberArray2DWithNullTest() {
 		try {
 			numberArray = DataUtilities.createNumberArray2D(null);
-			fail("Test should have failed");
+			fail("Cannot pass null as a parameter");
 		}
-		catch(IllegalArgumentException e) {
-			
+		catch(Exception e) {
+			assertEquals("Null does not throw "
+					+ "an InvalidParameterException",InvalidParameterException.class,e.getClass());
 		}
 	}
 	
-	@Test (expected = InvalidParameterException.class)
-	public void createNumberArray2DWithAnyOtherObjectTest() {
-		numberArray = DataUtilities.createNumberArray2D(null);		
-	}
-
+	/**
+	 * Tests whether the create number array 2D method will create a 2D Number array
+	 * with the same length and values in each indexes
+	 */
 	@Test
 	public void createNumberArray2DWithValid2DArrayOfDoublesTest() {
 		numberArray = DataUtilities.createNumberArray2D(doubleArray2);

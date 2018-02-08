@@ -14,28 +14,27 @@ import org.junit.Test;
 public class ShiftWithAllowZeroCrossingTest {
 	
 	private Range range, range2;
-
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
-
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	@After
-	public void tearDown() throws Exception {
+	
+	/**
+	 * Tests the shift method whether a null parameter passed in will throw an
+	 * InvalidParameterException
+	 */
+	@Test
+	public void shiftWithNullBaseTest() {
+		try {
+			Range.shift(null, 5, false);
+			fail("The shift method should have thrown an InvalidParameterException");
+		}
+		catch(Exception e) {
+			assertEquals("The shift method did not throw an InvalidParameterException", 
+					InvalidParameterException.class, e.getClass());
+		}
 	}
 	
-	@Test (expected = InvalidParameterException.class)
-	public void shiftWithNullBaseTest() {
-		Range.shift(null, 5, false);
-	}
-
+	/**
+	 * Tests the shift method whether a positive delta parameter will shift
+	 * the range boundaries as expected
+	 */
 	@Test
 	public void shiftWithPositiveDeltaWithoutCrossingZeroAndNotAllowedTest() {
 		range = new Range(0, 10);
@@ -45,6 +44,10 @@ public class ShiftWithAllowZeroCrossingTest {
 				range2, Range.shift(range, 2, false));
 	}
 	
+	/**
+	 * Tests the shift method whether a negative delta parameter will shift
+	 * the range boundaries as expected
+	 */
 	@Test
 	public void shiftWithNegativeDeltaWithoutCrossingZeroAndNotAllowedTest() {
 		range = new Range(-1, 0);
@@ -54,6 +57,11 @@ public class ShiftWithAllowZeroCrossingTest {
 				range2, Range.shift(range, -1, false));
 	}
 	
+	/**
+	 * Tests the shift method whether a negative delta parameter will shift
+	 * the range boundaries as expected after crossing zero when it is
+	 * not allowed
+	 */
 	@Test
 	public void shiftWithNegativeDeltaWithCrossingZeroAndNotAllowedTest() {
 		range = new Range(1, 2);
@@ -64,6 +72,11 @@ public class ShiftWithAllowZeroCrossingTest {
 				range2, Range.shift(range, -2, false));
 	}
 	
+	/**
+	 * Tests the shift method whether a positive delta parameter will shift
+	 * the range boundaries as expected after crossing zero when it is
+	 * not allowed
+	 */
 	@Test
 	public void shiftWithPositiveDeltaWithCrossingZeroAndNotAllowedTest() {
 		range = new Range(-3, -1);
@@ -74,6 +87,11 @@ public class ShiftWithAllowZeroCrossingTest {
 				range2, Range.shift(range, 4, false));
 	}
 	
+	/**
+	 * Tests the shift method whether a positive delta parameter will shift
+	 * the range boundaries as expected without crossing zero when it is
+	 * allowed
+	 */
 	@Test
 	public void shiftWithPositiveDeltaWithoutCrossingZeroButAllowedTest() {
 		range = new Range(0, 10);
@@ -83,6 +101,11 @@ public class ShiftWithAllowZeroCrossingTest {
 				range2, Range.shift(range, 2, true));
 	}
 	
+	/**
+	 * Tests the shift method whether a negative delta parameter will shift
+	 * the range boundaries as expected without crossing zero when it is
+	 * allowed
+	 */
 	@Test
 	public void shiftWithNegativeDeltaWithoutCrossingZeroButAllowedTest() {
 		range = new Range(-1, 0);
@@ -92,6 +115,11 @@ public class ShiftWithAllowZeroCrossingTest {
 				range2, Range.shift(range, -1, true));
 	}
 	
+	/**
+	 * Tests the shift method whether a negative delta parameter will shift
+	 * the range boundaries as expected after crossing zero when it is
+	 * allowed
+	 */
 	@Test
 	public void shiftWithNegativeDeltaWithCrossingZeroButAllowedTest() {
 		range = new Range(1, 2);
@@ -101,6 +129,11 @@ public class ShiftWithAllowZeroCrossingTest {
 				range2, Range.shift(range, -3, true));
 	}
 	
+	/**
+	 * Tests the shift method whether a positive delta parameter will shift
+	 * the range boundaries as expected after crossing zero when it is
+	 * allowed
+	 */
 	@Test
 	public void shiftWithPositiveDeltaWithCrossingZeroButAllowedTest() {
 		range = new Range(-3, -1);

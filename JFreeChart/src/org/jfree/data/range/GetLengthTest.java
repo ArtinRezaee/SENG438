@@ -2,37 +2,27 @@ package org.jfree.data.range;
 
 import static org.junit.Assert.*;
 
-import org.junit.*;
 import org.jfree.data.Range;
 import org.junit.Test;
 
 public class GetLengthTest {
 	
 	private Range range;
-
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
-
-	@Before
-	public void setUp() throws Exception {
-		
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
-
+	
+	/**
+	 * Tests the get length method whether it will return the expected value
+	 * for any valid ranges
+	 */
 	@Test
 	public void getLengthWithMoreThanOneNumberInRangetest() {
 		range = new Range(0, 10);
 		assertEquals("The function getLength() did not return the correct length of range.", 10, range.getLength(), .000000001d);
 	}
 	
+	/**
+	 * Tests the get length method whether it will return the expected value
+	 * for ranges with the same upper and lower boundaries
+	 */
 	@Test
 	public void getLengthWithOneNumberInRangetest() {
 		range = new Range(1, 1);
