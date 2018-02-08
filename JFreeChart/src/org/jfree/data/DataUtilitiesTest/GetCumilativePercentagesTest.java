@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import junit.framework.Assert;
 
-public class getCumilativePercentagesTest{
+public class GetCumilativePercentagesTest{
 	
 	/**
 	 * Test if a null parameter will result the method to fail
