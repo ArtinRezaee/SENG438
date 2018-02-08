@@ -30,9 +30,15 @@ public class GetCumilativePercentagesTest{
 	/**
 	 * Test if a null parameter will cause the method to throw and InvalidPrameterException
 	 */
-	@Test(expected = InvalidParameterException.class)
+	@Test
 	public void nullCumilativePercentageExceptionTest() {
-		DataUtilities.getCumulativePercentages(null);
+		try {
+			DataUtilities.getCumulativePercentages(null);
+			fail("Method does not throw and InvalidParameterException error");
+		}catch(Exception e) {
+			assertEquals("Exceptions are not equal", InvalidParameterException.class, e.getClass());
+		}
+
 	}
 	
 	/**
