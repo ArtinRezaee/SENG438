@@ -41,8 +41,19 @@ public class CreateNumberArray2DTest {
 	public void tearDown() throws Exception {
 	}
 	
-	@Test (expected = InvalidParameterException.class)
+	@Test
 	public void createNumberArray2DWithNullTest() {
+		try {
+			numberArray = DataUtilities.createNumberArray2D(null);
+			fail("Test should have failed");
+		}
+		catch(IllegalArgumentException e) {
+			
+		}
+	}
+	
+	@Test (expected = InvalidParameterException.class)
+	public void createNumberArray2DWithAnyOtherObjectTest() {
 		numberArray = DataUtilities.createNumberArray2D(null);		
 	}
 

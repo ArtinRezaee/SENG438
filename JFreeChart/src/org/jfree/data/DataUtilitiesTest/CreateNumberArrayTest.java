@@ -37,8 +37,19 @@ public class CreateNumberArrayTest {
 	public void tearDown() throws Exception {
 	}
 	
-	@Test (expected = InvalidParameterException.class)
+	@Test
 	public void createNumberArrayWithNullTest() {
+		try {
+			numberArray = DataUtilities.createNumberArray(null);
+			fail("Test should have failed");
+		}
+		catch(IllegalArgumentException e) {
+			
+		}
+	}
+	
+	@Test (expected = InvalidParameterException.class)
+	public void createNumberArrayWithAnyOtherObjectTest() {
 		numberArray = DataUtilities.createNumberArray(null);	
 	}
 	
