@@ -2,6 +2,23 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/lib"/>
+	<classpathentry kind="lib" path="lib/Jars/bsh-core-2.0b4.jar"/>
+	<classpathentry kind="lib" path="lib/Jars/cglib-2.1_3-src.jar"/>
+	<classpathentry kind="lib" path="lib/Jars/cglib-nodep-2.1_3.jar"/>
+	<classpathentry kind="lib" path="lib/Jars/gnujaxp.jar"/>
+	<classpathentry kind="lib" path="lib/Jars/hamcrest-core-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/Jars/hamcrest-library-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/Jars/jcommon-1.0.0-rc1-cvs.jar"/>
+	<classpathentry kind="lib" path="lib/Jars/jcommon-1.0.5.jar"/>
+	<classpathentry kind="lib" path="lib/Jars/jfreechart.jar"/>
+	<classpathentry kind="lib" path="lib/Jars/jmock-2.5.1.jar"/>
+	<classpathentry kind="lib" path="lib/Jars/jmock-junit3-2.5.1.jar"/>
+	<classpathentry kind="lib" path="lib/Jars/jmock-junit4-2.5.1.jar"/>
+	<classpathentry kind="lib" path="lib/Jars/jmock-legacy-2.5.1.jar"/>
+	<classpathentry kind="lib" path="lib/Jars/jmock-script-2.5.1.jar"/>
+	<classpathentry kind="lib" path="lib/Jars/junit-old.jar"/>
+	<classpathentry kind="lib" path="lib/Jars/junit.jar"/>
+	<classpathentry kind="lib" path="lib/Jars/objenesis-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/Jars/servlet.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
