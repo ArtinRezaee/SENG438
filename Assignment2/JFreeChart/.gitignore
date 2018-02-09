@@ -1,1 +1,14 @@
+*/.metadata/
+*/.recommenders/
+RemoteSystemsTempFiles/
+*/RemoteSystemsTempFiles/
+
+*/.DS_Store
+*/.settings
+*/bin/
+
+*.class
+.DS_Store
+.settings
 /bin/
+

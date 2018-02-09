@@ -51,7 +51,7 @@ public class ColumnTotalTest {
 	
 		
 	/**
-	 * Testing function when data valid and column is zero
+	 * Testing function when data is valid and column is zero
 	 */
 	@Test
 	public void NonEmptyArrayZeroCol() {
@@ -78,7 +78,7 @@ public class ColumnTotalTest {
 	}
 	
 	/**
-	 * Testing function when data valid and column is negative
+	 * Testing function when data is valid and column is negative
 	 */
 	@Test
 	public void NonEmptyArrayNegCol() {
@@ -110,7 +110,7 @@ public class ColumnTotalTest {
 	}
 	
 	/**
-	 * Testing function when data valid and column is positive
+	 * Testing function when data is valid and column is positive
 	 */
 	@Test
 	public void NonEmptyArrayPosCol() {
@@ -141,7 +141,7 @@ public class ColumnTotalTest {
 	}
 	
 	/**
-	 * Testing function when data valid and column is out of bounds
+	 * Testing function when data is valid and column is out of bounds
 	 */
 	@Test
 	public void IndexOutOfBounds() {

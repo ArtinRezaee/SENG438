@@ -50,10 +50,10 @@ public class RowTotalTest {
 	}
 	
 	/**
-	 * Testing function when data valid and row is zero
+	 * Testing function when data is valid and row is zero
 	 */
 	@Test
-	public void NonEmptyArrayZeroCol() {
+	public void NonEmptyArrayZeroRow() {
 		Mockery mockingContext = new Mockery(); 
 		final Values2D values = mockingContext.mock(Values2D.class);
 		
@@ -78,10 +78,10 @@ public class RowTotalTest {
 	}
 	
 	/**
-	 * Testing function when data valid and row is negative
+	 * Testing function when data is valid and row is negative
 	 */
 	@Test
-	public void NonEmptyArrayNegCol() {
+	public void NonEmptyArrayNegRow() {
 		Mockery mockingContext = new Mockery(); 
 		final Values2D values = mockingContext.mock(Values2D.class);
 		
@@ -110,10 +110,10 @@ public class RowTotalTest {
 	}
 	
 	/**
-	 * Testing function when data valid and row is positive
+	 * Testing function when data is valid and row is positive
 	 */
 	@Test
-	public void NonEmptyArrayPosCol() {
+	public void NonEmptyArrayPosRow() {
 		Mockery mockingContext = new Mockery(); 
 		final Values2D values = mockingContext.mock(Values2D.class);
 		
@@ -141,7 +141,7 @@ public class RowTotalTest {
 	}
 	
 	/**
-	 * Testing function when data valid and row is out of bounds
+	 * Testing function when data is valid and row is out of bounds
 	 */
 	@Test
 	public void IndexOutOfBounds() {
