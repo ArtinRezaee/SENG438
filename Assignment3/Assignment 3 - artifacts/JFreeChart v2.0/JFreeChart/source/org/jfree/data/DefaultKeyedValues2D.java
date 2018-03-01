@@ -61,428 +61,438 @@ import org.jfree.util.ObjectUtilities;
 import org.jfree.util.PublicCloneable;
 
 /**
- * A data structure that stores zero, one or many values, where each value 
- * is associated with two keys (a 'row' key and a 'column' key).  The keys 
- * should be (a) instances of {@link Comparable} and (b) immutable.  
+ * A data structure that stores zero, one or many values, where each value is
+ * associated with two keys (a 'row' key and a 'column' key). The keys should be
+ * (a) instances of {@link Comparable} and (b) immutable.
  */
-public class DefaultKeyedValues2D implements KeyedValues2D, 
-                                             PublicCloneable, Cloneable, 
-                                             Serializable {
+public class DefaultKeyedValues2D implements KeyedValues2D, PublicCloneable, Cloneable, Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = -5514169970951994748L;
-    
-    /** The row keys. */
-    private List rowKeys;
+	/** For serialization. */
+	private static final long serialVersionUID = -5514169970951994748L;
 
-    /** The column keys. */
-    private List columnKeys;
+	/** The row keys. */
+	private List rowKeys;
 
-    /** The row data. */
-    private List rows;
-    
-    /** If the row keys should be sorted by their comparable order. */
-    private boolean sortRowKeys;
+	/** The column keys. */
+	private List columnKeys;
 
-    /**
-     * Creates a new instance (initially empty).
-     */
-    public DefaultKeyedValues2D() {
-        this(false);
-    }
+	/** The row data. */
+	private List rows;
 
-    /**
-     * Creates a new instance (initially empty).
-     * 
-     * @param sortRowKeys  if the row keys should be sorted.
-     */
-    public DefaultKeyedValues2D(boolean sortRowKeys) {
-        this.rowKeys = new java.util.ArrayList();
-        this.columnKeys = new java.util.ArrayList();
-        this.rows = new java.util.ArrayList();
-        this.sortRowKeys = sortRowKeys;
-    }
+	/** If the row keys should be sorted by their comparable order. */
+	private boolean sortRowKeys;
 
-    /**
-     * Returns the row count.
-     *
-     * @return The row count.
-     */
-    public int getRowCount() {
-        return this.rowKeys.size();
-    }
+	/**
+	 * Creates a new instance (initially empty).
+	 */
+	public DefaultKeyedValues2D() {
+		this(false);
+	}
 
-    /**
-     * Returns the column count.
-     *
-     * @return The column count.
-     */
-    public int getColumnCount() {
-        return this.columnKeys.size();
-    }
+	/**
+	 * Creates a new instance (initially empty).
+	 * 
+	 * @param sortRowKeys
+	 *            if the row keys should be sorted.
+	 */
+	public DefaultKeyedValues2D(boolean sortRowKeys) {
+		this.rowKeys = new java.util.ArrayList();
+		this.columnKeys = new java.util.ArrayList();
+		this.rows = new java.util.ArrayList();
+		this.sortRowKeys = sortRowKeys;
+	}
 
-    /**
-     * Returns the value for a given row and column.
-     *
-     * @param row  the row index.
-     * @param column  the column index.
-     *
-     * @return The value.
-     */
-    public Number getValue(int row, int column) {
-        Number result = null;
-        DefaultKeyedValues rowData = (DefaultKeyedValues) this.rows.get(row);
-        if (rowData != null) {
-            Comparable columnKey = (Comparable) this.columnKeys.get(column);
-            // the row may not have an entry for this key, in which case the 
-            // return value is null
-            int index = rowData.getIndex(columnKey);
-            if (index >= 0) {
-                result = rowData.getValue(index);
-            }
-        }
-        return result;
-    }
+	/**
+	 * Returns the row count.
+	 *
+	 * @return The row count.
+	 */
+	public int getRowCount() {
+		return this.rowKeys.size();
+	}
 
-    /**
-     * Returns the key for a given row.
-     *
-     * @param row  the row index (zero based).
-     *
-     * @return The row index.
-     */
-    public Comparable getRowKey(int row) {
-        return (Comparable) this.rowKeys.get(row);
-    }
+	/**
+	 * Returns the column count.
+	 *
+	 * @return The column count.
+	 */
+	public int getColumnCount() {
+		return this.columnKeys.size();
+	}
 
-    /**
-     * Returns the row index for a given key.
-     *
-     * @param key  the key (<code>null</code> not permitted).
-     *
-     * @return The row index.
-     */
-    public int getRowIndex(Comparable key) {
-        if (key == null) {
-            throw new IllegalArgumentException("Null 'key' argument.");
-        }
-        if (this.sortRowKeys) {
-            return Collections.binarySearch(this.rowKeys, key);
-        }
-        else {
-            return this.rowKeys.indexOf(key);
-        }
-    }
+	/**
+	 * Returns the value for a given row and column.
+	 *
+	 * @param row
+	 *            the row index.
+	 * @param column
+	 *            the column index.
+	 *
+	 * @return The value.
+	 */
+	public Number getValue(int row, int column) {
+		Number result = null;
+		DefaultKeyedValues rowData = (DefaultKeyedValues) this.rows.get(row);
+		if (rowData != null) {
+			Comparable columnKey = (Comparable) this.columnKeys.get(column);
+			// the row may not have an entry for this key, in which case the
+			// return value is null
+			int index = rowData.getIndex(columnKey);
+			if (index >= 0) {
+				result = rowData.getValue(index);
+			}
+		}
+		return result;
+	}
 
-    /**
-     * Returns the row keys.
-     *
-     * @return The row keys.
-     */
-    public List getRowKeys() {
-        return Collections.unmodifiableList(this.rowKeys);
-    }
+	/**
+	 * Returns the key for a given row.
+	 *
+	 * @param row
+	 *            the row index (zero based).
+	 *
+	 * @return The row index.
+	 */
+	public Comparable getRowKey(int row) {
+		return (Comparable) this.rowKeys.get(row);
+	}
 
-    /**
-     * Returns the key for a given column.
-     *
-     * @param column  the column.
-     *
-     * @return The key.
-     */
-    public Comparable getColumnKey(int column) {
-        return (Comparable) this.columnKeys.get(column);
-    }
+	/**
+	 * Returns the row index for a given key.
+	 *
+	 * @param key
+	 *            the key (<code>null</code> not permitted).
+	 *
+	 * @return The row index.
+	 */
+	public int getRowIndex(Comparable key) {
+		if (key == null) {
+			throw new IllegalArgumentException("Null 'key' argument.");
+		}
+		if (this.sortRowKeys) {
+			return Collections.binarySearch(this.rowKeys, key);
+		} else {
+			return this.rowKeys.indexOf(key);
+		}
+	}
 
-    /**
-     * Returns the column index for a given key.
-     *
-     * @param key  the key (<code>null</code> not permitted).
-     *
-     * @return The column index.
-     */
-    public int getColumnIndex(Comparable key) {
-        if (key == null) {
-            throw new IllegalArgumentException("Null 'key' argument.");
-        }
-        return this.columnKeys.indexOf(key);
-    }
+	/**
+	 * Returns the row keys.
+	 *
+	 * @return The row keys.
+	 */
+	public List getRowKeys() {
+		return Collections.unmodifiableList(this.rowKeys);
+	}
 
-    /**
-     * Returns the column keys.
-     *
-     * @return The column keys.
-     */
-    public List getColumnKeys() {
-        return Collections.unmodifiableList(this.columnKeys);
-    }
+	/**
+	 * Returns the key for a given column.
+	 *
+	 * @param column
+	 *            the column.
+	 *
+	 * @return The key.
+	 */
+	public Comparable getColumnKey(int column) {
+		return (Comparable) this.columnKeys.get(column);
+	}
 
-    /**
-     * Returns the value for the given row and column keys.  This method will
-     * throw an {@link UnknownKeyException} if either key is not defined in the
-     * data structure.
-     *
-     * @param rowKey  the row key (<code>null</code> not permitted).
-     * @param columnKey  the column key (<code>null</code> not permitted).
-     *
-     * @return The value (possibly <code>null</code>).
-     */
-    public Number getValue(Comparable rowKey, Comparable columnKey) {
-        if (rowKey == null) {
-            throw new IllegalArgumentException("Null 'rowKey' argument.");
-        }
-        if (columnKey == null) {
-            throw new IllegalArgumentException("Null 'columnKey' argument.");
-        }
-        int row = getRowIndex(rowKey);
-        if (row >= 0) {
-            DefaultKeyedValues rowData 
-                = (DefaultKeyedValues) this.rows.get(row);
-            return rowData.getValue(columnKey);
-        }
-        else {
-            throw new UnknownKeyException("Unrecognised rowKey: " + rowKey);
-        }
-    }
+	/**
+	 * Returns the column index for a given key.
+	 *
+	 * @param key
+	 *            the key (<code>null</code> not permitted).
+	 *
+	 * @return The column index.
+	 */
+	public int getColumnIndex(Comparable key) {
+		if (key == null) {
+			throw new IllegalArgumentException("Null 'key' argument.");
+		}
+		return this.columnKeys.indexOf(key);
+	}
 
-    /**
-     * Adds a value to the table.  Performs the same function as 
-     * #setValue(Number, Comparable, Comparable).
-     *
-     * @param value  the value (<code>null</code> permitted).
-     * @param rowKey  the row key (<code>null</code> not permitted).
-     * @param columnKey  the column key (<code>null</code> not permitted).
-     */
-    public void addValue(Number value, Comparable rowKey, 
-                         Comparable columnKey) {
-        // defer argument checking
-        setValue(value, rowKey, columnKey);
-    }
+	/**
+	 * Returns the column keys.
+	 *
+	 * @return The column keys.
+	 */
+	public List getColumnKeys() {
+		return Collections.unmodifiableList(this.columnKeys);
+	}
 
-    /**
-     * Adds or updates a value.
-     *
-     * @param value  the value (<code>null</code> permitted).
-     * @param rowKey  the row key (<code>null</code> not permitted).
-     * @param columnKey  the column key (<code>null</code> not permitted).
-     */
-    public void setValue(Number value, Comparable rowKey, 
-                         Comparable columnKey) {
+	/**
+	 * Returns the value for the given row and column keys. This method will throw
+	 * an {@link UnknownKeyException} if either key is not defined in the data
+	 * structure.
+	 *
+	 * @param rowKey
+	 *            the row key (<code>null</code> not permitted).
+	 * @param columnKey
+	 *            the column key (<code>null</code> not permitted).
+	 *
+	 * @return The value (possibly <code>null</code>).
+	 */
+	public Number getValue(Comparable rowKey, Comparable columnKey) {
+		if (rowKey == null) {
+			throw new IllegalArgumentException("Null 'rowKey' argument.");
+		}
+		if (columnKey == null) {
+			throw new IllegalArgumentException("Null 'columnKey' argument.");
+		}
+		int row = getRowIndex(rowKey);
+		if (row >= 0) {
+			DefaultKeyedValues rowData = (DefaultKeyedValues) this.rows.get(row);
+			return rowData.getValue(columnKey);
+		} else {
+			throw new UnknownKeyException("Unrecognised rowKey: " + rowKey);
+		}
+	}
 
-        DefaultKeyedValues row;
-        int rowIndex = getRowIndex(rowKey);
-        
-        if (rowIndex >= 0) {
-            row = (DefaultKeyedValues) this.rows.get(rowIndex);
-        }
-        else {
-            row = new DefaultKeyedValues();
-            if (this.sortRowKeys) {
-                rowIndex = -rowIndex - 1;
-                this.rowKeys.add(rowIndex, rowKey);
-                this.rows.add(rowIndex, row);
-            }
-            else {
-                this.rowKeys.add(rowKey);
-                this.rows.add(row);
-            }
-        }
-        row.setValue(columnKey, value);
-        
-        int columnIndex = this.columnKeys.indexOf(columnKey);
-        if (columnIndex < 0) {
-            this.columnKeys.add(columnKey);
-        }
-    }
+	/**
+	 * Adds a value to the table. Performs the same function as #setValue(Number,
+	 * Comparable, Comparable).
+	 *
+	 * @param value
+	 *            the value (<code>null</code> permitted).
+	 * @param rowKey
+	 *            the row key (<code>null</code> not permitted).
+	 * @param columnKey
+	 *            the column key (<code>null</code> not permitted).
+	 */
+	public void addValue(Number value, Comparable rowKey, Comparable columnKey) {
+		// defer argument checking
+		setValue(value, rowKey, columnKey);
+	}
 
-    /**
-     * Removes a value.
-     *
-     * @param rowKey  the row key (<code>null</code> not permitted).
-     * @param columnKey  the column key (<code>null</code> not permitted).
-     */
-    public void removeValue(Comparable rowKey, Comparable columnKey) {
-        setValue(null, rowKey, columnKey);
-        
-        // 1. check whether the row is now empty.
-        boolean allNull = true;
-        int rowIndex = getRowIndex(rowKey);
-        DefaultKeyedValues row = (DefaultKeyedValues) this.rows.get(rowIndex);
+	/**
+	 * Adds or updates a value.
+	 *
+	 * @param value
+	 *            the value (<code>null</code> permitted).
+	 * @param rowKey
+	 *            the row key (<code>null</code> not permitted).
+	 * @param columnKey
+	 *            the column key (<code>null</code> not permitted).
+	 */
+	public void setValue(Number value, Comparable rowKey, Comparable columnKey) {
 
-        for (int item = 0, itemCount = row.getItemCount(); item < itemCount; 
-             item++) {
-            if (row.getValue(item) != null) {
-                allNull = false;
-                break;
-            }
-        }
-        
-        if (allNull) {
-            this.rowKeys.remove(rowIndex);
-            this.rows.remove(rowIndex);
-        }
-        
-        // 2. check whether the column is now empty.
-        allNull = true;
-        int columnIndex = getColumnIndex(columnKey);
-        
-        for (int item = 0, itemCount = this.rows.size(); item < itemCount; 
-             item++) {
-            row = (DefaultKeyedValues) this.rows.get(item);
-            if (row.getValue(columnIndex) != null) {
-                allNull = false;
-                break;
-            }
-        }
-        
-        if (allNull) {
-            for (int item = 0, itemCount = this.rows.size(); item < itemCount; 
-                 item++) {
-                row = (DefaultKeyedValues) this.rows.get(item);
-                row.removeValue(columnIndex);
-            }
-            this.columnKeys.remove(columnIndex);
-        }
-    }
+		DefaultKeyedValues row;
+		int rowIndex = getRowIndex(rowKey);
 
-    /**
-     * Removes a row.
-     *
-     * @param rowIndex  the row index.
-     */
-    public void removeRow(int rowIndex) {
-        this.rowKeys.remove(rowIndex);
-        this.rows.remove(rowIndex);
-    }
+		if (rowIndex >= 0) {
+			row = (DefaultKeyedValues) this.rows.get(rowIndex);
+		} else {
+			row = new DefaultKeyedValues();
+			if (this.sortRowKeys) {
+				rowIndex = -rowIndex - 1;
+				this.rowKeys.add(rowIndex, rowKey);
+				this.rows.add(rowIndex, row);
+			} else {
+				this.rowKeys.add(rowKey);
+				this.rows.add(row);
+			}
+		}
+		row.setValue(columnKey, value);
 
-    /**
-     * Removes a row.
-     *
-     * @param rowKey  the row key.
-     */
-    public void removeRow(Comparable rowKey) {
-        removeRow(getRowIndex(rowKey));
-    }
+		int columnIndex = this.columnKeys.indexOf(columnKey);
+		if (columnIndex < 0) {
+			this.columnKeys.add(columnKey);
+		}
+	}
 
-    /**
-     * Removes a column.
-     *
-     * @param columnIndex  the column index.
-     */
-    public void removeColumn(int columnIndex) {
-        Comparable columnKey = getColumnKey(columnIndex);
-        removeColumn(columnKey);
-    }
+	/**
+	 * Removes a value.
+	 *
+	 * @param rowKey
+	 *            the row key (<code>null</code> not permitted).
+	 * @param columnKey
+	 *            the column key (<code>null</code> not permitted).
+	 */
+	public void removeValue(Comparable rowKey, Comparable columnKey) {
+		setValue(null, rowKey, columnKey);
 
-    /**
-     * Removes a column.
-     *
-     * @param columnKey  the column key (<code>null</code> not permitted).
-     */
-    public void removeColumn(Comparable columnKey) {
-        Iterator iterator = this.rows.iterator();
-        while (iterator.hasNext()) {
-            DefaultKeyedValues rowData = (DefaultKeyedValues) iterator.next();
-            rowData.removeValue(columnKey);
-        }
-        this.columnKeys.remove(columnKey);
-    }
+		// 1. check whether the row is now empty.
+		boolean allNull = true;
+		int rowIndex = getRowIndex(rowKey);
+		DefaultKeyedValues row = (DefaultKeyedValues) this.rows.get(rowIndex);
 
-    /**
-     * Clears all the data and associated keys.
-     */
-    public void clear() {
-        this.rowKeys.clear();
-        this.columnKeys.clear();
-        this.rows.clear();
-    }
-    
-    /**
-     * Tests if this object is equal to another.
-     *
-     * @param o  the other object (<code>null</code> permitted).
-     *
-     * @return A boolean.
-     */
-    public boolean equals(Object o) {
+		for (int item = 0, itemCount = row.getItemCount(); item < itemCount; item++) {
+			if (row.getValue(item) != null) {
+				allNull = false;
+				break;
+			}
+		}
 
-        if (o == null) {
-            return false;
-        }
-        if (o == this) {
-            return true;
-        }
+		if (allNull) {
+			this.rowKeys.remove(rowIndex);
+			this.rows.remove(rowIndex);
+		}
 
-        if (!(o instanceof KeyedValues2D)) {
-            return false;
-        }
-        KeyedValues2D kv2D = (KeyedValues2D) o;
-        if (!getRowKeys().equals(kv2D.getRowKeys())) {
-            return false;
-        }
-        if (!getColumnKeys().equals(kv2D.getColumnKeys())) {
-            return false;
-        }
-        int rowCount = getRowCount();
-        if (rowCount != kv2D.getRowCount()) {
-            return false;
-        }
+		// 2. check whether the column is now empty.
+		allNull = true;
+		int columnIndex = getColumnIndex(columnKey);
 
-        int colCount = getColumnCount();
-        if (colCount != kv2D.getColumnCount()) {
-            return false;
-        }
+		for (int item = 0, itemCount = this.rows.size(); item < itemCount; item++) {
+			row = (DefaultKeyedValues) this.rows.get(item);
+			if (row.getValue(columnIndex) != null) {
+				allNull = false;
+				break;
+			}
+		}
 
-        for (int r = 0; r < rowCount; r++) {
-            for (int c = 0; c < colCount; c++) {
-                Number v1 = getValue(r, c);
-                Number v2 = kv2D.getValue(r, c);
-                if (v1 == null) {
-                    if (v2 != null) {
-                        return false;
-                    }
-                }
-                else {
-                    if (!v1.equals(v2)) {
-                        return false;
-                    }
-                }
-            }
-        }
-        return true;
-    }
+		if (allNull) {
+			for (int item = 0, itemCount = this.rows.size(); item < itemCount; item++) {
+				row = (DefaultKeyedValues) this.rows.get(item);
+				row.removeValue(columnIndex);
+			}
+			this.columnKeys.remove(columnIndex);
+		}
+	}
 
-    /**
-     * Returns a hash code.
-     * 
-     * @return A hash code.
-     */
-    public int hashCode() {
-        int result;
-        result = this.rowKeys.hashCode();
-        result = 29 * result + this.columnKeys.hashCode();
-        result = 29 * result + this.rows.hashCode();
-        return result;
-    }
+	/**
+	 * Removes a row.
+	 *
+	 * @param rowIndex
+	 *            the row index.
+	 */
+	public void removeRow(int rowIndex) {
+		this.rowKeys.remove(rowIndex);
+		this.rows.remove(rowIndex);
+	}
 
-    /**
-     * Returns a clone.
-     * 
-     * @return A clone.
-     * 
-     * @throws CloneNotSupportedException  this class will not throw this 
-     *         exception, but subclasses (if any) might.
-     */
-    public Object clone() throws CloneNotSupportedException {
-        DefaultKeyedValues2D clone = (DefaultKeyedValues2D) super.clone();
-        // for the keys, a shallow copy should be fine because keys
-        // should be immutable...
-        clone.columnKeys = new java.util.ArrayList(this.columnKeys);
-        clone.rowKeys = new java.util.ArrayList(this.rowKeys);
-        
-        // but the row data requires a deep copy
-        clone.rows = (List) ObjectUtilities.deepClone(this.rows);
-        return clone;
-    }
+	/**
+	 * Removes a row.
+	 *
+	 * @param rowKey
+	 *            the row key.
+	 */
+	public void removeRow(Comparable rowKey) {
+		removeRow(getRowIndex(rowKey));
+	}
+
+	/**
+	 * Removes a column.
+	 *
+	 * @param columnIndex
+	 *            the column index.
+	 */
+	public void removeColumn(int columnIndex) {
+		Comparable columnKey = getColumnKey(columnIndex);
+		removeColumn(columnKey);
+	}
+
+	/**
+	 * Removes a column.
+	 *
+	 * @param columnKey
+	 *            the column key (<code>null</code> not permitted).
+	 */
+	public void removeColumn(Comparable columnKey) {
+		Iterator iterator = this.rows.iterator();
+		while (iterator.hasNext()) {
+			DefaultKeyedValues rowData = (DefaultKeyedValues) iterator.next();
+			rowData.removeValue(columnKey);
+		}
+		this.columnKeys.remove(columnKey);
+	}
+
+	/**
+	 * Clears all the data and associated keys.
+	 */
+	public void clear() {
+		this.rowKeys.clear();
+		this.columnKeys.clear();
+		this.rows.clear();
+	}
+
+	/**
+	 * Tests if this object is equal to another.
+	 *
+	 * @param o
+	 *            the other object (<code>null</code> permitted).
+	 *
+	 * @return A boolean.
+	 */
+	public boolean equals(Object o) {
+
+		if (o == null) {
+			return false;
+		}
+		if (o == this) {
+			return true;
+		}
+
+		if (!(o instanceof KeyedValues2D)) {
+			return false;
+		}
+		KeyedValues2D kv2D = (KeyedValues2D) o;
+		if (!getRowKeys().equals(kv2D.getRowKeys())) {
+			return false;
+		}
+		if (!getColumnKeys().equals(kv2D.getColumnKeys())) {
+			return false;
+		}
+		int rowCount = getRowCount();
+		if (rowCount != kv2D.getRowCount()) {
+			return false;
+		}
+
+		int colCount = getColumnCount();
+		if (colCount != kv2D.getColumnCount()) {
+			return false;
+		}
+
+		for (int r = 0; r < rowCount; r++) {
+			for (int c = 0; c < colCount; c++) {
+				Number v1 = getValue(r, c);
+				Number v2 = kv2D.getValue(r, c);
+				if (v1 == null) {
+					if (v2 != null) {
+						return false;
+					}
+				} else {
+					if (!v1.equals(v2)) {
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Returns a hash code.
+	 * 
+	 * @return A hash code.
+	 */
+	public int hashCode() {
+		int result;
+		result = this.rowKeys.hashCode();
+		result = 29 * result + this.columnKeys.hashCode();
+		result = 29 * result + this.rows.hashCode();
+		return result;
+	}
+
+	/**
+	 * Returns a clone.
+	 * 
+	 * @return A clone.
+	 * 
+	 * @throws CloneNotSupportedException
+	 *             this class will not throw this exception, but subclasses (if any)
+	 *             might.
+	 */
+	public Object clone() throws CloneNotSupportedException {
+		DefaultKeyedValues2D clone = (DefaultKeyedValues2D) super.clone();
+		// for the keys, a shallow copy should be fine because keys
+		// should be immutable...
+		clone.columnKeys = new java.util.ArrayList(this.columnKeys);
+		clone.rowKeys = new java.util.ArrayList(this.rowKeys);
+
+		// but the row data requires a deep copy
+		clone.rows = (List) ObjectUtilities.deepClone(this.rows);
+		return clone;
+	}
 
 }

@@ -52,85 +52,92 @@ import org.jfree.util.PublicCloneable;
 /**
  * An empty block with a fixed size.
  */
-public class EmptyBlock extends AbstractContentBlock 
-                        implements Block, Cloneable, PublicCloneable,
-                                   Serializable {
-    
-    /** For serialization. */
-    private static final long serialVersionUID = -4083197869412648579L;
-    
-    /**
-     * Creates a new block with the specified width and height.
-     * 
-     * @param width  the block width.
-     * @param height  the block height.
-     */
-    public EmptyBlock(double width, double height) {
-        setDefaultWidth(width);
-        setDefaultHeight(height);
-    }
+public class EmptyBlock extends AbstractContentBlock implements Block, Cloneable, PublicCloneable, Serializable {
 
-    /**
-     * Arranges the contents of the block, within the given constraints, and 
-     * returns the block size.
-     * 
-     * @param g2  the graphics device.
-     * @param constraint  the constraint (<code>null</code> not permitted).
-     * @param params  the layout parameters (<code>null</code> not permitted).
-     * 
-     * @return The layout result.
-     */
-    public ArrangeResult arrange(Graphics2D g2, RectangleConstraint constraint, 
-            ArrangeParams params) {
-        
-        // there isn't any content to arrange, so we just need to return the
-        // size for the given constraint
-        ArrangeResult result = params.getRecyclableResult();
-        double w = constraint.calculateConstrainedWidth(getDefaultWidth());
-        double h = constraint.calculateConstrainedHeight(getDefaultHeight());
-        if (result != null) {
-            result.setSize(w, h);
-        }
-        else {
-            result = new ArrangeResult(w, h, null);
-        }
-        return result;
-        
-    }
-    
-    /**
-     * Draws the block.  Since the block is empty, this method does nothing.
-     * 
-     * @param g2  the graphics device.
-     * @param area  the area.
-     */
-    public void draw(Graphics2D g2, Rectangle2D area) {
-        // do nothing, we're empty
-    }
-    
-    /**
-     * Draws the block within the specified area.  Since the block is empty, 
-     * this method does nothing.
-     * 
-     * @param g2  the graphics device.
-     * @param area  the area.
-     * @param params  ignored (<code>null</code> permitted).
-     * 
-     * @return Always <code>null</code>.
-     */
-    public Object draw(Graphics2D g2, Rectangle2D area, Object params) {
-        return null;
-    }
+	/** For serialization. */
+	private static final long serialVersionUID = -4083197869412648579L;
 
-    /**
-     * Returns a clone of the block.
-     * 
-     * @return A clone.
-     * 
-     * @throws CloneNotSupportedException if there is a problem cloning.
-     */
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();   
-    }
+	/**
+	 * Creates a new block with the specified width and height.
+	 * 
+	 * @param width
+	 *            the block width.
+	 * @param height
+	 *            the block height.
+	 */
+	public EmptyBlock(double width, double height) {
+		setDefaultWidth(width);
+		setDefaultHeight(height);
+	}
+
+	/**
+	 * Arranges the contents of the block, within the given constraints, and returns
+	 * the block size.
+	 * 
+	 * @param g2
+	 *            the graphics device.
+	 * @param constraint
+	 *            the constraint (<code>null</code> not permitted).
+	 * @param params
+	 *            the layout parameters (<code>null</code> not permitted).
+	 * 
+	 * @return The layout result.
+	 */
+	public ArrangeResult arrange(Graphics2D g2, RectangleConstraint constraint, ArrangeParams params) {
+
+		// there isn't any content to arrange, so we just need to return the
+		// size for the given constraint
+		ArrangeResult result = params.getRecyclableResult();
+		double w = constraint.calculateConstrainedWidth(getDefaultWidth());
+		double h = constraint.calculateConstrainedHeight(getDefaultHeight());
+		if (result != null) {
+			result.setSize(w, h);
+		} else {
+			result = new ArrangeResult(w, h, null);
+		}
+		return result;
+
+	}
+
+	/**
+	 * Draws the block. Since the block is empty, this method does nothing.
+	 * 
+	 * @param g2
+	 *            the graphics device.
+	 * @param area
+	 *            the area.
+	 */
+	public void draw(Graphics2D g2, Rectangle2D area) {
+		// do nothing, we're empty
+	}
+
+	/**
+	 * Draws the block within the specified area. Since the block is empty, this
+	 * method does nothing.
+	 * 
+	 * @param g2
+	 *            the graphics device.
+	 * @param area
+	 *            the area.
+	 * @param params
+	 *            ignored (<code>null</code> permitted).
+	 * 
+	 * @return Always <code>null</code>.
+	 */
+	public Object draw(Graphics2D g2, Rectangle2D area, Object params) {
+		return null;
+	}
+
+	/**
+	 * Returns a clone of the block.
+	 * 
+	 * @return A clone.
+	 * 
+	 * @throws CloneNotSupportedException
+	 *             if there is a problem cloning.
+	 */
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
 
 }

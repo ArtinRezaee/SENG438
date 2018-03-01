@@ -87,9 +87,9 @@ import org.jfree.data.category.CategoryDataset;
 import org.jfree.io.SerialUtilities;
 
 /**
- * Renderer for drawing min max plot. This renderer draws all the series under 
- * the same category in the same x position using <code>objectIcon</code> and 
- * a line from the maximum value to the minimum value.
+ * Renderer for drawing min max plot. This renderer draws all the series under
+ * the same category in the same x position using <code>objectIcon</code> and a
+ * line from the maximum value to the minimum value.
  * <p>
  * For use with the {@link org.jfree.chart.plot.CategoryPlot} class.
  *
@@ -97,420 +97,424 @@ import org.jfree.io.SerialUtilities;
  */
 public class MinMaxCategoryRenderer extends AbstractCategoryItemRenderer {
 
-    /** For serialization. */
-    private static final long serialVersionUID = 2935615937671064911L;
-    
-    /** A flag indicating whether or not lines are drawn between XY points. */
-    private boolean plotLines = false;
+	/** For serialization. */
+	private static final long serialVersionUID = 2935615937671064911L;
 
-    /** 
-     * The paint of the line between the minimum value and the maximum value.
-     */
-    private transient Paint groupPaint = Color.black;
+	/** A flag indicating whether or not lines are drawn between XY points. */
+	private boolean plotLines = false;
 
-    /** 
-     * The stroke of the line between the minimum value and the maximum value.
-     */
-    private transient Stroke groupStroke = new BasicStroke(1.0f);
+	/**
+	 * The paint of the line between the minimum value and the maximum value.
+	 */
+	private transient Paint groupPaint = Color.black;
 
-    /** The icon used to indicate the minimum value.*/
-    private transient Icon minIcon = getIcon(new Arc2D.Double(-4, -4, 8, 8, 0,
-            360, Arc2D.OPEN), null, Color.black);
+	/**
+	 * The stroke of the line between the minimum value and the maximum value.
+	 */
+	private transient Stroke groupStroke = new BasicStroke(1.0f);
 
-    /** The icon used to indicate the maximum value.*/
-    private transient Icon maxIcon = getIcon(new Arc2D.Double(-4, -4, 8, 8, 0,
-            360, Arc2D.OPEN), null, Color.black);
+	/** The icon used to indicate the minimum value. */
+	private transient Icon minIcon = getIcon(new Arc2D.Double(-4, -4, 8, 8, 0, 360, Arc2D.OPEN), null, Color.black);
 
-    /** The icon used to indicate the values.*/
-    private transient Icon objectIcon = getIcon(new Line2D.Double(-4, 0, 4, 0),
-            false, true);
+	/** The icon used to indicate the maximum value. */
+	private transient Icon maxIcon = getIcon(new Arc2D.Double(-4, -4, 8, 8, 0, 360, Arc2D.OPEN), null, Color.black);
 
-    /** The last category. */
-    private int lastCategory = -1;
+	/** The icon used to indicate the values. */
+	private transient Icon objectIcon = getIcon(new Line2D.Double(-4, 0, 4, 0), false, true);
 
-    /** The minimum. */
-    private double min;
+	/** The last category. */
+	private int lastCategory = -1;
 
-    /** The maximum. */
-    private double max;
+	/** The minimum. */
+	private double min;
 
-    /**
-     * Default constructor.
-     */
-    public MinMaxCategoryRenderer() {
-        super();
-    }
+	/** The maximum. */
+	private double max;
 
-    /**
-     * Gets whether or not lines are drawn between category points.
-     *
-     * @return boolean true if line will be drawn between sequenced categories,
-     *         otherwise false.
-     *         
-     * @see #setDrawLines(boolean)
-     */
-    public boolean isDrawLines() {
-        return this.plotLines;
-    }
+	/**
+	 * Default constructor.
+	 */
+	public MinMaxCategoryRenderer() {
+		super();
+	}
 
-    /**
-     * Sets the flag that controls whether or not lines are drawn to connect
-     * the items within a series and sends a {@link RendererChangeEvent} to 
-     * all registered listeners.
-     *
-     * @param draw  the new value of the flag.
-     * 
-     * @see #isDrawLines()
-     */
-    public void setDrawLines(boolean draw) {
-        if (this.plotLines != draw) {
-            this.plotLines = draw;
-            this.notifyListeners(new RendererChangeEvent(this));
-        }
-        
-    }
+	/**
+	 * Gets whether or not lines are drawn between category points.
+	 *
+	 * @return boolean true if line will be drawn between sequenced categories,
+	 *         otherwise false.
+	 * 
+	 * @see #setDrawLines(boolean)
+	 */
+	public boolean isDrawLines() {
+		return this.plotLines;
+	}
 
-    /**
-     * Returns the paint used to draw the line between the minimum and maximum
-     * value items in each category.
-     *
-     * @return The paint (never <code>null</code>).
-     * 
-     * @see #setGroupPaint(Paint)
-     */
-    public Paint getGroupPaint() {
-        return this.groupPaint;
-    }
+	/**
+	 * Sets the flag that controls whether or not lines are drawn to connect the
+	 * items within a series and sends a {@link RendererChangeEvent} to all
+	 * registered listeners.
+	 *
+	 * @param draw
+	 *            the new value of the flag.
+	 * 
+	 * @see #isDrawLines()
+	 */
+	public void setDrawLines(boolean draw) {
+		if (this.plotLines != draw) {
+			this.plotLines = draw;
+			this.notifyListeners(new RendererChangeEvent(this));
+		}
 
-    /**
-     * Sets the paint used to draw the line between the minimum and maximum
-     * value items in each category and sends a {@link RendererChangeEvent} to
-     * all registered listeners.
-     *
-     * @param paint  the paint (<code>null</code> not permitted).
-     * 
-     * @see #getGroupPaint()
-     */
-    public void setGroupPaint(Paint paint) {
-        if (paint == null) {
-            throw new IllegalArgumentException("Null 'paint' argument.");
-        }
-        this.groupPaint = paint;
-        notifyListeners(new RendererChangeEvent(this));
-    }
+	}
 
-    /**
-     * Returns the stroke used to draw the line between the minimum and maximum
-     * value items in each category.
-     *
-     * @return The stroke (never <code>null</code>).
-     * 
-     * @see #setGroupStroke(Stroke)
-     */
-    public Stroke getGroupStroke() {
-        return this.groupStroke;
-    }
+	/**
+	 * Returns the paint used to draw the line between the minimum and maximum value
+	 * items in each category.
+	 *
+	 * @return The paint (never <code>null</code>).
+	 * 
+	 * @see #setGroupPaint(Paint)
+	 */
+	public Paint getGroupPaint() {
+		return this.groupPaint;
+	}
 
-    /**
-     * Sets the stroke of the line between the minimum value and the maximum 
-     * value.
-     *
-     * @param groupStroke The new stroke
-     */
-    public void setGroupStroke(Stroke groupStroke) {
-        this.groupStroke = groupStroke;
-    }
+	/**
+	 * Sets the paint used to draw the line between the minimum and maximum value
+	 * items in each category and sends a {@link RendererChangeEvent} to all
+	 * registered listeners.
+	 *
+	 * @param paint
+	 *            the paint (<code>null</code> not permitted).
+	 * 
+	 * @see #getGroupPaint()
+	 */
+	public void setGroupPaint(Paint paint) {
+		if (paint == null) {
+			throw new IllegalArgumentException("Null 'paint' argument.");
+		}
+		this.groupPaint = paint;
+		notifyListeners(new RendererChangeEvent(this));
+	}
 
-    /**
-     * Returns the icon drawn for each data item.
-     *
-     * @return The icon (never <code>null</code>).
-     * 
-     * @see #setObjectIcon(Icon)
-     */
-    public Icon getObjectIcon() {
-        return this.objectIcon;
-    }
+	/**
+	 * Returns the stroke used to draw the line between the minimum and maximum
+	 * value items in each category.
+	 *
+	 * @return The stroke (never <code>null</code>).
+	 * 
+	 * @see #setGroupStroke(Stroke)
+	 */
+	public Stroke getGroupStroke() {
+		return this.groupStroke;
+	}
 
-    /**
-     * Sets the icon drawn for each data item.
-     *
-     * @param icon  the icon.
-     * 
-     * @see #getObjectIcon()
-     */
-    public void setObjectIcon(Icon icon) {
-        if (icon == null) {
-            throw new IllegalArgumentException("Null 'icon' argument.");
-        }
-        this.objectIcon = icon;
-        notifyListeners(new RendererChangeEvent(this));
-    }
+	/**
+	 * Sets the stroke of the line between the minimum value and the maximum value.
+	 *
+	 * @param groupStroke
+	 *            The new stroke
+	 */
+	public void setGroupStroke(Stroke groupStroke) {
+		this.groupStroke = groupStroke;
+	}
 
-    /**
-     * Returns the icon displayed for the maximum value data item within each
-     * category.
-     *
-     * @return The icon (never <code>null</code>).
-     * 
-     * @see #setMaxIcon(Icon)
-     */
-    public Icon getMaxIcon() {
-        return this.maxIcon;
-    }
+	/**
+	 * Returns the icon drawn for each data item.
+	 *
+	 * @return The icon (never <code>null</code>).
+	 * 
+	 * @see #setObjectIcon(Icon)
+	 */
+	public Icon getObjectIcon() {
+		return this.objectIcon;
+	}
 
-    /**
-     * Sets the icon displayed for the maximum value data item within each
-     * category and sends a {@link RendererChangeEvent} to all registered
-     * listeners.
-     *
-     * @param icon  the icon (<code>null</code> not permitted).
-     * 
-     * @see #getMaxIcon()
-     */
-    public void setMaxIcon(Icon icon) {
-        if (icon == null) {
-            throw new IllegalArgumentException("Null 'icon' argument.");
-        }
-        this.maxIcon = icon;
-        notifyListeners(new RendererChangeEvent(this));
-    }
+	/**
+	 * Sets the icon drawn for each data item.
+	 *
+	 * @param icon
+	 *            the icon.
+	 * 
+	 * @see #getObjectIcon()
+	 */
+	public void setObjectIcon(Icon icon) {
+		if (icon == null) {
+			throw new IllegalArgumentException("Null 'icon' argument.");
+		}
+		this.objectIcon = icon;
+		notifyListeners(new RendererChangeEvent(this));
+	}
 
-    /**
-     * Returns the icon displayed for the minimum value data item within each
-     * category.
-     *
-     * @return The icon (never <code>null</code>).
-     * 
-     * @see #setMinIcon(Icon)
-     */
-    public Icon getMinIcon() {
-        return this.minIcon;
-    }
+	/**
+	 * Returns the icon displayed for the maximum value data item within each
+	 * category.
+	 *
+	 * @return The icon (never <code>null</code>).
+	 * 
+	 * @see #setMaxIcon(Icon)
+	 */
+	public Icon getMaxIcon() {
+		return this.maxIcon;
+	}
 
-    /**
-     * Sets the icon displayed for the minimum value data item within each
-     * category and sends a {@link RendererChangeEvent} to all registered
-     * listeners.
-     *
-     * @param icon  the icon (<code>null</code> not permitted).
-     * 
-     * @see #getMinIcon()
-     */
-    public void setMinIcon(Icon icon) {
-        if (icon == null) {
-            throw new IllegalArgumentException("Null 'icon' argument.");
-        }
-        this.minIcon = icon;
-        notifyListeners(new RendererChangeEvent(this));
-    }
+	/**
+	 * Sets the icon displayed for the maximum value data item within each category
+	 * and sends a {@link RendererChangeEvent} to all registered listeners.
+	 *
+	 * @param icon
+	 *            the icon (<code>null</code> not permitted).
+	 * 
+	 * @see #getMaxIcon()
+	 */
+	public void setMaxIcon(Icon icon) {
+		if (icon == null) {
+			throw new IllegalArgumentException("Null 'icon' argument.");
+		}
+		this.maxIcon = icon;
+		notifyListeners(new RendererChangeEvent(this));
+	}
 
-    /**
-     * Draw a single data item.
-     *
-     * @param g2  the graphics device.
-     * @param state  the renderer state.
-     * @param dataArea  the area in which the data is drawn.
-     * @param plot  the plot.
-     * @param domainAxis  the domain axis.
-     * @param rangeAxis  the range axis.
-     * @param dataset  the dataset.
-     * @param row  the row index (zero-based).
-     * @param column  the column index (zero-based).
-     * @param pass  the pass index.
-     */
-    public void drawItem(Graphics2D g2, CategoryItemRendererState state,
-            Rectangle2D dataArea, CategoryPlot plot, CategoryAxis domainAxis,
-            ValueAxis rangeAxis, CategoryDataset dataset, int row, int column,
-            int pass) {
+	/**
+	 * Returns the icon displayed for the minimum value data item within each
+	 * category.
+	 *
+	 * @return The icon (never <code>null</code>).
+	 * 
+	 * @see #setMinIcon(Icon)
+	 */
+	public Icon getMinIcon() {
+		return this.minIcon;
+	}
 
-        // first check the number we are plotting...
-        Number value = dataset.getValue(row, column);
-        if (value != null) {
-            // current data point...
-            double x1 = domainAxis.getCategoryMiddle(
-                column, getColumnCount(), dataArea, plot.getDomainAxisEdge());
-            double y1 = rangeAxis.valueToJava2D(
-                value.doubleValue(), dataArea, plot.getRangeAxisEdge());
-            g2.setPaint(getItemPaint(row, column));
-            g2.setStroke(getItemStroke(row, column));
-            Shape shape = null;
-            shape = new Rectangle2D.Double(x1 - 4, y1 - 4, 8.0, 8.0);
-            this.objectIcon.paintIcon(null, g2, (int) x1, (int) y1);
-            if (this.lastCategory == column) {
-                if (this.min > value.doubleValue()) {
-                    this.min = value.doubleValue();
-                }
-                if (this.max < value.doubleValue()) {
-                    this.max = value.doubleValue();
-                }
-                if (dataset.getRowCount() - 1 == row) {
-                    g2.setPaint(this.groupPaint);
-                    g2.setStroke(this.groupStroke);
-                    double minY = rangeAxis.valueToJava2D(this.min, dataArea, 
-                            plot.getRangeAxisEdge());
-                    double maxY = rangeAxis.valueToJava2D(this.max, dataArea, 
-                            plot.getRangeAxisEdge());
-                    g2.draw(new Line2D.Double(x1, minY, x1, maxY));
-                    this.minIcon.paintIcon(null, g2, (int) x1, (int) minY);
-                    this.maxIcon.paintIcon(null, g2, (int) x1, (int) maxY);
-                }
-            }
-            else {  // reset the min and max
-                this.lastCategory = column;
-                this.min = value.doubleValue();
-                this.max = value.doubleValue();
-            }
-            // connect to the previous point
-            if (this.plotLines) {
-                if (column != 0) {
-                    Number previousValue = dataset.getValue(row, column - 1);
-                    if (previousValue != null) {
-                        // previous data point...
-                        double previous = previousValue.doubleValue();
-                        double x0 = domainAxis.getCategoryMiddle(
-                            column - 1, getColumnCount(), dataArea,
-                            plot.getDomainAxisEdge());
-                        double y0 = rangeAxis.valueToJava2D(
-                            previous, dataArea, plot.getRangeAxisEdge());
-                        g2.setPaint(getItemPaint(row, column));
-                        g2.setStroke(getItemStroke(row, column));
-                        Line2D line = new Line2D.Double(x0, y0, x1, y1);
-                        g2.draw(line);
-                    }
-                }
-            }
+	/**
+	 * Sets the icon displayed for the minimum value data item within each category
+	 * and sends a {@link RendererChangeEvent} to all registered listeners.
+	 *
+	 * @param icon
+	 *            the icon (<code>null</code> not permitted).
+	 * 
+	 * @see #getMinIcon()
+	 */
+	public void setMinIcon(Icon icon) {
+		if (icon == null) {
+			throw new IllegalArgumentException("Null 'icon' argument.");
+		}
+		this.minIcon = icon;
+		notifyListeners(new RendererChangeEvent(this));
+	}
 
-            // collect entity and tool tip information...
-            if (state.getInfo() != null) {
-                EntityCollection entities 
-                    = state.getInfo().getOwner().getEntityCollection();
-                if (entities != null && shape != null) {
-                    String tip = null;
-                    CategoryToolTipGenerator tipster 
-                        = getToolTipGenerator(row, column);
-                    if (tipster != null) {
-                        tip = tipster.generateToolTip(dataset, row, column);
-                    }
-                    CategoryItemEntity entity = new CategoryItemEntity(
-                        shape, tip, null, dataset, row, 
-                        dataset.getColumnKey(column), column);
-                    entities.add(entity);
-                }
-            }
-        }
-    }
+	/**
+	 * Draw a single data item.
+	 *
+	 * @param g2
+	 *            the graphics device.
+	 * @param state
+	 *            the renderer state.
+	 * @param dataArea
+	 *            the area in which the data is drawn.
+	 * @param plot
+	 *            the plot.
+	 * @param domainAxis
+	 *            the domain axis.
+	 * @param rangeAxis
+	 *            the range axis.
+	 * @param dataset
+	 *            the dataset.
+	 * @param row
+	 *            the row index (zero-based).
+	 * @param column
+	 *            the column index (zero-based).
+	 * @param pass
+	 *            the pass index.
+	 */
+	public void drawItem(Graphics2D g2, CategoryItemRendererState state, Rectangle2D dataArea, CategoryPlot plot,
+			CategoryAxis domainAxis, ValueAxis rangeAxis, CategoryDataset dataset, int row, int column, int pass) {
 
-    /**
-     * Returns an icon.
-     *
-     * @param shape  the shape.
-     * @param fillPaint  the fill paint.
-     * @param outlinePaint  the outline paint.
-     *
-     * @return The icon.
-     */
-    private Icon getIcon(Shape shape, final Paint fillPaint, 
-                        final Paint outlinePaint) {
+		// first check the number we are plotting...
+		Number value = dataset.getValue(row, column);
+		if (value != null) {
+			// current data point...
+			double x1 = domainAxis.getCategoryMiddle(column, getColumnCount(), dataArea, plot.getDomainAxisEdge());
+			double y1 = rangeAxis.valueToJava2D(value.doubleValue(), dataArea, plot.getRangeAxisEdge());
+			g2.setPaint(getItemPaint(row, column));
+			g2.setStroke(getItemStroke(row, column));
+			Shape shape = null;
+			shape = new Rectangle2D.Double(x1 - 4, y1 - 4, 8.0, 8.0);
+			this.objectIcon.paintIcon(null, g2, (int) x1, (int) y1);
+			if (this.lastCategory == column) {
+				if (this.min > value.doubleValue()) {
+					this.min = value.doubleValue();
+				}
+				if (this.max < value.doubleValue()) {
+					this.max = value.doubleValue();
+				}
+				if (dataset.getRowCount() - 1 == row) {
+					g2.setPaint(this.groupPaint);
+					g2.setStroke(this.groupStroke);
+					double minY = rangeAxis.valueToJava2D(this.min, dataArea, plot.getRangeAxisEdge());
+					double maxY = rangeAxis.valueToJava2D(this.max, dataArea, plot.getRangeAxisEdge());
+					g2.draw(new Line2D.Double(x1, minY, x1, maxY));
+					this.minIcon.paintIcon(null, g2, (int) x1, (int) minY);
+					this.maxIcon.paintIcon(null, g2, (int) x1, (int) maxY);
+				}
+			} else { // reset the min and max
+				this.lastCategory = column;
+				this.min = value.doubleValue();
+				this.max = value.doubleValue();
+			}
+			// connect to the previous point
+			if (this.plotLines) {
+				if (column != 0) {
+					Number previousValue = dataset.getValue(row, column - 1);
+					if (previousValue != null) {
+						// previous data point...
+						double previous = previousValue.doubleValue();
+						double x0 = domainAxis.getCategoryMiddle(column - 1, getColumnCount(), dataArea,
+								plot.getDomainAxisEdge());
+						double y0 = rangeAxis.valueToJava2D(previous, dataArea, plot.getRangeAxisEdge());
+						g2.setPaint(getItemPaint(row, column));
+						g2.setStroke(getItemStroke(row, column));
+						Line2D line = new Line2D.Double(x0, y0, x1, y1);
+						g2.draw(line);
+					}
+				}
+			}
 
-      final int width = shape.getBounds().width;
-      final int height = shape.getBounds().height;
-      final GeneralPath path = new GeneralPath(shape);
-      return new Icon() {
-          public void paintIcon(Component c, Graphics g, int x, int y) {
-              Graphics2D g2 = (Graphics2D) g;
-              path.transform(AffineTransform.getTranslateInstance(x, y));
-              if (fillPaint != null) {
-                  g2.setPaint(fillPaint);
-                  g2.fill(path);
-              }
-              if (outlinePaint != null) {
-                  g2.setPaint(outlinePaint);
-                  g2.draw(path);
-              }
-              path.transform(AffineTransform.getTranslateInstance(-x, -y));
-        }
+			// collect entity and tool tip information...
+			if (state.getInfo() != null) {
+				EntityCollection entities = state.getInfo().getOwner().getEntityCollection();
+				if (entities != null && shape != null) {
+					String tip = null;
+					CategoryToolTipGenerator tipster = getToolTipGenerator(row, column);
+					if (tipster != null) {
+						tip = tipster.generateToolTip(dataset, row, column);
+					}
+					CategoryItemEntity entity = new CategoryItemEntity(shape, tip, null, dataset, row,
+							dataset.getColumnKey(column), column);
+					entities.add(entity);
+				}
+			}
+		}
+	}
 
-        public int getIconWidth() {
-            return width;
-        }
+	/**
+	 * Returns an icon.
+	 *
+	 * @param shape
+	 *            the shape.
+	 * @param fillPaint
+	 *            the fill paint.
+	 * @param outlinePaint
+	 *            the outline paint.
+	 *
+	 * @return The icon.
+	 */
+	private Icon getIcon(Shape shape, final Paint fillPaint, final Paint outlinePaint) {
 
-        public int getIconHeight() {
-            return height;
-        }
+		final int width = shape.getBounds().width;
+		final int height = shape.getBounds().height;
+		final GeneralPath path = new GeneralPath(shape);
+		return new Icon() {
+			public void paintIcon(Component c, Graphics g, int x, int y) {
+				Graphics2D g2 = (Graphics2D) g;
+				path.transform(AffineTransform.getTranslateInstance(x, y));
+				if (fillPaint != null) {
+					g2.setPaint(fillPaint);
+					g2.fill(path);
+				}
+				if (outlinePaint != null) {
+					g2.setPaint(outlinePaint);
+					g2.draw(path);
+				}
+				path.transform(AffineTransform.getTranslateInstance(-x, -y));
+			}
 
-      };
-    }
+			public int getIconWidth() {
+				return width;
+			}
 
-    /**
-     * Returns an icon.
-     *
-     * @param shape  the shape.
-     * @param fill  the fill flag.
-     * @param outline  the outline flag.
-     *
-     * @return The icon.
-     */
-    private Icon getIcon(Shape shape, final boolean fill, 
-                         final boolean outline) {
-        final int width = shape.getBounds().width;
-        final int height = shape.getBounds().height;
-        final GeneralPath path = new GeneralPath(shape);
-        return new Icon() {
-            public void paintIcon(Component c, Graphics g, int x, int y) {
-                Graphics2D g2 = (Graphics2D) g;
-                path.transform(AffineTransform.getTranslateInstance(x, y));
-                if (fill) {
-                    g2.fill(path);
-                }
-                if (outline) {
-                    g2.draw(path);
-                }
-                path.transform(AffineTransform.getTranslateInstance(-x, -y));
-            }
+			public int getIconHeight() {
+				return height;
+			}
 
-            public int getIconWidth() {
-                return width;
-            }
+		};
+	}
 
-            public int getIconHeight() {
-                return height;
-            }
-        };
-    }
-    
-    /**
-     * Provides serialization support.
-     *
-     * @param stream  the output stream.
-     *
-     * @throws IOException  if there is an I/O error.
-     */
-    private void writeObject(ObjectOutputStream stream) throws IOException {
-        stream.defaultWriteObject();
-        SerialUtilities.writeStroke(this.groupStroke, stream);
-        SerialUtilities.writePaint(this.groupPaint, stream);
-    }
-    
-    /**
-     * Provides serialization support.
-     *
-     * @param stream  the input stream.
-     *
-     * @throws IOException  if there is an I/O error.
-     * @throws ClassNotFoundException  if there is a classpath problem.
-     */
-    private void readObject(ObjectInputStream stream) 
-        throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        this.groupStroke = SerialUtilities.readStroke(stream);
-        this.groupPaint = SerialUtilities.readPaint(stream);
-          
-        this.minIcon = getIcon(new Arc2D.Double(-4, -4, 8, 8, 0, 360, 
-                Arc2D.OPEN), null, Color.black);
-        this.maxIcon = getIcon(new Arc2D.Double(-4, -4, 8, 8, 0, 360, 
-                Arc2D.OPEN), null, Color.black);
-        this.objectIcon = getIcon(new Line2D.Double(-4, 0, 4, 0), false, true);
-    }
-    
+	/**
+	 * Returns an icon.
+	 *
+	 * @param shape
+	 *            the shape.
+	 * @param fill
+	 *            the fill flag.
+	 * @param outline
+	 *            the outline flag.
+	 *
+	 * @return The icon.
+	 */
+	private Icon getIcon(Shape shape, final boolean fill, final boolean outline) {
+		final int width = shape.getBounds().width;
+		final int height = shape.getBounds().height;
+		final GeneralPath path = new GeneralPath(shape);
+		return new Icon() {
+			public void paintIcon(Component c, Graphics g, int x, int y) {
+				Graphics2D g2 = (Graphics2D) g;
+				path.transform(AffineTransform.getTranslateInstance(x, y));
+				if (fill) {
+					g2.fill(path);
+				}
+				if (outline) {
+					g2.draw(path);
+				}
+				path.transform(AffineTransform.getTranslateInstance(-x, -y));
+			}
+
+			public int getIconWidth() {
+				return width;
+			}
+
+			public int getIconHeight() {
+				return height;
+			}
+		};
+	}
+
+	/**
+	 * Provides serialization support.
+	 *
+	 * @param stream
+	 *            the output stream.
+	 *
+	 * @throws IOException
+	 *             if there is an I/O error.
+	 */
+	private void writeObject(ObjectOutputStream stream) throws IOException {
+		stream.defaultWriteObject();
+		SerialUtilities.writeStroke(this.groupStroke, stream);
+		SerialUtilities.writePaint(this.groupPaint, stream);
+	}
+
+	/**
+	 * Provides serialization support.
+	 *
+	 * @param stream
+	 *            the input stream.
+	 *
+	 * @throws IOException
+	 *             if there is an I/O error.
+	 * @throws ClassNotFoundException
+	 *             if there is a classpath problem.
+	 */
+	private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+		stream.defaultReadObject();
+		this.groupStroke = SerialUtilities.readStroke(stream);
+		this.groupPaint = SerialUtilities.readPaint(stream);
+
+		this.minIcon = getIcon(new Arc2D.Double(-4, -4, 8, 8, 0, 360, Arc2D.OPEN), null, Color.black);
+		this.maxIcon = getIcon(new Arc2D.Double(-4, -4, 8, 8, 0, 360, Arc2D.OPEN), null, Color.black);
+		this.objectIcon = getIcon(new Line2D.Double(-4, 0, 4, 0), false, true);
+	}
+
 }

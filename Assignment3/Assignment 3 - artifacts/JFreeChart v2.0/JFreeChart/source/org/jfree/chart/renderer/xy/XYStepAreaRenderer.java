@@ -73,501 +73,458 @@ import org.jfree.util.ShapeUtilities;
 /**
  * A step chart renderer that fills the area between the step and the x-axis.
  */
-public class XYStepAreaRenderer extends AbstractXYItemRenderer 
-                                implements XYItemRenderer, 
-                                           Cloneable,
-                                           PublicCloneable,
-                                           Serializable {
+public class XYStepAreaRenderer extends AbstractXYItemRenderer
+		implements XYItemRenderer, Cloneable, PublicCloneable, Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = -7311560779702649635L;
-    
-    /** Useful constant for specifying the type of rendering (shapes only). */
-    public static final int SHAPES = 1;
+	/** For serialization. */
+	private static final long serialVersionUID = -7311560779702649635L;
 
-    /** Useful constant for specifying the type of rendering (area only). */
-    public static final int AREA = 2;
+	/** Useful constant for specifying the type of rendering (shapes only). */
+	public static final int SHAPES = 1;
 
-    /** 
-     * Useful constant for specifying the type of rendering (area and shapes). 
-     */
-    public static final int AREA_AND_SHAPES = 3;
+	/** Useful constant for specifying the type of rendering (area only). */
+	public static final int AREA = 2;
 
-    /** A flag indicating whether or not shapes are drawn at each XY point. */
-    private boolean shapesVisible;
+	/**
+	 * Useful constant for specifying the type of rendering (area and shapes).
+	 */
+	public static final int AREA_AND_SHAPES = 3;
 
-    /** A flag that controls whether or not shapes are filled for ALL series. */
-    private boolean shapesFilled;
+	/** A flag indicating whether or not shapes are drawn at each XY point. */
+	private boolean shapesVisible;
 
-    /** A flag indicating whether or not Area are drawn at each XY point. */
-    private boolean plotArea;
+	/** A flag that controls whether or not shapes are filled for ALL series. */
+	private boolean shapesFilled;
 
-    /** A flag that controls whether or not the outline is shown. */
-    private boolean showOutline;
+	/** A flag indicating whether or not Area are drawn at each XY point. */
+	private boolean plotArea;
 
-    /** Area of the complete series */
-    protected transient Polygon pArea = null;
+	/** A flag that controls whether or not the outline is shown. */
+	private boolean showOutline;
 
-    /** 
-     * The value on the range axis which defines the 'lower' border of the 
-     * area. 
-     */
-    private double rangeBase;
+	/** Area of the complete series */
+	protected transient Polygon pArea = null;
 
-    /**
-     * Constructs a new renderer.
-     */
-    public XYStepAreaRenderer() {
-        this(AREA);
-    }
+	/**
+	 * The value on the range axis which defines the 'lower' border of the area.
+	 */
+	private double rangeBase;
 
-    /**
-     * Constructs a new renderer.
-     *
-     * @param type  the type of the renderer.
-     */
-    public XYStepAreaRenderer(int type) {
-        this(type, null, null);
-    }
+	/**
+	 * Constructs a new renderer.
+	 */
+	public XYStepAreaRenderer() {
+		this(AREA);
+	}
 
-    /**
-     * Constructs a new renderer.
-     * <p>
-     * To specify the type of renderer, use one of the constants:
-     * AREA, SHAPES or AREA_AND_SHAPES.
-     *
-     * @param type  the type of renderer.
-     * @param toolTipGenerator  the tool tip generator to use 
-     *                          (<code>null</code> permitted).
-     * @param urlGenerator  the URL generator (<code>null</code> permitted).
-     */
-    public XYStepAreaRenderer(int type,
-                              XYToolTipGenerator toolTipGenerator, 
-                              XYURLGenerator urlGenerator) {
+	/**
+	 * Constructs a new renderer.
+	 *
+	 * @param type
+	 *            the type of the renderer.
+	 */
+	public XYStepAreaRenderer(int type) {
+		this(type, null, null);
+	}
 
-        super();
-        setBaseToolTipGenerator(toolTipGenerator);
-        setURLGenerator(urlGenerator);
+	/**
+	 * Constructs a new renderer.
+	 * <p>
+	 * To specify the type of renderer, use one of the constants: AREA, SHAPES or
+	 * AREA_AND_SHAPES.
+	 *
+	 * @param type
+	 *            the type of renderer.
+	 * @param toolTipGenerator
+	 *            the tool tip generator to use (<code>null</code> permitted).
+	 * @param urlGenerator
+	 *            the URL generator (<code>null</code> permitted).
+	 */
+	public XYStepAreaRenderer(int type, XYToolTipGenerator toolTipGenerator, XYURLGenerator urlGenerator) {
 
-        if (type == AREA) {
-            this.plotArea = true;
-        }
-        else if (type == SHAPES) {
-            this.shapesVisible = true;
-        }
-        else if (type == AREA_AND_SHAPES) {
-            this.plotArea = true;
-            this.shapesVisible = true;
-        }
-        this.showOutline = false;
-    }
+		super();
+		setBaseToolTipGenerator(toolTipGenerator);
+		setURLGenerator(urlGenerator);
 
-    /**
-     * Returns a flag that controls whether or not outlines of the areas are 
-     * drawn.
-     *
-     * @return The flag.
-     */
-    public boolean isOutline() {
-        return this.showOutline;
-    }
+		if (type == AREA) {
+			this.plotArea = true;
+		} else if (type == SHAPES) {
+			this.shapesVisible = true;
+		} else if (type == AREA_AND_SHAPES) {
+			this.plotArea = true;
+			this.shapesVisible = true;
+		}
+		this.showOutline = false;
+	}
 
-    /**
-     * Sets a flag that controls whether or not outlines of the areas are 
-     * drawn, and sends a {@link RendererChangeEvent} to all registered 
-     * listeners.
-     *
-     * @param show  the flag.
-     */
-    public void setOutline(boolean show) {
-        this.showOutline = show;
-        notifyListeners(new RendererChangeEvent(this));
-    }
+	/**
+	 * Returns a flag that controls whether or not outlines of the areas are drawn.
+	 *
+	 * @return The flag.
+	 */
+	public boolean isOutline() {
+		return this.showOutline;
+	}
 
-    /**
-     * Returns true if shapes are being plotted by the renderer.
-     *
-     * @return <code>true</code> if shapes are being plotted by the renderer.
-     */
-    public boolean getShapesVisible() {
-        return this.shapesVisible;
-    }
-    
-    /**
-     * Sets the flag that controls whether or not shapes are displayed for each 
-     * data item, and sends a {@link RendererChangeEvent} to all registered
-     * listeners.
-     * 
-     * @param flag  the flag.
-     */
-    public void setShapesVisible(boolean flag) {
-        this.shapesVisible = flag;
-        notifyListeners(new RendererChangeEvent(this));
-    }
+	/**
+	 * Sets a flag that controls whether or not outlines of the areas are drawn, and
+	 * sends a {@link RendererChangeEvent} to all registered listeners.
+	 *
+	 * @param show
+	 *            the flag.
+	 */
+	public void setOutline(boolean show) {
+		this.showOutline = show;
+		notifyListeners(new RendererChangeEvent(this));
+	}
 
-    /**
-     * Returns the flag that controls whether or not the shapes are filled.
-     * 
-     * @return A boolean.
-     */
-    public boolean isShapesFilled() {
-        return this.shapesFilled;
-    }
-    
-    /**
-     * Sets the 'shapes filled' for ALL series.
-     *
-     * @param filled  the flag.
-     */
-    public void setShapesFilled(boolean filled) {
-        this.shapesFilled = filled;
-        notifyListeners(new RendererChangeEvent(this));
-    }
+	/**
+	 * Returns true if shapes are being plotted by the renderer.
+	 *
+	 * @return <code>true</code> if shapes are being plotted by the renderer.
+	 */
+	public boolean getShapesVisible() {
+		return this.shapesVisible;
+	}
 
-    /**
-     * Returns true if Area is being plotted by the renderer.
-     *
-     * @return <code>true</code> if Area is being plotted by the renderer.
-     */
-    public boolean getPlotArea() {
-        return this.plotArea;
-    }
+	/**
+	 * Sets the flag that controls whether or not shapes are displayed for each data
+	 * item, and sends a {@link RendererChangeEvent} to all registered listeners.
+	 * 
+	 * @param flag
+	 *            the flag.
+	 */
+	public void setShapesVisible(boolean flag) {
+		this.shapesVisible = flag;
+		notifyListeners(new RendererChangeEvent(this));
+	}
 
-    /**
-     * Sets a flag that controls whether or not areas are drawn for each data 
-     * item.
-     * 
-     * @param flag  the flag.
-     */
-    public void setPlotArea(boolean flag) {
-        this.plotArea = flag;
-        notifyListeners(new RendererChangeEvent(this));
-    }
-    
-    /**
-     * Returns the value on the range axis which defines the 'lower' border of
-     * the area.
-     *
-     * @return <code>double</code> the value on the range axis which defines 
-     *         the 'lower' border of the area.
-     */
-    public double getRangeBase() {
-        return this.rangeBase;
-    }
+	/**
+	 * Returns the flag that controls whether or not the shapes are filled.
+	 * 
+	 * @return A boolean.
+	 */
+	public boolean isShapesFilled() {
+		return this.shapesFilled;
+	}
 
-    /**
-     * Sets the value on the range axis which defines the default border of the 
-     * area.  E.g. setRangeBase(Double.NEGATIVE_INFINITY) lets areas always 
-     * reach the lower border of the plotArea. 
-     * 
-     * @param val  the value on the range axis which defines the default border
-     *             of the area.
-     */
-    public void setRangeBase(double val) {
-        this.rangeBase = val;
-        notifyListeners(new RendererChangeEvent(this));
-    }
+	/**
+	 * Sets the 'shapes filled' for ALL series.
+	 *
+	 * @param filled
+	 *            the flag.
+	 */
+	public void setShapesFilled(boolean filled) {
+		this.shapesFilled = filled;
+		notifyListeners(new RendererChangeEvent(this));
+	}
 
-    /**
-     * Initialises the renderer.  Here we calculate the Java2D y-coordinate for
-     * zero, since all the bars have their bases fixed at zero.
-     *
-     * @param g2  the graphics device.
-     * @param dataArea  the area inside the axes.
-     * @param plot  the plot.
-     * @param data  the data.
-     * @param info  an optional info collection object to return data back to 
-     *              the caller.
-     *
-     * @return The number of passes required by the renderer.
-     */
-    public XYItemRendererState initialise(Graphics2D g2,
-                                          Rectangle2D dataArea,
-                                          XYPlot plot,
-                                          XYDataset data,
-                                          PlotRenderingInfo info) {
+	/**
+	 * Returns true if Area is being plotted by the renderer.
+	 *
+	 * @return <code>true</code> if Area is being plotted by the renderer.
+	 */
+	public boolean getPlotArea() {
+		return this.plotArea;
+	}
 
-        return super.initialise(g2, dataArea, plot, data, info);
+	/**
+	 * Sets a flag that controls whether or not areas are drawn for each data item.
+	 * 
+	 * @param flag
+	 *            the flag.
+	 */
+	public void setPlotArea(boolean flag) {
+		this.plotArea = flag;
+		notifyListeners(new RendererChangeEvent(this));
+	}
 
-    }
+	/**
+	 * Returns the value on the range axis which defines the 'lower' border of the
+	 * area.
+	 *
+	 * @return <code>double</code> the value on the range axis which defines the
+	 *         'lower' border of the area.
+	 */
+	public double getRangeBase() {
+		return this.rangeBase;
+	}
 
+	/**
+	 * Sets the value on the range axis which defines the default border of the
+	 * area. E.g. setRangeBase(Double.NEGATIVE_INFINITY) lets areas always reach the
+	 * lower border of the plotArea.
+	 * 
+	 * @param val
+	 *            the value on the range axis which defines the default border of
+	 *            the area.
+	 */
+	public void setRangeBase(double val) {
+		this.rangeBase = val;
+		notifyListeners(new RendererChangeEvent(this));
+	}
 
-    /**
-     * Draws the visual representation of a single data item.
-     *
-     * @param g2  the graphics device.
-     * @param state  the renderer state.
-     * @param dataArea  the area within which the data is being drawn.
-     * @param info  collects information about the drawing.
-     * @param plot  the plot (can be used to obtain standard color information 
-     *              etc).
-     * @param domainAxis  the domain axis.
-     * @param rangeAxis  the range axis.
-     * @param dataset  the dataset.
-     * @param series  the series index (zero-based).
-     * @param item  the item index (zero-based).
-     * @param crosshairState  crosshair information for the plot 
-     *                        (<code>null</code> permitted).
-     * @param pass  the pass index.
-     */
-    public void drawItem(Graphics2D g2,
-                         XYItemRendererState state,
-                         Rectangle2D dataArea,
-                         PlotRenderingInfo info,
-                         XYPlot plot,
-                         ValueAxis domainAxis,
-                         ValueAxis rangeAxis,
-                         XYDataset dataset,
-                         int series,
-                         int item,
-                         CrosshairState crosshairState,
-                         int pass) {
-                             
-        PlotOrientation orientation = plot.getOrientation();
-        
-        // Get the item count for the series, so that we can know which is the 
-        // end of the series.
-        int itemCount = dataset.getItemCount(series);
+	/**
+	 * Initialises the renderer. Here we calculate the Java2D y-coordinate for zero,
+	 * since all the bars have their bases fixed at zero.
+	 *
+	 * @param g2
+	 *            the graphics device.
+	 * @param dataArea
+	 *            the area inside the axes.
+	 * @param plot
+	 *            the plot.
+	 * @param data
+	 *            the data.
+	 * @param info
+	 *            an optional info collection object to return data back to the
+	 *            caller.
+	 *
+	 * @return The number of passes required by the renderer.
+	 */
+	public XYItemRendererState initialise(Graphics2D g2, Rectangle2D dataArea, XYPlot plot, XYDataset data,
+			PlotRenderingInfo info) {
 
-        Paint paint = getItemPaint(series, item);
-        Stroke seriesStroke = getItemStroke(series, item);
-        g2.setPaint(paint);
-        g2.setStroke(seriesStroke);
+		return super.initialise(g2, dataArea, plot, data, info);
 
-        // get the data point...
-        Number x1 = dataset.getX(series, item);
-        Number y1 = dataset.getY(series, item);
-        double x = x1.doubleValue();
-        double y = y1 == null ? getRangeBase() : y1.doubleValue();
-        double transX1 = domainAxis.valueToJava2D(
-            x, dataArea, plot.getDomainAxisEdge()
-        );
-        double transY1 = rangeAxis.valueToJava2D(
-            y, dataArea, plot.getRangeAxisEdge()
-        );
-                                                          
-        // avoid possible sun.dc.pr.PRException: endPath: bad path
-        transY1 = restrictValueToDataArea(transY1, plot, dataArea);         
+	}
 
-        if (this.pArea == null && y1 != null) {
+	/**
+	 * Draws the visual representation of a single data item.
+	 *
+	 * @param g2
+	 *            the graphics device.
+	 * @param state
+	 *            the renderer state.
+	 * @param dataArea
+	 *            the area within which the data is being drawn.
+	 * @param info
+	 *            collects information about the drawing.
+	 * @param plot
+	 *            the plot (can be used to obtain standard color information etc).
+	 * @param domainAxis
+	 *            the domain axis.
+	 * @param rangeAxis
+	 *            the range axis.
+	 * @param dataset
+	 *            the dataset.
+	 * @param series
+	 *            the series index (zero-based).
+	 * @param item
+	 *            the item index (zero-based).
+	 * @param crosshairState
+	 *            crosshair information for the plot (<code>null</code> permitted).
+	 * @param pass
+	 *            the pass index.
+	 */
+	public void drawItem(Graphics2D g2, XYItemRendererState state, Rectangle2D dataArea, PlotRenderingInfo info,
+			XYPlot plot, ValueAxis domainAxis, ValueAxis rangeAxis, XYDataset dataset, int series, int item,
+			CrosshairState crosshairState, int pass) {
 
-            // Create a new Area for the series
-            this.pArea = new Polygon();
-        
-            // start from Y = rangeBase
-            double transY2 = rangeAxis.valueToJava2D(
-                getRangeBase(), dataArea, plot.getRangeAxisEdge()
-            );
-        
-            // avoid possible sun.dc.pr.PRException: endPath: bad path
-            transY2 = restrictValueToDataArea(transY2, plot, dataArea);         
-        
-            // The first point is (x, this.baseYValue)
-            if (orientation == PlotOrientation.VERTICAL) {
-                this.pArea.addPoint((int) transX1, (int) transY2);
-            }
-            else if (orientation == PlotOrientation.HORIZONTAL) {
-                this.pArea.addPoint((int) transY2, (int) transX1);
-            }
-        }
+		PlotOrientation orientation = plot.getOrientation();
 
-        double transX0 = 0;
-        double transY0 = restrictValueToDataArea(
-            getRangeBase(), plot, dataArea
-        );           
-        
-        Number x0 = null;
-        Number y0 = null;
-        if (item > 0) {
-            // get the previous data point...
-            x0 = dataset.getX(series, item - 1);
-            y0 = y1 == null ? null : dataset.getY(series, item - 1);
+		// Get the item count for the series, so that we can know which is the
+		// end of the series.
+		int itemCount = dataset.getItemCount(series);
 
-            x = x0.doubleValue();
-            y = y0 == null ? getRangeBase() : y0.doubleValue();
-            transX0 = domainAxis.valueToJava2D(
-                x, dataArea, plot.getDomainAxisEdge()
-            );
-            transY0 = rangeAxis.valueToJava2D(
-                y, dataArea, plot.getRangeAxisEdge()
-            );
+		Paint paint = getItemPaint(series, item);
+		Stroke seriesStroke = getItemStroke(series, item);
+		g2.setPaint(paint);
+		g2.setStroke(seriesStroke);
 
-            // avoid possible sun.dc.pr.PRException: endPath: bad path
-            transY0 = restrictValueToDataArea(transY0, plot, dataArea);
-                        
-            if (y1 == null) {
-                // NULL value -> insert point on base line
-                // instead of 'step point'
-                transX1 = transX0;
-                transY0 = transY1;          
-            }
-            if (transY0 != transY1) {
-                // not just a horizontal bar but need to perform a 'step'.
-                if (orientation == PlotOrientation.VERTICAL) {
-                    this.pArea.addPoint((int) transX1, (int) transY0);
-                }
-                else if (orientation == PlotOrientation.HORIZONTAL) {
-                    this.pArea.addPoint((int) transY0, (int) transX1);
-                }
-            }
-        }           
+		// get the data point...
+		Number x1 = dataset.getX(series, item);
+		Number y1 = dataset.getY(series, item);
+		double x = x1.doubleValue();
+		double y = y1 == null ? getRangeBase() : y1.doubleValue();
+		double transX1 = domainAxis.valueToJava2D(x, dataArea, plot.getDomainAxisEdge());
+		double transY1 = rangeAxis.valueToJava2D(y, dataArea, plot.getRangeAxisEdge());
 
-        Shape shape = null;
-        if (y1 != null) {
-            // Add each point to Area (x, y)
-            if (orientation == PlotOrientation.VERTICAL) {
-                this.pArea.addPoint((int) transX1, (int) transY1);
-            }
-            else if (orientation == PlotOrientation.HORIZONTAL) {
-                this.pArea.addPoint((int) transY1, (int) transX1);
-            }
+		// avoid possible sun.dc.pr.PRException: endPath: bad path
+		transY1 = restrictValueToDataArea(transY1, plot, dataArea);
 
-            if (getShapesVisible()) {
-                shape = getItemShape(series, item);
-                if (orientation == PlotOrientation.VERTICAL) {
-                    shape = ShapeUtilities.createTranslatedShape(
-                        shape, transX1, transY1
-                    );
-                }
-                else if (orientation == PlotOrientation.HORIZONTAL) {
-                    shape = ShapeUtilities.createTranslatedShape(
-                        shape, transY1, transX1
-                    );
-                }
-                if (isShapesFilled()) {
-                    g2.fill(shape);
-                }   
-                else {
-                    g2.draw(shape);
-                }   
-            }
-            else {
-                if (orientation == PlotOrientation.VERTICAL) {
-                    shape = new Rectangle2D.Double(
-                        transX1 - 2, transY1 - 2, 4.0, 4.0
-                    );
-                }
-                else if (orientation == PlotOrientation.HORIZONTAL) {
-                    shape = new Rectangle2D.Double(
-                        transY1 - 2, transX1 - 2, 4.0, 4.0
-                    );
-                }
-            }
-        }
+		if (this.pArea == null && y1 != null) {
 
-        // Check if the item is the last item for the series or if it
-        // is a NULL value and number of items > 0.  We can't draw an area for 
-        // a single point.
-        if (getPlotArea() && item > 0 && this.pArea != null 
-                          && (item == (itemCount - 1) || y1 == null)) {
+			// Create a new Area for the series
+			this.pArea = new Polygon();
 
-            double transY2 = rangeAxis.valueToJava2D(
-                getRangeBase(), dataArea, plot.getRangeAxisEdge()
-            );
+			// start from Y = rangeBase
+			double transY2 = rangeAxis.valueToJava2D(getRangeBase(), dataArea, plot.getRangeAxisEdge());
 
-            // avoid possible sun.dc.pr.PRException: endPath: bad path
-            transY2 = restrictValueToDataArea(transY2, plot, dataArea);         
+			// avoid possible sun.dc.pr.PRException: endPath: bad path
+			transY2 = restrictValueToDataArea(transY2, plot, dataArea);
 
-            if (orientation == PlotOrientation.VERTICAL) {
-                // Add the last point (x,0)
-                this.pArea.addPoint((int) transX1, (int) transY2);
-            }
-            else if (orientation == PlotOrientation.HORIZONTAL) {
-                // Add the last point (x,0)
-                this.pArea.addPoint((int) transY2, (int) transX1);
-            }
+			// The first point is (x, this.baseYValue)
+			if (orientation == PlotOrientation.VERTICAL) {
+				this.pArea.addPoint((int) transX1, (int) transY2);
+			} else if (orientation == PlotOrientation.HORIZONTAL) {
+				this.pArea.addPoint((int) transY2, (int) transX1);
+			}
+		}
 
-            // fill the polygon
-            g2.fill(this.pArea);
+		double transX0 = 0;
+		double transY0 = restrictValueToDataArea(getRangeBase(), plot, dataArea);
 
-            // draw an outline around the Area.
-            if (isOutline()) {
-                g2.setStroke(getSeriesOutlineStroke(series));
-                g2.setPaint(getSeriesOutlinePaint(series));
-                g2.draw(this.pArea);
-            }
+		Number x0 = null;
+		Number y0 = null;
+		if (item > 0) {
+			// get the previous data point...
+			x0 = dataset.getX(series, item - 1);
+			y0 = y1 == null ? null : dataset.getY(series, item - 1);
 
-            // start new area when needed (see above)
-            this.pArea = null;
-        }
+			x = x0.doubleValue();
+			y = y0 == null ? getRangeBase() : y0.doubleValue();
+			transX0 = domainAxis.valueToJava2D(x, dataArea, plot.getDomainAxisEdge());
+			transY0 = rangeAxis.valueToJava2D(y, dataArea, plot.getRangeAxisEdge());
 
-        // do we need to update the crosshair values?
-        if (y1 != null) {
-            updateCrosshairValues(
-                crosshairState, x1.doubleValue(), y1.doubleValue(), 
-                transX1, transY1, orientation
-            );
-        }
+			// avoid possible sun.dc.pr.PRException: endPath: bad path
+			transY0 = restrictValueToDataArea(transY0, plot, dataArea);
 
-        // collect entity and tool tip information...
-        if (state.getInfo() != null) {
-            EntityCollection entities 
-                = state.getInfo().getOwner().getEntityCollection();
-            if (entities != null && shape != null) {
-                String tip = null;
-                XYToolTipGenerator generator 
-                    = getToolTipGenerator(series, item);
-                if (generator != null) {
-                    tip = generator.generateToolTip(dataset, series, item);
-                }
-                String url = null;
-                if (getURLGenerator() != null) {
-                    url = getURLGenerator().generateURL(dataset, series, item);
-                }
-                XYItemEntity entity = new XYItemEntity(
-                    shape, dataset, series, item, tip, url
-                );
-                entities.add(entity);
-            }
-        }
-    }
+			if (y1 == null) {
+				// NULL value -> insert point on base line
+				// instead of 'step point'
+				transX1 = transX0;
+				transY0 = transY1;
+			}
+			if (transY0 != transY1) {
+				// not just a horizontal bar but need to perform a 'step'.
+				if (orientation == PlotOrientation.VERTICAL) {
+					this.pArea.addPoint((int) transX1, (int) transY0);
+				} else if (orientation == PlotOrientation.HORIZONTAL) {
+					this.pArea.addPoint((int) transY0, (int) transX1);
+				}
+			}
+		}
 
-    /**
-     * Returns a clone of the renderer.
-     * 
-     * @return A clone.
-     * 
-     * @throws CloneNotSupportedException  if the renderer cannot be cloned.
-     */
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
-    
-    /**
-     * Helper method which returns a value if it lies
-     * inside the visible dataArea and otherwise the corresponding
-     * coordinate on the border of the dataArea. The PlotOrientation
-     * is taken into account. 
-     * Useful to avoid possible sun.dc.pr.PRException: endPath: bad path
-     * which occurs when trying to draw lines/shapes which in large part
-     * lie outside of the visible dataArea.
-     * 
-     * @param value the value which shall be 
-     * @param dataArea  the area within which the data is being drawn.
-     * @param plot  the plot (can be used to obtain standard color 
-     *              information etc).
-     * @return <code>double</code> value inside the data area.
-     */
-    protected static double restrictValueToDataArea(double value, 
-                                                    XYPlot plot, 
-                                                    Rectangle2D dataArea) {
-        double min = 0;
-        double max = 0;
-        if (plot.getOrientation() == PlotOrientation.VERTICAL) {
-            min = dataArea.getMinY();
-            max = dataArea.getMaxY();
-        } 
-        else if (plot.getOrientation() ==  PlotOrientation.HORIZONTAL) {
-            min = dataArea.getMinX();
-            max = dataArea.getMaxX();
-        }       
-        if (value < min) {
-            value = min;
-        }
-        else if (value > max) {
-            value = max;
-        }
-        return value;
-    }
+		Shape shape = null;
+		if (y1 != null) {
+			// Add each point to Area (x, y)
+			if (orientation == PlotOrientation.VERTICAL) {
+				this.pArea.addPoint((int) transX1, (int) transY1);
+			} else if (orientation == PlotOrientation.HORIZONTAL) {
+				this.pArea.addPoint((int) transY1, (int) transX1);
+			}
+
+			if (getShapesVisible()) {
+				shape = getItemShape(series, item);
+				if (orientation == PlotOrientation.VERTICAL) {
+					shape = ShapeUtilities.createTranslatedShape(shape, transX1, transY1);
+				} else if (orientation == PlotOrientation.HORIZONTAL) {
+					shape = ShapeUtilities.createTranslatedShape(shape, transY1, transX1);
+				}
+				if (isShapesFilled()) {
+					g2.fill(shape);
+				} else {
+					g2.draw(shape);
+				}
+			} else {
+				if (orientation == PlotOrientation.VERTICAL) {
+					shape = new Rectangle2D.Double(transX1 - 2, transY1 - 2, 4.0, 4.0);
+				} else if (orientation == PlotOrientation.HORIZONTAL) {
+					shape = new Rectangle2D.Double(transY1 - 2, transX1 - 2, 4.0, 4.0);
+				}
+			}
+		}
+
+		// Check if the item is the last item for the series or if it
+		// is a NULL value and number of items > 0. We can't draw an area for
+		// a single point.
+		if (getPlotArea() && item > 0 && this.pArea != null && (item == (itemCount - 1) || y1 == null)) {
+
+			double transY2 = rangeAxis.valueToJava2D(getRangeBase(), dataArea, plot.getRangeAxisEdge());
+
+			// avoid possible sun.dc.pr.PRException: endPath: bad path
+			transY2 = restrictValueToDataArea(transY2, plot, dataArea);
+
+			if (orientation == PlotOrientation.VERTICAL) {
+				// Add the last point (x,0)
+				this.pArea.addPoint((int) transX1, (int) transY2);
+			} else if (orientation == PlotOrientation.HORIZONTAL) {
+				// Add the last point (x,0)
+				this.pArea.addPoint((int) transY2, (int) transX1);
+			}
+
+			// fill the polygon
+			g2.fill(this.pArea);
+
+			// draw an outline around the Area.
+			if (isOutline()) {
+				g2.setStroke(getSeriesOutlineStroke(series));
+				g2.setPaint(getSeriesOutlinePaint(series));
+				g2.draw(this.pArea);
+			}
+
+			// start new area when needed (see above)
+			this.pArea = null;
+		}
+
+		// do we need to update the crosshair values?
+		if (y1 != null) {
+			updateCrosshairValues(crosshairState, x1.doubleValue(), y1.doubleValue(), transX1, transY1, orientation);
+		}
+
+		// collect entity and tool tip information...
+		if (state.getInfo() != null) {
+			EntityCollection entities = state.getInfo().getOwner().getEntityCollection();
+			if (entities != null && shape != null) {
+				String tip = null;
+				XYToolTipGenerator generator = getToolTipGenerator(series, item);
+				if (generator != null) {
+					tip = generator.generateToolTip(dataset, series, item);
+				}
+				String url = null;
+				if (getURLGenerator() != null) {
+					url = getURLGenerator().generateURL(dataset, series, item);
+				}
+				XYItemEntity entity = new XYItemEntity(shape, dataset, series, item, tip, url);
+				entities.add(entity);
+			}
+		}
+	}
+
+	/**
+	 * Returns a clone of the renderer.
+	 * 
+	 * @return A clone.
+	 * 
+	 * @throws CloneNotSupportedException
+	 *             if the renderer cannot be cloned.
+	 */
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+
+	/**
+	 * Helper method which returns a value if it lies inside the visible dataArea
+	 * and otherwise the corresponding coordinate on the border of the dataArea. The
+	 * PlotOrientation is taken into account. Useful to avoid possible
+	 * sun.dc.pr.PRException: endPath: bad path which occurs when trying to draw
+	 * lines/shapes which in large part lie outside of the visible dataArea.
+	 * 
+	 * @param value
+	 *            the value which shall be
+	 * @param dataArea
+	 *            the area within which the data is being drawn.
+	 * @param plot
+	 *            the plot (can be used to obtain standard color information etc).
+	 * @return <code>double</code> value inside the data area.
+	 */
+	protected static double restrictValueToDataArea(double value, XYPlot plot, Rectangle2D dataArea) {
+		double min = 0;
+		double max = 0;
+		if (plot.getOrientation() == PlotOrientation.VERTICAL) {
+			min = dataArea.getMinY();
+			max = dataArea.getMaxY();
+		} else if (plot.getOrientation() == PlotOrientation.HORIZONTAL) {
+			min = dataArea.getMinX();
+			max = dataArea.getMaxX();
+		}
+		if (value < min) {
+			value = min;
+		} else if (value > max) {
+			value = max;
+		}
+		return value;
+	}
 
 }

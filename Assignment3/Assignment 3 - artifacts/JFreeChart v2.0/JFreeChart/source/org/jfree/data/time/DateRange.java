@@ -50,93 +50,96 @@ import java.util.Date;
 import org.jfree.data.Range;
 
 /**
- * A range specified in terms of two <code>java.util.Date</code> objects.  
+ * A range specified in terms of two <code>java.util.Date</code> objects.
  * Instances of this class are immutable.
  */
 public class DateRange extends Range implements Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = -4705682568375418157L;
-    
-    /** The lower bound for the range. */
-    private Date lowerDate;
+	/** For serialization. */
+	private static final long serialVersionUID = -4705682568375418157L;
 
-    /** The upper bound for the range. */
-    private Date upperDate;
+	/** The lower bound for the range. */
+	private Date lowerDate;
 
-    /**
-     * Default constructor.
-     */
-    public DateRange() {
-        this(new Date(0), new Date(1));
-    }
+	/** The upper bound for the range. */
+	private Date upperDate;
 
-    /**
-     * Constructs a new range.
-     *
-     * @param lower  the lower bound (<code>null</code> not permitted).
-     * @param upper  the upper bound (<code>null</code> not permitted).
-     */
-    public DateRange(Date lower, Date upper) {
+	/**
+	 * Default constructor.
+	 */
+	public DateRange() {
+		this(new Date(0), new Date(1));
+	}
 
-        super(lower.getTime(), upper.getTime());
-        this.lowerDate = lower;
-        this.upperDate = upper;
+	/**
+	 * Constructs a new range.
+	 *
+	 * @param lower
+	 *            the lower bound (<code>null</code> not permitted).
+	 * @param upper
+	 *            the upper bound (<code>null</code> not permitted).
+	 */
+	public DateRange(Date lower, Date upper) {
 
-    }
+		super(lower.getTime(), upper.getTime());
+		this.lowerDate = lower;
+		this.upperDate = upper;
 
-    /**
-     * Constructs a new range using two values that will be interpreted as 
-     * "milliseconds since midnight GMT, 1-Jan-1970".
-     *
-     * @param lower  the lower (oldest) date.
-     * @param upper  the upper (most recent) date.
-     */
-    public DateRange(double lower, double upper) {
-        super(lower, upper);
-        this.lowerDate = new Date((long) lower);
-        this.upperDate = new Date((long) upper);
-    }
+	}
 
-    /**
-     * Constructs a new range that is based on another {@link Range}.  The 
-     * other range does not have to be a {@link DateRange}.  If it is not, the 
-     * upper and lower bounds are evaluated as milliseconds since midnight 
-     * GMT, 1-Jan-1970.
-     *
-     * @param other  the other range (<code>null</code> not permitted).
-     */
-    public DateRange(Range other) {
-        this(other.getLowerBound(), other.getUpperBound());
-    }
+	/**
+	 * Constructs a new range using two values that will be interpreted as
+	 * "milliseconds since midnight GMT, 1-Jan-1970".
+	 *
+	 * @param lower
+	 *            the lower (oldest) date.
+	 * @param upper
+	 *            the upper (most recent) date.
+	 */
+	public DateRange(double lower, double upper) {
+		super(lower, upper);
+		this.lowerDate = new Date((long) lower);
+		this.upperDate = new Date((long) upper);
+	}
 
-    /**
-     * Returns the lower (earlier) date for the range.
-     *
-     * @return The lower date for the range.
-     */
-    public Date getLowerDate() {
-        return this.lowerDate;
-    }
+	/**
+	 * Constructs a new range that is based on another {@link Range}. The other
+	 * range does not have to be a {@link DateRange}. If it is not, the upper and
+	 * lower bounds are evaluated as milliseconds since midnight GMT, 1-Jan-1970.
+	 *
+	 * @param other
+	 *            the other range (<code>null</code> not permitted).
+	 */
+	public DateRange(Range other) {
+		this(other.getLowerBound(), other.getUpperBound());
+	}
 
-    /**
-     * Returns the upper (later) date for the range.
-     *
-     * @return The upper date for the range.
-     */
-    public Date getUpperDate() {
-        return this.upperDate;
-    }
-    
-    /**
-     * Returns a string representing the date range (useful for debugging).
-     * 
-     * @return A string representing the date range.
-     */
-    public String toString() {
-        DateFormat df = DateFormat.getDateTimeInstance();
-        return "[" + df.format(this.lowerDate) + " --> " 
-            + df.format(this.upperDate) + "]";
-    }
+	/**
+	 * Returns the lower (earlier) date for the range.
+	 *
+	 * @return The lower date for the range.
+	 */
+	public Date getLowerDate() {
+		return this.lowerDate;
+	}
+
+	/**
+	 * Returns the upper (later) date for the range.
+	 *
+	 * @return The upper date for the range.
+	 */
+	public Date getUpperDate() {
+		return this.upperDate;
+	}
+
+	/**
+	 * Returns a string representing the date range (useful for debugging).
+	 * 
+	 * @return A string representing the date range.
+	 */
+	public String toString() {
+		DateFormat df = DateFormat.getDateTimeInstance();
+		return "[" + df.format(this.lowerDate) + " --> " + df.format(this.upperDate) + "]";
+	}
 
 }

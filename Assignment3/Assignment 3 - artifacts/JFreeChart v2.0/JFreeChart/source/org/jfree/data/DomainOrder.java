@@ -49,91 +49,90 @@ import java.io.Serializable;
  */
 public final class DomainOrder implements Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = 4902774943512072627L;
-    
-    /** No order. */
-    public static final DomainOrder NONE = new DomainOrder("DomainOrder.NONE");
+	/** For serialization. */
+	private static final long serialVersionUID = 4902774943512072627L;
 
-    /** Ascending order. */
-    public static final DomainOrder ASCENDING 
-        = new DomainOrder("DomainOrder.ASCENDING");
+	/** No order. */
+	public static final DomainOrder NONE = new DomainOrder("DomainOrder.NONE");
 
-    /** Descending order. */
-    public static final DomainOrder DESCENDING 
-        = new DomainOrder("DomainOrder.DESCENDING");
+	/** Ascending order. */
+	public static final DomainOrder ASCENDING = new DomainOrder("DomainOrder.ASCENDING");
 
-    /** The name. */
-    private String name;
+	/** Descending order. */
+	public static final DomainOrder DESCENDING = new DomainOrder("DomainOrder.DESCENDING");
 
-    /**
-     * Private constructor.
-     *
-     * @param name  the name.
-     */
-    private DomainOrder(String name) {
-        this.name = name;
-    }
+	/** The name. */
+	private String name;
 
-    /**
-     * Returns a string representing the object.
-     *
-     * @return The string.
-     */
-    public String toString() {
-        return this.name;
-    }
+	/**
+	 * Private constructor.
+	 *
+	 * @param name
+	 *            the name.
+	 */
+	private DomainOrder(String name) {
+		this.name = name;
+	}
 
-    /**
-     * Returns <code>true</code> if this object is equal to the specified 
-     * object, and <code>false</code> otherwise.
-     *
-     * @param obj  the other object.
-     *
-     * @return A boolean.
-     */
-    public boolean equals(Object obj) {
+	/**
+	 * Returns a string representing the object.
+	 *
+	 * @return The string.
+	 */
+	public String toString() {
+		return this.name;
+	}
 
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof DomainOrder)) {
-            return false;
-        }
-        DomainOrder that = (DomainOrder) obj;
-        if (!this.name.equals(that.toString())) {
-            return false;
-        }
-        return true;
-    }
-    
-    /**
-     * Returns a hash code value for the object.
-     *
-     * @return The hashcode
-     */
-    public int hashCode() {
-        return this.name.hashCode();
-    }
+	/**
+	 * Returns <code>true</code> if this object is equal to the specified object,
+	 * and <code>false</code> otherwise.
+	 *
+	 * @param obj
+	 *            the other object.
+	 *
+	 * @return A boolean.
+	 */
+	public boolean equals(Object obj) {
 
-    /**
-     * Ensures that serialization returns the unique instances.
-     * 
-     * @return The object.
-     * 
-     * @throws ObjectStreamException if there is a problem.
-     */
-    private Object readResolve() throws ObjectStreamException {
-        if (this.equals(DomainOrder.ASCENDING)) {
-            return DomainOrder.ASCENDING;
-        }
-        else if (this.equals(DomainOrder.DESCENDING)) {
-            return DomainOrder.DESCENDING;
-        }
-        else if (this.equals(DomainOrder.NONE)) {
-            return DomainOrder.NONE;
-        }
-        return null;
-    }
-    
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof DomainOrder)) {
+			return false;
+		}
+		DomainOrder that = (DomainOrder) obj;
+		if (!this.name.equals(that.toString())) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Returns a hash code value for the object.
+	 *
+	 * @return The hashcode
+	 */
+	public int hashCode() {
+		return this.name.hashCode();
+	}
+
+	/**
+	 * Ensures that serialization returns the unique instances.
+	 * 
+	 * @return The object.
+	 * 
+	 * @throws ObjectStreamException
+	 *             if there is a problem.
+	 */
+	private Object readResolve() throws ObjectStreamException {
+		if (this.equals(DomainOrder.ASCENDING)) {
+			return DomainOrder.ASCENDING;
+		} else if (this.equals(DomainOrder.DESCENDING)) {
+			return DomainOrder.DESCENDING;
+		} else if (this.equals(DomainOrder.NONE)) {
+			return DomainOrder.NONE;
+		}
+		return null;
+	}
+
 }

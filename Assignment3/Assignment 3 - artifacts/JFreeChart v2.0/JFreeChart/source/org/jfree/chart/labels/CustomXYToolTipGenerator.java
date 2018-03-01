@@ -53,153 +53,158 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.util.PublicCloneable;
 
 /**
- * A tool tip generator that stores custom tooltips. The dataset passed into 
- * the generateToolTip method is ignored.
+ * A tool tip generator that stores custom tooltips. The dataset passed into the
+ * generateToolTip method is ignored.
  *
  * @author Richard Atkinson
  */
-public class CustomXYToolTipGenerator implements XYToolTipGenerator, 
-                                                 Cloneable, 
-                                                 PublicCloneable,
-                                                 Serializable {
+public class CustomXYToolTipGenerator implements XYToolTipGenerator, Cloneable, PublicCloneable, Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = 8636030004670141362L; 
-    
-    /** Storage for the tooltip lists. */
-    private List toolTipSeries = new java.util.ArrayList();
+	/** For serialization. */
+	private static final long serialVersionUID = 8636030004670141362L;
 
-    /**
-     * Default constructor.
-     */
-    public CustomXYToolTipGenerator() {
-        super();
-    }
+	/** Storage for the tooltip lists. */
+	private List toolTipSeries = new java.util.ArrayList();
 
-    /**
-     * Returns the number of tool tip lists stored by the renderer.
-     *
-     * @return The list count.
-     */
-    public int getListCount() {
-        return this.toolTipSeries.size();
-    }
+	/**
+	 * Default constructor.
+	 */
+	public CustomXYToolTipGenerator() {
+		super();
+	}
 
-    /**
-     * Returns the number of tool tips in a given list.
-     *
-     * @param list  the list index (zero based).
-     *
-     * @return The tooltip count.
-     */
-    public int getToolTipCount(int list) {
+	/**
+	 * Returns the number of tool tip lists stored by the renderer.
+	 *
+	 * @return The list count.
+	 */
+	public int getListCount() {
+		return this.toolTipSeries.size();
+	}
 
-        int result = 0;
-        List tooltips = (List) this.toolTipSeries.get(list);
-        if (tooltips != null) {
-            result = tooltips.size();
-        }
-        return result;
-    }
+	/**
+	 * Returns the number of tool tips in a given list.
+	 *
+	 * @param list
+	 *            the list index (zero based).
+	 *
+	 * @return The tooltip count.
+	 */
+	public int getToolTipCount(int list) {
 
-    /**
-     * Returns the tool tip text for an item.
-     *
-     * @param series  the series index.
-     * @param item  the item index.
-     *
-     * @return The tool tip text.
-     */
-    public String getToolTipText(int series, int item) {
+		int result = 0;
+		List tooltips = (List) this.toolTipSeries.get(list);
+		if (tooltips != null) {
+			result = tooltips.size();
+		}
+		return result;
+	}
 
-        String result = null;
+	/**
+	 * Returns the tool tip text for an item.
+	 *
+	 * @param series
+	 *            the series index.
+	 * @param item
+	 *            the item index.
+	 *
+	 * @return The tool tip text.
+	 */
+	public String getToolTipText(int series, int item) {
 
-        if (series < getListCount()) {
-            List tooltips = (List) this.toolTipSeries.get(series);
-            if (tooltips != null) {
-                if (item < tooltips.size()) {
-                    result = (String) tooltips.get(item);
-                }
-            }
-        }
+		String result = null;
 
-        return result;
-    }
+		if (series < getListCount()) {
+			List tooltips = (List) this.toolTipSeries.get(series);
+			if (tooltips != null) {
+				if (item < tooltips.size()) {
+					result = (String) tooltips.get(item);
+				}
+			}
+		}
 
-    /**
-     * Adds a list of tooltips for a series.
-     *
-     * @param toolTips  the list of tool tips.
-     */
-    public void addToolTipSeries(List toolTips) {
-        this.toolTipSeries.add(toolTips);
-    }
+		return result;
+	}
 
-    /**
-     * Generates a tool tip text item for a particular item within a series.
-     *
-     * @param data  the dataset (ignored in this implementation).
-     * @param series  the series (zero-based index).
-     * @param item  the item (zero-based index).
-     *
-     * @return The tooltip text.
-     */
-    public String generateToolTip(XYDataset data, int series, int item) {
+	/**
+	 * Adds a list of tooltips for a series.
+	 *
+	 * @param toolTips
+	 *            the list of tool tips.
+	 */
+	public void addToolTipSeries(List toolTips) {
+		this.toolTipSeries.add(toolTips);
+	}
 
-        return getToolTipText(series, item);
+	/**
+	 * Generates a tool tip text item for a particular item within a series.
+	 *
+	 * @param data
+	 *            the dataset (ignored in this implementation).
+	 * @param series
+	 *            the series (zero-based index).
+	 * @param item
+	 *            the item (zero-based index).
+	 *
+	 * @return The tooltip text.
+	 */
+	public String generateToolTip(XYDataset data, int series, int item) {
 
-    }
+		return getToolTipText(series, item);
 
-    /**
-     * Returns an independent copy of the generator.
-     * 
-     * @return A clone.
-     * 
-     * @throws CloneNotSupportedException if cloning is not supported.
-     */
-    public Object clone() throws CloneNotSupportedException {
-        
-        CustomXYToolTipGenerator clone 
-            = (CustomXYToolTipGenerator) super.clone();
-        if (this.toolTipSeries != null) {
-            clone.toolTipSeries = new java.util.ArrayList(this.toolTipSeries);
-        }
-        return clone;
-        
-    }
-    /**
-     * Tests if this object is equal to another.
-     *
-     * @param obj  the other object.
-     *
-     * @return A boolean.
-     */
-    public boolean equals(Object obj) {
+	}
 
-        if (obj == this) {
-            return true;
-        }
+	/**
+	 * Returns an independent copy of the generator.
+	 * 
+	 * @return A clone.
+	 * 
+	 * @throws CloneNotSupportedException
+	 *             if cloning is not supported.
+	 */
+	public Object clone() throws CloneNotSupportedException {
 
-        if (obj instanceof CustomXYToolTipGenerator) {
-            CustomXYToolTipGenerator generator = (CustomXYToolTipGenerator) obj;
-            boolean result = true;
-            for (int series = 0; series < getListCount(); series++) {
-                for (int item = 0; item < getToolTipCount(series); item++) {
-                    String t1 = getToolTipText(series, item);
-                    String t2 = generator.getToolTipText(series, item);
-                    if (t1 != null) {
-                        result = result && t1.equals(t2);
-                    }
-                    else {
-                        result = result && (t2 == null);
-                    }
-                }
-            }
-            return result;
-        }
+		CustomXYToolTipGenerator clone = (CustomXYToolTipGenerator) super.clone();
+		if (this.toolTipSeries != null) {
+			clone.toolTipSeries = new java.util.ArrayList(this.toolTipSeries);
+		}
+		return clone;
 
-        return false;
+	}
 
-    }
+	/**
+	 * Tests if this object is equal to another.
+	 *
+	 * @param obj
+	 *            the other object.
+	 *
+	 * @return A boolean.
+	 */
+	public boolean equals(Object obj) {
+
+		if (obj == this) {
+			return true;
+		}
+
+		if (obj instanceof CustomXYToolTipGenerator) {
+			CustomXYToolTipGenerator generator = (CustomXYToolTipGenerator) obj;
+			boolean result = true;
+			for (int series = 0; series < getListCount(); series++) {
+				for (int item = 0; item < getToolTipCount(series); item++) {
+					String t1 = getToolTipText(series, item);
+					String t2 = generator.getToolTipText(series, item);
+					if (t1 != null) {
+						result = result && t1.equals(t2);
+					} else {
+						result = result && (t2 == null);
+					}
+				}
+			}
+			return result;
+		}
+
+		return false;
+
+	}
 
 }

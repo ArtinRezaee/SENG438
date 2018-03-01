@@ -47,6 +47,6 @@ package org.jfree.data.general;
  */
 public interface KeyedValuesDataset extends PieDataset {
 
-    // no new methods required
+	// no new methods required
 
 }

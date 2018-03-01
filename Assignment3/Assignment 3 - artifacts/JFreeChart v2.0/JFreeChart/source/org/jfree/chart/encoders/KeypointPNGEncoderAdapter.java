@@ -50,93 +50,92 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * Adapter class for the Keypoint PNG Encoder.  The ImageEncoderFactory will 
- * only return a reference to this class by default if the library has been 
- * compiled under a JDK < 1.4 or is being run using a JDK < 1.4.
+ * Adapter class for the Keypoint PNG Encoder. The ImageEncoderFactory will only
+ * return a reference to this class by default if the library has been compiled
+ * under a JDK < 1.4 or is being run using a JDK < 1.4.
  *
  * @author Richard Atkinson
  */
 public class KeypointPNGEncoderAdapter implements ImageEncoder {
-    private int quality = 9;
-    private boolean encodingAlpha = false;
+	private int quality = 9;
+	private boolean encodingAlpha = false;
 
-    /**
-     * Get the quality of the image encoding.  The underlying encoder uses int 
-     * values:  0 for no compression, and values 1 through 9 for various levels
-     * of compression (1 is best speed, 9 is best compression).
-     *
-     * @return A float representing the quality.
-     */
-    public float getQuality() {
-        return this.quality;
-    }
+	/**
+	 * Get the quality of the image encoding. The underlying encoder uses int
+	 * values: 0 for no compression, and values 1 through 9 for various levels of
+	 * compression (1 is best speed, 9 is best compression).
+	 *
+	 * @return A float representing the quality.
+	 */
+	public float getQuality() {
+		return this.quality;
+	}
 
-    /**
-     * Set the quality of the image encoding (supported).  The underlying
-     * encoder uses int values:  0 for no compression, and values 1 through 9 
-     * for various levels of compression (1 is best speed, 9 is best 
-     * compression).
-     *
-     * @param quality  A float representing the quality.
-     */
-    public void setQuality(float quality) {
-        this.quality = (int) quality;
-    }
+	/**
+	 * Set the quality of the image encoding (supported). The underlying encoder
+	 * uses int values: 0 for no compression, and values 1 through 9 for various
+	 * levels of compression (1 is best speed, 9 is best compression).
+	 *
+	 * @param quality
+	 *            A float representing the quality.
+	 */
+	public void setQuality(float quality) {
+		this.quality = (int) quality;
+	}
 
-    /**
-     * Get whether the encoder should encode alpha transparency.
-     *
-     * @return Whether the encoder is encoding alpha transparency.
-     */
-    public boolean isEncodingAlpha() {
-        return this.encodingAlpha;
-    }
+	/**
+	 * Get whether the encoder should encode alpha transparency.
+	 *
+	 * @return Whether the encoder is encoding alpha transparency.
+	 */
+	public boolean isEncodingAlpha() {
+		return this.encodingAlpha;
+	}
 
-    /**
-     * Set whether the encoder should encode alpha transparency (supported).
-     *
-     * @param encodingAlpha  Whether the encoder should encode alpha 
-     *                       transparency.
-     */
-    public void setEncodingAlpha(boolean encodingAlpha) {
-        this.encodingAlpha = encodingAlpha;
-    }
+	/**
+	 * Set whether the encoder should encode alpha transparency (supported).
+	 *
+	 * @param encodingAlpha
+	 *            Whether the encoder should encode alpha transparency.
+	 */
+	public void setEncodingAlpha(boolean encodingAlpha) {
+		this.encodingAlpha = encodingAlpha;
+	}
 
-    /**
-     * Encodes an image in PNG format.
-     *
-     * @param bufferedImage  The image to be encoded.
-     * @return The byte[] that is the encoded image.
-     * @throws IOException
-     */
-    public byte[] encode(BufferedImage bufferedImage) throws IOException {
-        if (bufferedImage == null) {
-            throw new IllegalArgumentException("Null 'image' argument.");
-        }
-        PngEncoder encoder = new PngEncoder(bufferedImage, this.encodingAlpha, 
-                0, this.quality);
-        return encoder.pngEncode();
-    }
+	/**
+	 * Encodes an image in PNG format.
+	 *
+	 * @param bufferedImage
+	 *            The image to be encoded.
+	 * @return The byte[] that is the encoded image.
+	 * @throws IOException
+	 */
+	public byte[] encode(BufferedImage bufferedImage) throws IOException {
+		if (bufferedImage == null) {
+			throw new IllegalArgumentException("Null 'image' argument.");
+		}
+		PngEncoder encoder = new PngEncoder(bufferedImage, this.encodingAlpha, 0, this.quality);
+		return encoder.pngEncode();
+	}
 
-    /**
-     * Encodes an image in PNG format and writes it to an 
-     * <code>OutputStream</code>.
-     *
-     * @param bufferedImage  The image to be encoded.
-     * @param outputStream  The OutputStream to write the encoded image to.
-     * @throws IOException
-     */
-    public void encode(BufferedImage bufferedImage, OutputStream outputStream) 
-        throws IOException {
-        if (bufferedImage == null) {
-            throw new IllegalArgumentException("Null 'image' argument.");
-        }
-        if (outputStream == null) {
-            throw new IllegalArgumentException("Null 'outputStream' argument.");
-        }
-        PngEncoder encoder = new PngEncoder(bufferedImage, this.encodingAlpha, 
-                0, this.quality);
-        outputStream.write(encoder.pngEncode());
-    }
+	/**
+	 * Encodes an image in PNG format and writes it to an <code>OutputStream</code>.
+	 *
+	 * @param bufferedImage
+	 *            The image to be encoded.
+	 * @param outputStream
+	 *            The OutputStream to write the encoded image to.
+	 * @throws IOException
+	 */
+	public void encode(BufferedImage bufferedImage, OutputStream outputStream) throws IOException {
+		if (bufferedImage == null) {
+			throw new IllegalArgumentException("Null 'image' argument.");
+		}
+		if (outputStream == null) {
+			throw new IllegalArgumentException("Null 'outputStream' argument.");
+		}
+		PngEncoder encoder = new PngEncoder(bufferedImage, this.encodingAlpha, 0, this.quality);
+		outputStream.write(encoder.pngEncode());
+	}
 
 }

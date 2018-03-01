@@ -46,25 +46,25 @@ package org.jfree.chart.block;
  */
 public class Message {
 
-    private ContentBlock source;
-    
-    private String message;
-    
-    public Message(ContentBlock source, String message) {
-        this.source = source;
-        this.message = message;
-    }
-    
-    public ContentBlock getSource() {
-        return this.source;
-    }
-    
-    public String getMessage() {
-        return this.message;
-    }
-    
-    public String toString() {
-        return "[" + this.source.toString() + ": " + this.message + "]";
-    }
-    
+	private ContentBlock source;
+
+	private String message;
+
+	public Message(ContentBlock source, String message) {
+		this.source = source;
+		this.message = message;
+	}
+
+	public ContentBlock getSource() {
+		return this.source;
+	}
+
+	public String getMessage() {
+		return this.message;
+	}
+
+	public String toString() {
+		return "[" + this.source.toString() + ": " + this.message + "]";
+	}
+
 }

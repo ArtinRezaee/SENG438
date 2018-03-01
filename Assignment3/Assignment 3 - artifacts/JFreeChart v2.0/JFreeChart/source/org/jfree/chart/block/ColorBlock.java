@@ -51,74 +51,83 @@ import java.awt.geom.Rectangle2D;
  */
 public class ColorBlock extends AbstractContentBlock implements Block {
 
-    /** The paint used for the block. */
-    private Paint paint;
-    
-    /**
-     * Creates a new block.
-     * 
-     * @param paint  the paint.
-     * @param width  the block width.
-     * @param height  the block height.
-     */
-    public ColorBlock(Paint paint, double width, double height) {
-        this.paint = paint;
-        setDefaultWidth(width);
-        setDefaultHeight(height);
-    }
+	/** The paint used for the block. */
+	private Paint paint;
 
-    /**
-     * Arranges the contents of the block, within the given constraints, and 
-     * returns the block size.
-     * 
-     * @param g2  the graphics device.
-     * @param constraint  the constraint (<code>null</code> not permitted).
-     * @param params  the layout parameters (<code>null</code> not permitted).
-     * 
-     * @return The layout result.
-     */
-    public ArrangeResult arrange(Graphics2D g2, RectangleConstraint constraint, 
-            ArrangeParams params) {
-        
-        // there isn't any content to arrange, so we just need to return the
-        // size for the given constraint
-        ArrangeResult result = params.getRecyclableResult();
-        double w = constraint.calculateConstrainedWidth(getDefaultWidth());
-        double h = constraint.calculateConstrainedHeight(getDefaultHeight());
-        if (result != null) {
-            result.setSize(w, h);
-        }
-        else {
-            result = new ArrangeResult(w, h, null);
-        }
-        return result;
-        
-    }
-    
-    /**
-     * Draws the block.
-     * 
-     * @param g2  the graphics device.
-     * @param area  the area.
-     */
-    public void draw(Graphics2D g2, Rectangle2D area) {
-        Rectangle2D bounds = getBounds();
-        g2.setPaint(this.paint);
-        g2.fill(bounds);
-    }
-    
-    /**
-     * Draws the block within the specified area.
-     * 
-     * @param g2  the graphics device.
-     * @param area  the area.
-     * @param params  ignored (<code>null</code> permitted).
-     * 
-     * @return Always <code>null</code>.
-     */
-    public Object draw(Graphics2D g2, Rectangle2D area, Object params) {
-        draw(g2, area);
-        return null;
-    }
+	/**
+	 * Creates a new block.
+	 * 
+	 * @param paint
+	 *            the paint.
+	 * @param width
+	 *            the block width.
+	 * @param height
+	 *            the block height.
+	 */
+	public ColorBlock(Paint paint, double width, double height) {
+		this.paint = paint;
+		setDefaultWidth(width);
+		setDefaultHeight(height);
+	}
+
+	/**
+	 * Arranges the contents of the block, within the given constraints, and returns
+	 * the block size.
+	 * 
+	 * @param g2
+	 *            the graphics device.
+	 * @param constraint
+	 *            the constraint (<code>null</code> not permitted).
+	 * @param params
+	 *            the layout parameters (<code>null</code> not permitted).
+	 * 
+	 * @return The layout result.
+	 */
+	public ArrangeResult arrange(Graphics2D g2, RectangleConstraint constraint, ArrangeParams params) {
+
+		// there isn't any content to arrange, so we just need to return the
+		// size for the given constraint
+		ArrangeResult result = params.getRecyclableResult();
+		double w = constraint.calculateConstrainedWidth(getDefaultWidth());
+		double h = constraint.calculateConstrainedHeight(getDefaultHeight());
+		if (result != null) {
+			result.setSize(w, h);
+		} else {
+			result = new ArrangeResult(w, h, null);
+		}
+		return result;
+
+	}
+
+	/**
+	 * Draws the block.
+	 * 
+	 * @param g2
+	 *            the graphics device.
+	 * @param area
+	 *            the area.
+	 */
+	public void draw(Graphics2D g2, Rectangle2D area) {
+		Rectangle2D bounds = getBounds();
+		g2.setPaint(this.paint);
+		g2.fill(bounds);
+	}
+
+	/**
+	 * Draws the block within the specified area.
+	 * 
+	 * @param g2
+	 *            the graphics device.
+	 * @param area
+	 *            the area.
+	 * @param params
+	 *            ignored (<code>null</code> permitted).
+	 * 
+	 * @return Always <code>null</code>.
+	 */
+	public Object draw(Graphics2D g2, Rectangle2D area, Object params) {
+		draw(g2, area);
+		return null;
+	}
 
 }

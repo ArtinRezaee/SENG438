@@ -56,285 +56,294 @@ import java.util.Date;
 import java.util.TimeZone;
 
 /**
- * Represents a millisecond.  This class is immutable, which is a requirement 
- * for all {@link RegularTimePeriod} subclasses.
+ * Represents a millisecond. This class is immutable, which is a requirement for
+ * all {@link RegularTimePeriod} subclasses.
  */
 public class Millisecond extends RegularTimePeriod implements Serializable {
 
-    /** For serialization. */
-    static final long serialVersionUID = -5316836467277638485L;
-    
-    /** A constant for the first millisecond in a second. */
-    public static final int FIRST_MILLISECOND_IN_SECOND = 0;
+	/** For serialization. */
+	static final long serialVersionUID = -5316836467277638485L;
 
-    /** A constant for the last millisecond in a second. */
-    public static final int LAST_MILLISECOND_IN_SECOND = 999;
+	/** A constant for the first millisecond in a second. */
+	public static final int FIRST_MILLISECOND_IN_SECOND = 0;
 
-    /** The millisecond. */
-    private int millisecond;
+	/** A constant for the last millisecond in a second. */
+	public static final int LAST_MILLISECOND_IN_SECOND = 999;
 
-    /** The second. */
-    private Second second;
+	/** The millisecond. */
+	private int millisecond;
 
-    /**
-     * Constructs a millisecond based on the current system time.
-     */
-    public Millisecond() {
-        this(new Date());
-    }
+	/** The second. */
+	private Second second;
 
-    /**
-     * Constructs a millisecond.
-     *
-     * @param millisecond  the millisecond (0-999).
-     * @param second  the second.
-     */
-    public Millisecond(int millisecond, Second second) {
-        this.millisecond = millisecond;
-        this.second = second;
-    }
+	/**
+	 * Constructs a millisecond based on the current system time.
+	 */
+	public Millisecond() {
+		this(new Date());
+	}
 
-    /**
-     * Creates a new millisecond.
-     * 
-     * @param millisecond  the millisecond (0-999).
-     * @param second  the second (0-59).
-     * @param minute  the minute (0-59).
-     * @param hour  the hour (0-23).
-     * @param day  the day (1-31).
-     * @param month  the month (1-12).
-     * @param year  the year (1900-9999).
-     */    
-    public Millisecond(int millisecond, int second, int minute, int hour,
-                       int day, int month, int year) {
-                           
-        this(millisecond, new Second(second, minute, hour, day, month, year));
-    
-    }
+	/**
+	 * Constructs a millisecond.
+	 *
+	 * @param millisecond
+	 *            the millisecond (0-999).
+	 * @param second
+	 *            the second.
+	 */
+	public Millisecond(int millisecond, Second second) {
+		this.millisecond = millisecond;
+		this.second = second;
+	}
 
-    /**
-     * Constructs a millisecond.
-     *
-     * @param time  the time.
-     */
-    public Millisecond(Date time) {
-        this(time, RegularTimePeriod.DEFAULT_TIME_ZONE);
-    }
+	/**
+	 * Creates a new millisecond.
+	 * 
+	 * @param millisecond
+	 *            the millisecond (0-999).
+	 * @param second
+	 *            the second (0-59).
+	 * @param minute
+	 *            the minute (0-59).
+	 * @param hour
+	 *            the hour (0-23).
+	 * @param day
+	 *            the day (1-31).
+	 * @param month
+	 *            the month (1-12).
+	 * @param year
+	 *            the year (1900-9999).
+	 */
+	public Millisecond(int millisecond, int second, int minute, int hour, int day, int month, int year) {
 
-    /**
-     * Creates a millisecond.
-     *
-     * @param time  the instant in time.
-     * @param zone  the time zone.
-     */
-    public Millisecond(Date time, TimeZone zone) {
+		this(millisecond, new Second(second, minute, hour, day, month, year));
 
-        this.second = new Second(time, zone);
-        Calendar calendar = Calendar.getInstance(zone);
-        calendar.setTime(time);
-        this.millisecond = calendar.get(Calendar.MILLISECOND);
+	}
 
-    }
+	/**
+	 * Constructs a millisecond.
+	 *
+	 * @param time
+	 *            the time.
+	 */
+	public Millisecond(Date time) {
+		this(time, RegularTimePeriod.DEFAULT_TIME_ZONE);
+	}
 
-    /**
-     * Returns the second.
-     *
-     * @return The second.
-     */
-    public Second getSecond() {
-        return this.second;
-    }
+	/**
+	 * Creates a millisecond.
+	 *
+	 * @param time
+	 *            the instant in time.
+	 * @param zone
+	 *            the time zone.
+	 */
+	public Millisecond(Date time, TimeZone zone) {
 
-    /**
-     * Returns the millisecond.
-     *
-     * @return The millisecond.
-     */
-    public long getMillisecond() {
-        return this.millisecond;
-    }
+		this.second = new Second(time, zone);
+		Calendar calendar = Calendar.getInstance(zone);
+		calendar.setTime(time);
+		this.millisecond = calendar.get(Calendar.MILLISECOND);
 
-    /**
-     * Returns the millisecond preceding this one.
-     *
-     * @return The millisecond preceding this one.
-     */
-    public RegularTimePeriod previous() {
+	}
 
-        RegularTimePeriod result = null;
+	/**
+	 * Returns the second.
+	 *
+	 * @return The second.
+	 */
+	public Second getSecond() {
+		return this.second;
+	}
 
-        if (this.millisecond != FIRST_MILLISECOND_IN_SECOND) {
-            result = new Millisecond(this.millisecond - 1, this.second);
-        }
-        else {
-            Second previous = (Second) this.second.previous();
-            if (previous != null) {
-                result = new Millisecond(LAST_MILLISECOND_IN_SECOND, previous);
-            }
-        }
-        return result;
+	/**
+	 * Returns the millisecond.
+	 *
+	 * @return The millisecond.
+	 */
+	public long getMillisecond() {
+		return this.millisecond;
+	}
 
-    }
+	/**
+	 * Returns the millisecond preceding this one.
+	 *
+	 * @return The millisecond preceding this one.
+	 */
+	public RegularTimePeriod previous() {
 
-    /**
-     * Returns the millisecond following this one.
-     *
-     * @return The millisecond following this one.
-     */
-    public RegularTimePeriod next() {
+		RegularTimePeriod result = null;
 
-        RegularTimePeriod result = null;
-        if (this.millisecond != LAST_MILLISECOND_IN_SECOND) {
-            result = new Millisecond(this.millisecond + 1, this.second);
-        }
-        else {
-            Second next = (Second) this.second.next();
-            if (next != null) {
-                result = new Millisecond(FIRST_MILLISECOND_IN_SECOND, next);
-            }
-        }
-        return result;
+		if (this.millisecond != FIRST_MILLISECOND_IN_SECOND) {
+			result = new Millisecond(this.millisecond - 1, this.second);
+		} else {
+			Second previous = (Second) this.second.previous();
+			if (previous != null) {
+				result = new Millisecond(LAST_MILLISECOND_IN_SECOND, previous);
+			}
+		}
+		return result;
 
-    }
+	}
 
-    /**
-     * Returns a serial index number for the millisecond.
-     *
-     * @return The serial index number.
-     */
-    public long getSerialIndex() {
-        return this.second.getSerialIndex() * 1000L + this.millisecond;
-    }
+	/**
+	 * Returns the millisecond following this one.
+	 *
+	 * @return The millisecond following this one.
+	 */
+	public RegularTimePeriod next() {
 
-    /**
-     * Tests the equality of this object against an arbitrary Object.
-     * <P>
-     * This method will return true ONLY if the object is a Millisecond object
-     * representing the same millisecond as this instance.
-     *
-     * @param obj  the object to compare
-     *
-     * @return <code>true</code> if milliseconds and seconds of this and object
-     *      are the same.
-     */
-    public boolean equals(Object obj) {
+		RegularTimePeriod result = null;
+		if (this.millisecond != LAST_MILLISECOND_IN_SECOND) {
+			result = new Millisecond(this.millisecond + 1, this.second);
+		} else {
+			Second next = (Second) this.second.next();
+			if (next != null) {
+				result = new Millisecond(FIRST_MILLISECOND_IN_SECOND, next);
+			}
+		}
+		return result;
 
-        if (obj instanceof Millisecond) {
-            Millisecond m = (Millisecond) obj;
-            return ((this.millisecond == m.getMillisecond())
-                    && (this.second.equals(m.getSecond())));
-        }
-        else {
-            return false;
-        }
+	}
 
-    }
+	/**
+	 * Returns a serial index number for the millisecond.
+	 *
+	 * @return The serial index number.
+	 */
+	public long getSerialIndex() {
+		return this.second.getSerialIndex() * 1000L + this.millisecond;
+	}
 
-    /**
-     * Returns a hash code for this object instance.  The approach described by 
-     * Joshua Bloch in "Effective Java" has been used here:
-     * <p>
-     * <code>http://developer.java.sun.com/developer/Books/effectivejava
-     * /Chapter3.pdf</code>
-     * 
-     * @return A hashcode.
-     */
-    public int hashCode() {
-        int result = 17;
-        result = 37 * result + this.millisecond;
-        result = 37 * result + this.second.hashCode();
-        return result;
-    }
+	/**
+	 * Tests the equality of this object against an arbitrary Object.
+	 * <P>
+	 * This method will return true ONLY if the object is a Millisecond object
+	 * representing the same millisecond as this instance.
+	 *
+	 * @param obj
+	 *            the object to compare
+	 *
+	 * @return <code>true</code> if milliseconds and seconds of this and object are
+	 *         the same.
+	 */
+	public boolean equals(Object obj) {
 
-    /**
-     * Returns an integer indicating the order of this Millisecond object
-     * relative to the specified object:
-     *
-     * negative == before, zero == same, positive == after.
-     *
-     * @param obj  the object to compare
-     *
-     * @return negative == before, zero == same, positive == after.
-     */
-    public int compareTo(Object obj) {
+		if (obj instanceof Millisecond) {
+			Millisecond m = (Millisecond) obj;
+			return ((this.millisecond == m.getMillisecond()) && (this.second.equals(m.getSecond())));
+		} else {
+			return false;
+		}
 
-        int result;
-        long difference;
+	}
 
-        // CASE 1 : Comparing to another Second object
-        // -------------------------------------------
-        if (obj instanceof Millisecond) {
-            Millisecond ms = (Millisecond) obj;
-            difference = getFirstMillisecond() - ms.getFirstMillisecond();
-            if (difference > 0) {
-                result = 1;
-            }
-            else {
-                if (difference < 0) {
-                    result = -1;
-                }
-                else {
-                    result = 0;
-                }
-            }
-        }
+	/**
+	 * Returns a hash code for this object instance. The approach described by
+	 * Joshua Bloch in "Effective Java" has been used here:
+	 * <p>
+	 * <code>http://developer.java.sun.com/developer/Books/effectivejava
+	 * /Chapter3.pdf</code>
+	 * 
+	 * @return A hashcode.
+	 */
+	public int hashCode() {
+		int result = 17;
+		result = 37 * result + this.millisecond;
+		result = 37 * result + this.second.hashCode();
+		return result;
+	}
 
-        // CASE 2 : Comparing to another TimePeriod object
-        // -----------------------------------------------
-        else if (obj instanceof RegularTimePeriod) {
-            // more difficult case - evaluate later...
-            result = 0;
-        }
+	/**
+	 * Returns an integer indicating the order of this Millisecond object relative
+	 * to the specified object:
+	 *
+	 * negative == before, zero == same, positive == after.
+	 *
+	 * @param obj
+	 *            the object to compare
+	 *
+	 * @return negative == before, zero == same, positive == after.
+	 */
+	public int compareTo(Object obj) {
 
-        // CASE 3 : Comparing to a non-TimePeriod object
-        // ---------------------------------------------
-        else {
-            // consider time periods to be ordered after general objects
-            result = 1;
-        }
+		int result;
+		long difference;
 
-        return result;
+		// CASE 1 : Comparing to another Second object
+		// -------------------------------------------
+		if (obj instanceof Millisecond) {
+			Millisecond ms = (Millisecond) obj;
+			difference = getFirstMillisecond() - ms.getFirstMillisecond();
+			if (difference > 0) {
+				result = 1;
+			} else {
+				if (difference < 0) {
+					result = -1;
+				} else {
+					result = 0;
+				}
+			}
+		}
 
-    }
+		// CASE 2 : Comparing to another TimePeriod object
+		// -----------------------------------------------
+		else if (obj instanceof RegularTimePeriod) {
+			// more difficult case - evaluate later...
+			result = 0;
+		}
 
-    /**
-     * Returns the first millisecond of the time period.
-     *
-     * @return The first millisecond of the time period.
-     */
-    public long getFirstMillisecond() {
-        return this.second.getFirstMillisecond() + this.millisecond;
-    }
+		// CASE 3 : Comparing to a non-TimePeriod object
+		// ---------------------------------------------
+		else {
+			// consider time periods to be ordered after general objects
+			result = 1;
+		}
 
-    /**
-     * Returns the first millisecond of the time period.
-     *
-     * @param calendar  the calendar.
-     *
-     * @return The first millisecond of the time period.
-     */
-    public long getFirstMillisecond(Calendar calendar) {
-        return this.second.getFirstMillisecond(calendar) + this.millisecond;
-    }
+		return result;
 
-    /**
-     * Returns the last millisecond of the time period.
-     *
-     * @return The last millisecond of the time period.
-     */
-    public long getLastMillisecond() {
-        return this.second.getFirstMillisecond() + this.millisecond;
-    }
+	}
 
-    /**
-     * Returns the last millisecond of the time period.
-     *
-     * @param calendar  the calendar.
-     *
-     * @return The last millisecond of the time period.
-     */
-    public long getLastMillisecond(Calendar calendar) {
-        return this.second.getFirstMillisecond(calendar) + this.millisecond;
-    }
+	/**
+	 * Returns the first millisecond of the time period.
+	 *
+	 * @return The first millisecond of the time period.
+	 */
+	public long getFirstMillisecond() {
+		return this.second.getFirstMillisecond() + this.millisecond;
+	}
+
+	/**
+	 * Returns the first millisecond of the time period.
+	 *
+	 * @param calendar
+	 *            the calendar.
+	 *
+	 * @return The first millisecond of the time period.
+	 */
+	public long getFirstMillisecond(Calendar calendar) {
+		return this.second.getFirstMillisecond(calendar) + this.millisecond;
+	}
+
+	/**
+	 * Returns the last millisecond of the time period.
+	 *
+	 * @return The last millisecond of the time period.
+	 */
+	public long getLastMillisecond() {
+		return this.second.getFirstMillisecond() + this.millisecond;
+	}
+
+	/**
+	 * Returns the last millisecond of the time period.
+	 *
+	 * @param calendar
+	 *            the calendar.
+	 *
+	 * @return The last millisecond of the time period.
+	 */
+	public long getLastMillisecond(Calendar calendar) {
+		return this.second.getFirstMillisecond(calendar) + this.millisecond;
+	}
 
 }

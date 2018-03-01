@@ -60,165 +60,151 @@ import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.ui.RectangleEdge;
 
 /**
- * An axis that displays categories and has a 3D effect.
- * Used for bar charts and line charts.
+ * An axis that displays categories and has a 3D effect. Used for bar charts and
+ * line charts.
  *
  * @author Klaus Rheinwald
  */
-public class CategoryAxis3D extends CategoryAxis 
-                            implements Cloneable, Serializable {
+public class CategoryAxis3D extends CategoryAxis implements Cloneable, Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = 4114732251353700972L;
-    
-    /**
-     * Creates a new axis.
-     */
-    public CategoryAxis3D() {
-        this(null);
-    }
-    
-    /**
-     * Creates a new axis using default attribute values.
-     *
-     * @param label  the axis label (<code>null</code> permitted).
-     */
-    public CategoryAxis3D(String label) {
-        super(label);
-    }
+	/** For serialization. */
+	private static final long serialVersionUID = 4114732251353700972L;
 
-    /**
-     * Draws the axis on a Java 2D graphics device (such as the screen or a 
-     * printer).
-     *
-     * @param g2  the graphics device (<code>null</code> not permitted).
-     * @param plotArea  the area within which the axis should be drawn 
-     *                  (<code>null</code> not permitted).
-     * @param dataArea  the area within which the plot is being drawn 
-     *                  (<code>null</code> not permitted).
-     * @param edge  the location of the axis (<code>null</code> not permitted).
-     * @param plotState  collects information about the plot (<code>null</code>
-     *                   permitted).
-     * 
-     * @return The axis state (never <code>null</code>).
-     */
-    public AxisState draw(Graphics2D g2, 
-                          Rectangle2D plotArea, 
-                          Rectangle2D dataArea, 
-                          RectangleEdge edge,
-                          PlotRenderingInfo plotState) {
+	/**
+	 * Creates a new axis.
+	 */
+	public CategoryAxis3D() {
+		this(null);
+	}
 
-        // if the axis is not visible, don't draw it...
-        if (!isVisible()) {
-            return new AxisState(0.0);
-        }
+	/**
+	 * Creates a new axis using default attribute values.
+	 *
+	 * @param label
+	 *            the axis label (<code>null</code> permitted).
+	 */
+	public CategoryAxis3D(String label) {
+		super(label);
+	}
 
-        // calculate the adjusted data area taking into account the 3D effect...
-        // this assumes that there is a 3D renderer, all this 3D effect is a 
-        // bit of an ugly hack...
-        CategoryPlot plot = (CategoryPlot) getPlot();
+	/**
+	 * Draws the axis on a Java 2D graphics device (such as the screen or a
+	 * printer).
+	 *
+	 * @param g2
+	 *            the graphics device (<code>null</code> not permitted).
+	 * @param plotArea
+	 *            the area within which the axis should be drawn (<code>null</code>
+	 *            not permitted).
+	 * @param dataArea
+	 *            the area within which the plot is being drawn (<code>null</code>
+	 *            not permitted).
+	 * @param edge
+	 *            the location of the axis (<code>null</code> not permitted).
+	 * @param plotState
+	 *            collects information about the plot (<code>null</code> permitted).
+	 * 
+	 * @return The axis state (never <code>null</code>).
+	 */
+	public AxisState draw(Graphics2D g2, Rectangle2D plotArea, Rectangle2D dataArea, RectangleEdge edge,
+			PlotRenderingInfo plotState) {
 
-        Rectangle2D adjustedDataArea = new Rectangle2D.Double();
-        if (plot.getRenderer() instanceof Effect3D) {
-            Effect3D e3D = (Effect3D) plot.getRenderer();
-            double adjustedX = dataArea.getMinX();
-            double adjustedY = dataArea.getMinY();
-            double adjustedW = dataArea.getWidth() - e3D.getXOffset();
-            double adjustedH = dataArea.getHeight() - e3D.getYOffset();
+		// if the axis is not visible, don't draw it...
+		if (!isVisible()) {
+			return new AxisState(0.0);
+		}
 
-            if (edge == RectangleEdge.LEFT || edge == RectangleEdge.BOTTOM) {
-                adjustedY += e3D.getYOffset();
-            }
-            else if (edge == RectangleEdge.RIGHT || edge == RectangleEdge.TOP) {
-                adjustedX += e3D.getXOffset();
-            }
-            adjustedDataArea.setRect(
-                adjustedX, adjustedY, adjustedW, adjustedH
-            );
-        }
-        else {
-            adjustedDataArea.setRect(dataArea);   
-        }
+		// calculate the adjusted data area taking into account the 3D effect...
+		// this assumes that there is a 3D renderer, all this 3D effect is a
+		// bit of an ugly hack...
+		CategoryPlot plot = (CategoryPlot) getPlot();
 
-        // draw the category labels and axis label
-        AxisState state = new AxisState(0.0);
-        state = drawCategoryLabels(
-            g2, adjustedDataArea, edge, state, plotState
-        );
-        drawLabel(getLabel(), g2, plotArea, edge);
+		Rectangle2D adjustedDataArea = new Rectangle2D.Double();
+		if (plot.getRenderer() instanceof Effect3D) {
+			Effect3D e3D = (Effect3D) plot.getRenderer();
+			double adjustedX = dataArea.getMinX();
+			double adjustedY = dataArea.getMinY();
+			double adjustedW = dataArea.getWidth() - e3D.getXOffset();
+			double adjustedH = dataArea.getHeight() - e3D.getYOffset();
 
-        return state;
-        
-    }
-    
-    /**
-     * Returns the Java 2D coordinate for a category.
-     * 
-     * @param anchor  the anchor point.
-     * @param category  the category index.
-     * @param categoryCount  the category count.
-     * @param area  the data area.
-     * @param edge  the location of the axis.
-     * 
-     * @return The coordinate.
-     */
-    public double getCategoryJava2DCoordinate(CategoryAnchor anchor, 
-                                              int category, 
-                                              int categoryCount, 
-                                              Rectangle2D area,
-                                              RectangleEdge edge) {
-    
-        double result = 0.0;
-        Rectangle2D adjustedArea = area;
-        CategoryPlot plot = (CategoryPlot) getPlot();
-        CategoryItemRenderer renderer = plot.getRenderer();
-        if (renderer instanceof Effect3D) {
-            Effect3D e3D = (Effect3D) renderer;
-            double adjustedX = area.getMinX();
-            double adjustedY = area.getMinY();
-            double adjustedW = area.getWidth() - e3D.getXOffset();
-            double adjustedH = area.getHeight() - e3D.getYOffset();
+			if (edge == RectangleEdge.LEFT || edge == RectangleEdge.BOTTOM) {
+				adjustedY += e3D.getYOffset();
+			} else if (edge == RectangleEdge.RIGHT || edge == RectangleEdge.TOP) {
+				adjustedX += e3D.getXOffset();
+			}
+			adjustedDataArea.setRect(adjustedX, adjustedY, adjustedW, adjustedH);
+		} else {
+			adjustedDataArea.setRect(dataArea);
+		}
 
-            if (edge == RectangleEdge.LEFT || edge == RectangleEdge.BOTTOM) {
-                adjustedY += e3D.getYOffset();
-            }
-            else if (edge == RectangleEdge.RIGHT || edge == RectangleEdge.TOP) {
-                adjustedX += e3D.getXOffset();
-            }
-            adjustedArea = new Rectangle2D.Double(
-                adjustedX, adjustedY, adjustedW, adjustedH
-            );
-        }
+		// draw the category labels and axis label
+		AxisState state = new AxisState(0.0);
+		state = drawCategoryLabels(g2, adjustedDataArea, edge, state, plotState);
+		drawLabel(getLabel(), g2, plotArea, edge);
 
-        if (anchor == CategoryAnchor.START) {
-            result = getCategoryStart(
-                category, categoryCount, adjustedArea, edge
-            );
-        }
-        else if (anchor == CategoryAnchor.MIDDLE) {
-            result = getCategoryMiddle(
-                category, categoryCount, adjustedArea, edge
-            );
-        }
-        else if (anchor == CategoryAnchor.END) {
-            result = getCategoryEnd(
-                category, categoryCount, adjustedArea, edge
-            );
-        }
-        return result;
-                                                      
-    }
-                                              
-    /**
-     * Returns a clone of the axis.
-     * 
-     * @return A clone.
-     * 
-     * @throws CloneNotSupportedException If the axis is not cloneable for 
-     *         some reason.
-     */
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
-    
+		return state;
+
+	}
+
+	/**
+	 * Returns the Java 2D coordinate for a category.
+	 * 
+	 * @param anchor
+	 *            the anchor point.
+	 * @param category
+	 *            the category index.
+	 * @param categoryCount
+	 *            the category count.
+	 * @param area
+	 *            the data area.
+	 * @param edge
+	 *            the location of the axis.
+	 * 
+	 * @return The coordinate.
+	 */
+	public double getCategoryJava2DCoordinate(CategoryAnchor anchor, int category, int categoryCount, Rectangle2D area,
+			RectangleEdge edge) {
+
+		double result = 0.0;
+		Rectangle2D adjustedArea = area;
+		CategoryPlot plot = (CategoryPlot) getPlot();
+		CategoryItemRenderer renderer = plot.getRenderer();
+		if (renderer instanceof Effect3D) {
+			Effect3D e3D = (Effect3D) renderer;
+			double adjustedX = area.getMinX();
+			double adjustedY = area.getMinY();
+			double adjustedW = area.getWidth() - e3D.getXOffset();
+			double adjustedH = area.getHeight() - e3D.getYOffset();
+
+			if (edge == RectangleEdge.LEFT || edge == RectangleEdge.BOTTOM) {
+				adjustedY += e3D.getYOffset();
+			} else if (edge == RectangleEdge.RIGHT || edge == RectangleEdge.TOP) {
+				adjustedX += e3D.getXOffset();
+			}
+			adjustedArea = new Rectangle2D.Double(adjustedX, adjustedY, adjustedW, adjustedH);
+		}
+
+		if (anchor == CategoryAnchor.START) {
+			result = getCategoryStart(category, categoryCount, adjustedArea, edge);
+		} else if (anchor == CategoryAnchor.MIDDLE) {
+			result = getCategoryMiddle(category, categoryCount, adjustedArea, edge);
+		} else if (anchor == CategoryAnchor.END) {
+			result = getCategoryEnd(category, categoryCount, adjustedArea, edge);
+		}
+		return result;
+
+	}
+
+	/**
+	 * Returns a clone of the axis.
+	 * 
+	 * @return A clone.
+	 * 
+	 * @throws CloneNotSupportedException
+	 *             If the axis is not cloneable for some reason.
+	 */
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+
 }

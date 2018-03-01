@@ -50,80 +50,80 @@ import java.io.Serializable;
  */
 public final class PlotOrientation implements Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = -2508771828190337782L;
-    
-    /** For a plot where the range axis is horizontal. */
-    public static final PlotOrientation HORIZONTAL
-        = new PlotOrientation("PlotOrientation.HORIZONTAL");
+	/** For serialization. */
+	private static final long serialVersionUID = -2508771828190337782L;
 
-    /** For a plot where the range axis is vertical. */
-    public static final PlotOrientation VERTICAL
-        = new PlotOrientation("PlotOrientation.VERTICAL");
+	/** For a plot where the range axis is horizontal. */
+	public static final PlotOrientation HORIZONTAL = new PlotOrientation("PlotOrientation.HORIZONTAL");
 
-    /** The name. */
-    private String name;
+	/** For a plot where the range axis is vertical. */
+	public static final PlotOrientation VERTICAL = new PlotOrientation("PlotOrientation.VERTICAL");
 
-    /**
-     * Private constructor.
-     *
-     * @param name  the name.
-     */
-    private PlotOrientation(String name) {
-        this.name = name;
-    }
+	/** The name. */
+	private String name;
 
-    /**
-     * Returns a string representing the object.
-     *
-     * @return The string.
-     */
-    public String toString() {
-        return this.name;
-    }
+	/**
+	 * Private constructor.
+	 *
+	 * @param name
+	 *            the name.
+	 */
+	private PlotOrientation(String name) {
+		this.name = name;
+	}
 
-    /**
-     * Returns <code>true</code> if this object is equal to the specified 
-     * object, and <code>false</code> otherwise.
-     *
-     * @param o  the other object.
-     *
-     * @return A boolean.
-     */
-    public boolean equals(Object o) {
+	/**
+	 * Returns a string representing the object.
+	 *
+	 * @return The string.
+	 */
+	public String toString() {
+		return this.name;
+	}
 
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof PlotOrientation)) {
-            return false;
-        }
+	/**
+	 * Returns <code>true</code> if this object is equal to the specified object,
+	 * and <code>false</code> otherwise.
+	 *
+	 * @param o
+	 *            the other object.
+	 *
+	 * @return A boolean.
+	 */
+	public boolean equals(Object o) {
 
-        PlotOrientation orientation = (PlotOrientation) o;
-        if (!this.name.equals(orientation.toString())) {
-            return false;
-        }
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof PlotOrientation)) {
+			return false;
+		}
 
-        return true;
+		PlotOrientation orientation = (PlotOrientation) o;
+		if (!this.name.equals(orientation.toString())) {
+			return false;
+		}
 
-    }
-    
-    /**
-     * Ensures that serialization returns the unique instances.
-     * 
-     * @return The object.
-     * 
-     * @throws ObjectStreamException if there is a problem.
-     */
-    private Object readResolve() throws ObjectStreamException {
-        Object result = null;
-        if (this.equals(PlotOrientation.HORIZONTAL)) {
-            result = PlotOrientation.HORIZONTAL;
-        }
-        else if (this.equals(PlotOrientation.VERTICAL)) {
-            result = PlotOrientation.VERTICAL;
-        }
-        return result;
-    }
+		return true;
+
+	}
+
+	/**
+	 * Ensures that serialization returns the unique instances.
+	 * 
+	 * @return The object.
+	 * 
+	 * @throws ObjectStreamException
+	 *             if there is a problem.
+	 */
+	private Object readResolve() throws ObjectStreamException {
+		Object result = null;
+		if (this.equals(PlotOrientation.HORIZONTAL)) {
+			result = PlotOrientation.HORIZONTAL;
+		} else if (this.equals(PlotOrientation.VERTICAL)) {
+			result = PlotOrientation.VERTICAL;
+		}
+		return result;
+	}
 
 }

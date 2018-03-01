@@ -45,65 +45,68 @@ import org.jfree.chart.plot.PlotRenderingInfo;
 import org.jfree.chart.renderer.RendererState;
 
 /**
- * An object that retains temporary state information for a 
+ * An object that retains temporary state information for a
  * {@link CategoryItemRenderer}.
  */
 public class CategoryItemRendererState extends RendererState {
 
-    /** The bar width. */
-    private double barWidth;
-    
-    /** The series running total. */
-    private double seriesRunningTotal;
-    
-    /**
-     * Creates a new object for recording temporary state information for a
-     * renderer.
-     * 
-     * @param info  the plot rendering info.
-     */
-    public CategoryItemRendererState(PlotRenderingInfo info) {
-        super(info);
-        this.barWidth = 0.0;
-        this.seriesRunningTotal = 0.0;
-    }
-    
-    /**
-     * Returns the bar width.
-     * 
-     * @return The bar width.
-     */
-    public double getBarWidth() {
-        return this.barWidth;
-    }
-    
-    /**
-     * Sets the bar width.  The renderer calculates this value and stores it 
-     * here - it is not intended that users can manually set the bar width.
-     * 
-     * @param width  the width.
-     */
-    public void setBarWidth(double width) {
-        this.barWidth = width;
-    }
-    
-    /**
-     * Returns the series running total.
-     * 
-     * @return The running total.
-     */
-    public double getSeriesRunningTotal() {
-        return this.seriesRunningTotal;    
-    }
-    
-    /**
-     * Sets the series running total (this method is intended for the use of 
-     * the renderer only).
-     * 
-     * @param total  the new total.
-     */
-    void setSeriesRunningTotal(double total) {
-        this.seriesRunningTotal = total;
-    }
-    
+	/** The bar width. */
+	private double barWidth;
+
+	/** The series running total. */
+	private double seriesRunningTotal;
+
+	/**
+	 * Creates a new object for recording temporary state information for a
+	 * renderer.
+	 * 
+	 * @param info
+	 *            the plot rendering info.
+	 */
+	public CategoryItemRendererState(PlotRenderingInfo info) {
+		super(info);
+		this.barWidth = 0.0;
+		this.seriesRunningTotal = 0.0;
+	}
+
+	/**
+	 * Returns the bar width.
+	 * 
+	 * @return The bar width.
+	 */
+	public double getBarWidth() {
+		return this.barWidth;
+	}
+
+	/**
+	 * Sets the bar width. The renderer calculates this value and stores it here -
+	 * it is not intended that users can manually set the bar width.
+	 * 
+	 * @param width
+	 *            the width.
+	 */
+	public void setBarWidth(double width) {
+		this.barWidth = width;
+	}
+
+	/**
+	 * Returns the series running total.
+	 * 
+	 * @return The running total.
+	 */
+	public double getSeriesRunningTotal() {
+		return this.seriesRunningTotal;
+	}
+
+	/**
+	 * Sets the series running total (this method is intended for the use of the
+	 * renderer only).
+	 * 
+	 * @param total
+	 *            the new total.
+	 */
+	void setSeriesRunningTotal(double total) {
+		this.seriesRunningTotal = total;
+	}
+
 }

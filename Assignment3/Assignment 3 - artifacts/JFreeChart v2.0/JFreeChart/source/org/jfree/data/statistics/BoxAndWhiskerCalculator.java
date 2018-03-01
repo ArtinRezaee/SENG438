@@ -50,155 +50,136 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * A utility class that calculates the mean, median, quartiles Q1 and Q3, plus
- * a list of outlier values...all from an arbitrary list of 
- * <code>Number</code> objects.
+ * A utility class that calculates the mean, median, quartiles Q1 and Q3, plus a
+ * list of outlier values...all from an arbitrary list of <code>Number</code>
+ * objects.
  */
 public abstract class BoxAndWhiskerCalculator {
-    
-    /**
-     * Calculates the statistics required for a {@link BoxAndWhiskerItem}.
-     * <P>
-     * Any items in the list that are not instances of the <code>Number</code> 
-     * class are ignored. Likewise, <code>null</code> values are ignored.
-     * 
-     * @param values  a list of numbers (a <code>null</code> list is not 
-     *                permitted).
-     * 
-     * @return Box-and-whisker statistics.
-     */
-    public static BoxAndWhiskerItem calculateBoxAndWhiskerStatistics(
-                                        List values) {
-        
-        Collections.sort(values);
-        
-        double mean = Statistics.calculateMean(values);
-        double median = Statistics.calculateMedian(values, false);
-        double q1 = calculateQ1(values);
-        double q3 = calculateQ3(values);
-        
-        double interQuartileRange = q3 - q1;
-        
-        double upperOutlierThreshold = q3 + (interQuartileRange * 1.5);
-        double lowerOutlierThreshold = q1 - (interQuartileRange * 1.5);
-        
-        double upperFaroutThreshold = q3 + (interQuartileRange * 2.0);
-        double lowerFaroutThreshold = q1 - (interQuartileRange * 2.0);
 
-        double minRegularValue = Double.POSITIVE_INFINITY;
-        double maxRegularValue = Double.NEGATIVE_INFINITY;
-        double minOutlier = Double.POSITIVE_INFINITY;
-        double maxOutlier = Double.NEGATIVE_INFINITY;
-        List outliers = new ArrayList();
-        
-        Iterator iterator = values.iterator();
-        while (iterator.hasNext()) {
-            Object object = iterator.next();
-            if (object != null && object instanceof Number) {
-                Number number = (Number) object;
-                double value = number.doubleValue();
-                if (value > upperOutlierThreshold) {
-                    outliers.add(number);
-                    if (value > maxOutlier && value <= upperFaroutThreshold) {
-                        maxOutlier = value;
-                    }
-                }
-                else if (value < lowerOutlierThreshold) {
-                    outliers.add(number);                    
-                    if (value < minOutlier && value >= lowerFaroutThreshold) {
-                        minOutlier = value;
-                    }
-                }
-                else {
-                    if (minRegularValue == Double.NaN) {
-                        minRegularValue = value;
-                    }
-                    else {
-                        minRegularValue = Math.min(minRegularValue, value);
-                    }
-                    if (maxRegularValue == Double.NaN) {
-                        maxRegularValue = value;
-                    }
-                    else {
-                        maxRegularValue = Math.max(maxRegularValue, value);
-                    }
-                }
-                
-            }
-        }
-        minOutlier = Math.min(minOutlier, minRegularValue);
-        maxOutlier = Math.max(maxOutlier, maxRegularValue);
-        
-        return new BoxAndWhiskerItem(
-            new Double(mean),
-            new Double(median),
-            new Double(q1),
-            new Double(q3),
-            new Double(minRegularValue),
-            new Double(maxRegularValue),
-            new Double(minOutlier),
-            new Double(maxOutlier),
-            outliers
-        );
-        
-    }
+	/**
+	 * Calculates the statistics required for a {@link BoxAndWhiskerItem}.
+	 * <P>
+	 * Any items in the list that are not instances of the <code>Number</code> class
+	 * are ignored. Likewise, <code>null</code> values are ignored.
+	 * 
+	 * @param values
+	 *            a list of numbers (a <code>null</code> list is not permitted).
+	 * 
+	 * @return Box-and-whisker statistics.
+	 */
+	public static BoxAndWhiskerItem calculateBoxAndWhiskerStatistics(List values) {
 
-    /**
-     * Calculates the first quartile for a list of numbers in ascending order.
-     * 
-     * @param values  the numbers in ascending order.
-     * 
-     * @return The first quartile.
-     */
-    public static double calculateQ1(List values) {
-        double result = Double.NaN;
-        int count = values.size();
-        if (count > 0) {
-            if (count % 2 == 1) {
-                if (count > 1) {
-                    result = Statistics.calculateMedian(values, 0, count / 2);
-                }
-                else {
-                    result = Statistics.calculateMedian(values, 0, 0);
-                }
-            }
-            else {
-                result = Statistics.calculateMedian(values, 0, count / 2 - 1);
-            }
-            
-        }
-        return result;
-    }
-    
-    /**
-     * Calculates the third quartile for a list of numbers in ascending order.
-     * 
-     * @param values  the list of values.
-     * 
-     * @return The third quartile.
-     */
-    public static double calculateQ3(List values) {
-        double result = Double.NaN;
-        int count = values.size();
-        if (count > 0) {
-            if (count % 2 == 1) {
-                if (count > 1) {
-                    result = Statistics.calculateMedian(
-                        values, count / 2, count - 1
-                    );
-                }
-                else {
-                    result = Statistics.calculateMedian(values, 0, 0);
-                }
-            }
-            else {
-                result = Statistics.calculateMedian(
-                    values, count / 2, count - 1
-                );
-            }
-            
-        }
-        return result;
-    }
-    
+		Collections.sort(values);
+
+		double mean = Statistics.calculateMean(values);
+		double median = Statistics.calculateMedian(values, false);
+		double q1 = calculateQ1(values);
+		double q3 = calculateQ3(values);
+
+		double interQuartileRange = q3 - q1;
+
+		double upperOutlierThreshold = q3 + (interQuartileRange * 1.5);
+		double lowerOutlierThreshold = q1 - (interQuartileRange * 1.5);
+
+		double upperFaroutThreshold = q3 + (interQuartileRange * 2.0);
+		double lowerFaroutThreshold = q1 - (interQuartileRange * 2.0);
+
+		double minRegularValue = Double.POSITIVE_INFINITY;
+		double maxRegularValue = Double.NEGATIVE_INFINITY;
+		double minOutlier = Double.POSITIVE_INFINITY;
+		double maxOutlier = Double.NEGATIVE_INFINITY;
+		List outliers = new ArrayList();
+
+		Iterator iterator = values.iterator();
+		while (iterator.hasNext()) {
+			Object object = iterator.next();
+			if (object != null && object instanceof Number) {
+				Number number = (Number) object;
+				double value = number.doubleValue();
+				if (value > upperOutlierThreshold) {
+					outliers.add(number);
+					if (value > maxOutlier && value <= upperFaroutThreshold) {
+						maxOutlier = value;
+					}
+				} else if (value < lowerOutlierThreshold) {
+					outliers.add(number);
+					if (value < minOutlier && value >= lowerFaroutThreshold) {
+						minOutlier = value;
+					}
+				} else {
+					if (minRegularValue == Double.NaN) {
+						minRegularValue = value;
+					} else {
+						minRegularValue = Math.min(minRegularValue, value);
+					}
+					if (maxRegularValue == Double.NaN) {
+						maxRegularValue = value;
+					} else {
+						maxRegularValue = Math.max(maxRegularValue, value);
+					}
+				}
+
+			}
+		}
+		minOutlier = Math.min(minOutlier, minRegularValue);
+		maxOutlier = Math.max(maxOutlier, maxRegularValue);
+
+		return new BoxAndWhiskerItem(new Double(mean), new Double(median), new Double(q1), new Double(q3),
+				new Double(minRegularValue), new Double(maxRegularValue), new Double(minOutlier),
+				new Double(maxOutlier), outliers);
+
+	}
+
+	/**
+	 * Calculates the first quartile for a list of numbers in ascending order.
+	 * 
+	 * @param values
+	 *            the numbers in ascending order.
+	 * 
+	 * @return The first quartile.
+	 */
+	public static double calculateQ1(List values) {
+		double result = Double.NaN;
+		int count = values.size();
+		if (count > 0) {
+			if (count % 2 == 1) {
+				if (count > 1) {
+					result = Statistics.calculateMedian(values, 0, count / 2);
+				} else {
+					result = Statistics.calculateMedian(values, 0, 0);
+				}
+			} else {
+				result = Statistics.calculateMedian(values, 0, count / 2 - 1);
+			}
+
+		}
+		return result;
+	}
+
+	/**
+	 * Calculates the third quartile for a list of numbers in ascending order.
+	 * 
+	 * @param values
+	 *            the list of values.
+	 * 
+	 * @return The third quartile.
+	 */
+	public static double calculateQ3(List values) {
+		double result = Double.NaN;
+		int count = values.size();
+		if (count > 0) {
+			if (count % 2 == 1) {
+				if (count > 1) {
+					result = Statistics.calculateMedian(values, count / 2, count - 1);
+				} else {
+					result = Statistics.calculateMedian(values, 0, 0);
+				}
+			} else {
+				result = Statistics.calculateMedian(values, count / 2, count - 1);
+			}
+
+		}
+		return result;
+	}
+
 }

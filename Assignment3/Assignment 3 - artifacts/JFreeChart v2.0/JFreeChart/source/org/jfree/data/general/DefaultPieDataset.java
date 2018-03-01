@@ -64,216 +64,223 @@ import org.jfree.util.PublicCloneable;
 /**
  * A default implementation of the {@link PieDataset} interface.
  */
-public class DefaultPieDataset extends AbstractDataset
-                               implements PieDataset, 
-                                          Cloneable, PublicCloneable, 
-                                          Serializable {
+public class DefaultPieDataset extends AbstractDataset implements PieDataset, Cloneable, PublicCloneable, Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = 2904745139106540618L;
-    
-    /** Storage for the data. */
-    private DefaultKeyedValues data;
+	/** For serialization. */
+	private static final long serialVersionUID = 2904745139106540618L;
 
-    /**
-     * Constructs a new dataset, initially empty.
-     */
-    public DefaultPieDataset() {
-        this.data = new DefaultKeyedValues();
-    }
+	/** Storage for the data. */
+	private DefaultKeyedValues data;
 
-    /**
-     * Creates a new dataset by copying data from a {@link KeyedValues} 
-     * instance.
-     *
-     * @param data  the data (<code>null</code> not permitted).
-     */
-    public DefaultPieDataset(KeyedValues data) {
-        if (data == null) {
-            throw new IllegalArgumentException("Null 'data' argument.");   
-        }
-        this.data = new DefaultKeyedValues();
-        for (int i = 0; i < data.getItemCount(); i++) {
-            this.data.addValue(data.getKey(i), data.getValue(i));
-        }
-    }
+	/**
+	 * Constructs a new dataset, initially empty.
+	 */
+	public DefaultPieDataset() {
+		this.data = new DefaultKeyedValues();
+	}
 
-    /**
-     * Returns the number of items in the dataset.
-     *
-     * @return The item count.
-     */
-    public int getItemCount() {
-        return this.data.getItemCount();
-    }
+	/**
+	 * Creates a new dataset by copying data from a {@link KeyedValues} instance.
+	 *
+	 * @param data
+	 *            the data (<code>null</code> not permitted).
+	 */
+	public DefaultPieDataset(KeyedValues data) {
+		if (data == null) {
+			throw new IllegalArgumentException("Null 'data' argument.");
+		}
+		this.data = new DefaultKeyedValues();
+		for (int i = 0; i < data.getItemCount(); i++) {
+			this.data.addValue(data.getKey(i), data.getValue(i));
+		}
+	}
 
-    /**
-     * Returns the categories in the dataset.  The returned list is 
-     * unmodifiable.
-     *
-     * @return The categories in the dataset.
-     */
-    public List getKeys() {
-        return Collections.unmodifiableList(this.data.getKeys());
-    }
+	/**
+	 * Returns the number of items in the dataset.
+	 *
+	 * @return The item count.
+	 */
+	public int getItemCount() {
+		return this.data.getItemCount();
+	}
 
-    /**
-     * Returns the key for an item.
-     *
-     * @param item  the item index (zero-based).
-     *
-     * @return The key.
-     */
-    public Comparable getKey(int item) {
-        Comparable result = null;
-        if (getItemCount() > item) {
-            result = this.data.getKey(item);
-        }
-        return result;
-    }
+	/**
+	 * Returns the categories in the dataset. The returned list is unmodifiable.
+	 *
+	 * @return The categories in the dataset.
+	 */
+	public List getKeys() {
+		return Collections.unmodifiableList(this.data.getKeys());
+	}
 
-    /**
-     * Returns the index for a key.
-     *
-     * @param key  the key.
-     *
-     * @return The index, or <code>-1</code> if the key is unrecognised.
-     */
-    public int getIndex(Comparable key) {
-        return this.data.getIndex(key);
-    }
+	/**
+	 * Returns the key for an item.
+	 *
+	 * @param item
+	 *            the item index (zero-based).
+	 *
+	 * @return The key.
+	 */
+	public Comparable getKey(int item) {
+		Comparable result = null;
+		if (getItemCount() > item) {
+			result = this.data.getKey(item);
+		}
+		return result;
+	}
 
-    /**
-     * Returns a value.
-     *
-     * @param item  the value index.
-     *
-     * @return The value (possibly <code>null</code>).
-     */
-    public Number getValue(int item) {
+	/**
+	 * Returns the index for a key.
+	 *
+	 * @param key
+	 *            the key.
+	 *
+	 * @return The index, or <code>-1</code> if the key is unrecognised.
+	 */
+	public int getIndex(Comparable key) {
+		return this.data.getIndex(key);
+	}
 
-        Number result = null;
-        if (getItemCount() > item) {
-            result = this.data.getValue(item);
-        }
-        return result;
+	/**
+	 * Returns a value.
+	 *
+	 * @param item
+	 *            the value index.
+	 *
+	 * @return The value (possibly <code>null</code>).
+	 */
+	public Number getValue(int item) {
 
-    }
+		Number result = null;
+		if (getItemCount() > item) {
+			result = this.data.getValue(item);
+		}
+		return result;
 
-    /**
-     * Returns the data value associated with a key.
-     *
-     * @param key  the key (<code>null</code> not permitted).
-     *
-     * @return The value (possibly <code>null</code>).
-     * 
-     * @throws UnknownKeyException if the key is not recognised.
-     */
-    public Number getValue(Comparable key) {
-        if (key == null) {
-            throw new IllegalArgumentException("Null 'key' argument.");
-        }
-        return this.data.getValue(key);
-    }
+	}
 
-    /**
-     * Sets the data value for a key.
-     *
-     * @param key  the key.
-     * @param value  the value.
-     */
-    public void setValue(Comparable key, Number value) {
-        this.data.setValue(key, value);
-        fireDatasetChanged();
-    }
+	/**
+	 * Returns the data value associated with a key.
+	 *
+	 * @param key
+	 *            the key (<code>null</code> not permitted).
+	 *
+	 * @return The value (possibly <code>null</code>).
+	 * 
+	 * @throws UnknownKeyException
+	 *             if the key is not recognised.
+	 */
+	public Number getValue(Comparable key) {
+		if (key == null) {
+			throw new IllegalArgumentException("Null 'key' argument.");
+		}
+		return this.data.getValue(key);
+	}
 
-    /**
-     * Sets the data value for a key.
-     *
-     * @param key  the key.
-     * @param value  the value.
-     */
-    public void setValue(Comparable key, double value) {
-        setValue(key, new Double(value));
-    }
+	/**
+	 * Sets the data value for a key.
+	 *
+	 * @param key
+	 *            the key.
+	 * @param value
+	 *            the value.
+	 */
+	public void setValue(Comparable key, Number value) {
+		this.data.setValue(key, value);
+		fireDatasetChanged();
+	}
 
-    /**
-     * Removes an item from the dataset and sends a {@link DatasetChangeEvent}
-     * to all registered listeners.
-     * 
-     * @param key  the key.
-     */
-    public void remove(Comparable key) {
-        this.data.removeValue(key);   
-        fireDatasetChanged();
-    }
+	/**
+	 * Sets the data value for a key.
+	 *
+	 * @param key
+	 *            the key.
+	 * @param value
+	 *            the value.
+	 */
+	public void setValue(Comparable key, double value) {
+		setValue(key, new Double(value));
+	}
 
-    /**
-     * Tests if this object is equal to another.
-     *
-     * @param obj  the other object.
-     *
-     * @return A boolean.
-     */
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
+	/**
+	 * Removes an item from the dataset and sends a {@link DatasetChangeEvent} to
+	 * all registered listeners.
+	 * 
+	 * @param key
+	 *            the key.
+	 */
+	public void remove(Comparable key) {
+		this.data.removeValue(key);
+		fireDatasetChanged();
+	}
 
-        if (!(obj instanceof PieDataset)) {
-            return false;
-        }
-        PieDataset that = (PieDataset) obj;
-        int count = getItemCount();
-        if (that.getItemCount() != count) {
-            return false;
-        }
+	/**
+	 * Tests if this object is equal to another.
+	 *
+	 * @param obj
+	 *            the other object.
+	 *
+	 * @return A boolean.
+	 */
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
 
-        for (int i = 0; i < count; i++) {
-            Comparable k1 = getKey(i);
-            Comparable k2 = that.getKey(i);
-            if (!k1.equals(k2)) {
-                return false;
-            }
+		if (!(obj instanceof PieDataset)) {
+			return false;
+		}
+		PieDataset that = (PieDataset) obj;
+		int count = getItemCount();
+		if (that.getItemCount() != count) {
+			return false;
+		}
 
-            Number v1 = getValue(i);
-            Number v2 = that.getValue(i);
-            if (v1 == null) {
-                if (v2 != null) {
-                    return false;
-                }
-            }
-            else {
-                if (!v1.equals(v2)) {
-                    return false;
-                }
-            }
-        }
-        return true;
+		for (int i = 0; i < count; i++) {
+			Comparable k1 = getKey(i);
+			Comparable k2 = that.getKey(i);
+			if (!k1.equals(k2)) {
+				return false;
+			}
 
-    }
+			Number v1 = getValue(i);
+			Number v2 = that.getValue(i);
+			if (v1 == null) {
+				if (v2 != null) {
+					return false;
+				}
+			} else {
+				if (!v1.equals(v2)) {
+					return false;
+				}
+			}
+		}
+		return true;
 
-    /**
-     * Returns a hash code.
-     * 
-     * @return A hash code.
-     */
-    public int hashCode() {
-        return this.data.hashCode();
-    }
+	}
 
-    /**
-     * Returns a clone of the dataset.
-     * 
-     * @return A clone.
-     * 
-     * @throws CloneNotSupportedException This class will not throw this 
-     *         exception, but subclasses (if any) might.
-     */
-    public Object clone() throws CloneNotSupportedException {
-        DefaultPieDataset clone = (DefaultPieDataset) super.clone();
-        clone.data = (DefaultKeyedValues) this.data.clone();
-        return clone;    
-    }
-    
+	/**
+	 * Returns a hash code.
+	 * 
+	 * @return A hash code.
+	 */
+	public int hashCode() {
+		return this.data.hashCode();
+	}
+
+	/**
+	 * Returns a clone of the dataset.
+	 * 
+	 * @return A clone.
+	 * 
+	 * @throws CloneNotSupportedException
+	 *             This class will not throw this exception, but subclasses (if any)
+	 *             might.
+	 */
+	public Object clone() throws CloneNotSupportedException {
+		DefaultPieDataset clone = (DefaultPieDataset) super.clone();
+		clone.data = (DefaultKeyedValues) this.data.clone();
+		return clone;
+	}
+
 }

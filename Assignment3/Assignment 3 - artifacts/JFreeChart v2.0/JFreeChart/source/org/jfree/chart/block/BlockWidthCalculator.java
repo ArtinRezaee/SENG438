@@ -42,25 +42,26 @@
 package org.jfree.chart.block;
 
 /**
- * A block width calculator is used to determine the unconstrained height
- * of a block during layout.
+ * A block width calculator is used to determine the unconstrained height of a
+ * block during layout.
  */
 public interface BlockWidthCalculator {
-    
-    /** 
-     * Returns <code>true</code> if the calculator can provide a width for
-     * the given block.
-     */
-    public boolean canHandleBlock(Block block);
 
-    /**
-     * Returns the calculated width for the specified block.
-     * 
-     * @param block  the block.
-     * 
-     * @return The width (a negative value indicates that no valid width 
-     *         could be calculated).
-     */
-    public double calculateWidth(Block block);
-    
+	/**
+	 * Returns <code>true</code> if the calculator can provide a width for the given
+	 * block.
+	 */
+	public boolean canHandleBlock(Block block);
+
+	/**
+	 * Returns the calculated width for the specified block.
+	 * 
+	 * @param block
+	 *            the block.
+	 * 
+	 * @return The width (a negative value indicates that no valid width could be
+	 *         calculated).
+	 */
+	public double calculateWidth(Block block);
+
 }

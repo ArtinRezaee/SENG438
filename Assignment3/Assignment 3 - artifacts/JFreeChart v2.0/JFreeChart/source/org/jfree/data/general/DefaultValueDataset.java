@@ -49,97 +49,99 @@ import org.jfree.util.ObjectUtilities;
 import org.jfree.util.PublicCloneable;
 
 /**
- * A dataset that stores a single value.  This class provides a default 
+ * A dataset that stores a single value. This class provides a default
  * implementation of the {@link ValueDataset} interface.
  */
 public class DefaultValueDataset extends AbstractDataset
-                                 implements ValueDataset, 
-                                            Cloneable, PublicCloneable,
-                                            Serializable {
+		implements ValueDataset, Cloneable, PublicCloneable, Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = 8137521217249294891L;
-    
-    /** The value. */
-    private Number value;
+	/** For serialization. */
+	private static final long serialVersionUID = 8137521217249294891L;
 
-    /**
-     * Constructs a new dataset, initially empty.
-     */
-    public DefaultValueDataset() {
-        this(null);
-    }
-    
-    /**
-     * Creates a new dataset.
-     * 
-     * @param value  the value.
-     */
-    public DefaultValueDataset(double value) {
-        this(new Double(value));
-    }
+	/** The value. */
+	private Number value;
 
-    /**
-     * Creates a new dataset.
-     *
-     * @param value  the initial value.
-     */
-    public DefaultValueDataset(Number value) {
-        this.value = value;
-    }
+	/**
+	 * Constructs a new dataset, initially empty.
+	 */
+	public DefaultValueDataset() {
+		this(null);
+	}
 
-    /**
-     * Returns the value.
-     *
-     * @return The value (possibly <code>null</code>).
-     */
-    public Number getValue() {
-        return this.value;
-    }
+	/**
+	 * Creates a new dataset.
+	 * 
+	 * @param value
+	 *            the value.
+	 */
+	public DefaultValueDataset(double value) {
+		this(new Double(value));
+	}
 
-    /**
-     * Sets the value and sends a {@link DatasetChangeEvent} to all registered 
-     * listeners.
-     *
-     * @param value  the new value (<code>null</code> permitted).
-     */
-    public void setValue(Number value) {
-        this.value = value;
-        notifyListeners(new DatasetChangeEvent(this, this));
-    }
+	/**
+	 * Creates a new dataset.
+	 *
+	 * @param value
+	 *            the initial value.
+	 */
+	public DefaultValueDataset(Number value) {
+		this.value = value;
+	}
 
-    /**
-     * Tests this dataset for equality with an arbitrary object.
-     *
-     * @param obj  the object.
-     *
-     * @return A boolean.
-     */
-    public boolean equals(Object obj) {
+	/**
+	 * Returns the value.
+	 *
+	 * @return The value (possibly <code>null</code>).
+	 */
+	public Number getValue() {
+		return this.value;
+	}
 
-        if (obj == null) {
-            return false;
-        }
+	/**
+	 * Sets the value and sends a {@link DatasetChangeEvent} to all registered
+	 * listeners.
+	 *
+	 * @param value
+	 *            the new value (<code>null</code> permitted).
+	 */
+	public void setValue(Number value) {
+		this.value = value;
+		notifyListeners(new DatasetChangeEvent(this, this));
+	}
 
-        if (obj == this) {
-            return true;
-        }
+	/**
+	 * Tests this dataset for equality with an arbitrary object.
+	 *
+	 * @param obj
+	 *            the object.
+	 *
+	 * @return A boolean.
+	 */
+	public boolean equals(Object obj) {
 
-        if (obj instanceof ValueDataset) {
-            ValueDataset vd = (ValueDataset) obj;
-            return ObjectUtilities.equal(this.value, vd.getValue());
-        }
+		if (obj == null) {
+			return false;
+		}
 
-        return false;
-    }
+		if (obj == this) {
+			return true;
+		}
 
-    /**
-     * Returns a hash code.
-     * 
-     * @return A hash code.
-     */
-    public int hashCode() {
-        return (this.value != null ? this.value.hashCode() : 0);
-    }
-    
+		if (obj instanceof ValueDataset) {
+			ValueDataset vd = (ValueDataset) obj;
+			return ObjectUtilities.equal(this.value, vd.getValue());
+		}
+
+		return false;
+	}
+
+	/**
+	 * Returns a hash code.
+	 * 
+	 * @return A hash code.
+	 */
+	public int hashCode() {
+		return (this.value != null ? this.value.hashCode() : 0);
+	}
+
 }

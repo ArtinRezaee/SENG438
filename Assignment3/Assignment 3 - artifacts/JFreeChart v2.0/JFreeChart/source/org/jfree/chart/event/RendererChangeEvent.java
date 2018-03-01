@@ -42,32 +42,33 @@
 package org.jfree.chart.event;
 
 /**
- * An event that can be forwarded to any 
- * {@link org.jfree.chart.event.RendererChangeListener} to signal a change to 
- * a plot.
+ * An event that can be forwarded to any
+ * {@link org.jfree.chart.event.RendererChangeListener} to signal a change to a
+ * plot.
  */
 public class RendererChangeEvent extends ChartChangeEvent {
 
-    /** The renderer that generated the event. */
-    private Object renderer;
+	/** The renderer that generated the event. */
+	private Object renderer;
 
-    /**
-     * Creates a new event.
-     *
-     * @param renderer  the renderer that generated the event.
-     */
-    public RendererChangeEvent(Object renderer) {
-        super(renderer);
-        this.renderer = renderer;
-    }
+	/**
+	 * Creates a new event.
+	 *
+	 * @param renderer
+	 *            the renderer that generated the event.
+	 */
+	public RendererChangeEvent(Object renderer) {
+		super(renderer);
+		this.renderer = renderer;
+	}
 
-    /**
-     * Returns the renderer that generated the event.
-     *
-     * @return The renderer that generated the event.
-     */
-    public Object getRenderer() {
-        return this.renderer;
-    }
+	/**
+	 * Returns the renderer that generated the event.
+	 *
+	 * @return The renderer that generated the event.
+	 */
+	public Object getRenderer() {
+		return this.renderer;
+	}
 
 }

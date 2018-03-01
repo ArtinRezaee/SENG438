@@ -55,34 +55,37 @@ package org.jfree.data;
  */
 public interface DomainInfo {
 
-    /**
-     * Returns the minimum x-value in the dataset.
-     *
-     * @param includeInterval  a flag that determines whether or not the
-     *                         x-interval is taken into account.
-     * 
-     * @return The minimum value.
-     */
-    public double getDomainLowerBound(boolean includeInterval);
+	/**
+	 * Returns the minimum x-value in the dataset.
+	 *
+	 * @param includeInterval
+	 *            a flag that determines whether or not the x-interval is taken into
+	 *            account.
+	 * 
+	 * @return The minimum value.
+	 */
+	public double getDomainLowerBound(boolean includeInterval);
 
-    /**
-     * Returns the maximum x-value in the dataset.
-     *
-     * @param includeInterval  a flag that determines whether or not the
-     *                         x-interval is taken into account.
-     * 
-     * @return The maximum value.
-     */
-    public double getDomainUpperBound(boolean includeInterval);
+	/**
+	 * Returns the maximum x-value in the dataset.
+	 *
+	 * @param includeInterval
+	 *            a flag that determines whether or not the x-interval is taken into
+	 *            account.
+	 * 
+	 * @return The maximum value.
+	 */
+	public double getDomainUpperBound(boolean includeInterval);
 
-    /**
-     * Returns the range of the values in this dataset's domain.
-     *
-     * @param includeInterval  a flag that determines whether or not the
-     *                         x-interval is taken into account.
-     * 
-     * @return The range.
-     */
-    public Range getDomainBounds(boolean includeInterval);
+	/**
+	 * Returns the range of the values in this dataset's domain.
+	 *
+	 * @param includeInterval
+	 *            a flag that determines whether or not the x-interval is taken into
+	 *            account.
+	 * 
+	 * @return The range.
+	 */
+	public Range getDomainBounds(boolean includeInterval);
 
 }

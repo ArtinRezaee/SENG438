@@ -53,91 +53,94 @@ import java.io.OutputStream;
 import javax.imageio.ImageIO;
 
 /**
- * Adapter class for the Sun JPEG Encoder.  The ImageEncoderFactory will only 
- * return a reference to this class by default if the library has been compiled 
+ * Adapter class for the Sun JPEG Encoder. The ImageEncoderFactory will only
+ * return a reference to this class by default if the library has been compiled
  * under a JDK 1.4+ and is being run using a JDK 1.4+.
  *
  * @author Richard Atkinson
  */
 public class SunJPEGEncoderAdapter implements ImageEncoder {
-    
-    private float quality = 0.75f;
 
-    /**
-     * Default constructor.
-     */
-    public SunJPEGEncoderAdapter() {
-    }
+	private float quality = 0.75f;
 
-    /**
-     * Get the quality of the image encoding.
-     *
-     * @return A float representing the quality.
-     */
-    public float getQuality() {
-        return this.quality;
-    }
+	/**
+	 * Default constructor.
+	 */
+	public SunJPEGEncoderAdapter() {
+	}
 
-    /**
-     * Set the quality of the image encoding (ignored).
-     *
-     * @param quality  A float representing the quality.
-     */
-    public void setQuality(float quality) {
-        this.quality = quality;
-    }
+	/**
+	 * Get the quality of the image encoding.
+	 *
+	 * @return A float representing the quality.
+	 */
+	public float getQuality() {
+		return this.quality;
+	}
 
-    /**
-     * Get whether the encoder encodes alpha transparency (always false).
-     *
-     * @return Whether the encoder is encoding alpha transparency.
-     */
-    public boolean isEncodingAlpha() {
-        return false;
-    }
+	/**
+	 * Set the quality of the image encoding (ignored).
+	 *
+	 * @param quality
+	 *            A float representing the quality.
+	 */
+	public void setQuality(float quality) {
+		this.quality = quality;
+	}
 
-    /**
-     * Set whether the encoder should encode alpha transparency (not supported 
-     * for JPEG).
-     *
-     * @param encodingAlpha  Whether the encoder should encode alpha 
-     *                       transparency.
-     */
-    public void setEncodingAlpha(boolean encodingAlpha) {
-        //  No op
-    }
+	/**
+	 * Get whether the encoder encodes alpha transparency (always false).
+	 *
+	 * @return Whether the encoder is encoding alpha transparency.
+	 */
+	public boolean isEncodingAlpha() {
+		return false;
+	}
 
-    /**
-     * Encodes an image in JPEG format.
-     *
-     * @param bufferedImage  The image to be encoded.
-     * 
-     * @return The byte[] that is the encoded image.
-     * 
-     * @throws IOException
-     */
-    public byte[] encode(BufferedImage bufferedImage) throws IOException {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        encode(bufferedImage, outputStream);
-        return outputStream.toByteArray();
-    }
+	/**
+	 * Set whether the encoder should encode alpha transparency (not supported for
+	 * JPEG).
+	 *
+	 * @param encodingAlpha
+	 *            Whether the encoder should encode alpha transparency.
+	 */
+	public void setEncodingAlpha(boolean encodingAlpha) {
+		// No op
+	}
 
-    /**
-     * Encodes an image in JPEG format and writes it to an OutputStream.
-     *
-     * @param bufferedImage  The image to be encoded.
-     * @param outputStream  The OutputStream to write the encoded image to.
-     * @throws IOException
-     */
-    public void encode(BufferedImage bufferedImage, OutputStream outputStream) 
-        throws IOException {
-        if (bufferedImage == null) {
-            throw new IllegalArgumentException("Null 'image' argument.");
-        }
-        if (outputStream == null) {
-            throw new IllegalArgumentException("Null 'outputStream' argument.");
-        }
-        ImageIO.write(bufferedImage, ImageFormat.JPEG, outputStream);
-    }
+	/**
+	 * Encodes an image in JPEG format.
+	 *
+	 * @param bufferedImage
+	 *            The image to be encoded.
+	 * 
+	 * @return The byte[] that is the encoded image.
+	 * 
+	 * @throws IOException
+	 */
+	public byte[] encode(BufferedImage bufferedImage) throws IOException {
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		encode(bufferedImage, outputStream);
+		return outputStream.toByteArray();
+	}
+
+	/**
+	 * Encodes an image in JPEG format and writes it to an OutputStream.
+	 *
+	 * @param bufferedImage
+	 *            The image to be encoded.
+	 * @param outputStream
+	 *            The OutputStream to write the encoded image to.
+	 * @throws IOException
+	 */
+	public void encode(BufferedImage bufferedImage, OutputStream outputStream) throws IOException {
+		if (bufferedImage == null) {
+			throw new IllegalArgumentException("Null 'image' argument.");
+		}
+		if (outputStream == null) {
+			throw new IllegalArgumentException("Null 'outputStream' argument.");
+		}
+		ImageIO.write(bufferedImage, ImageFormat.JPEG, outputStream);
+	}
 
 }

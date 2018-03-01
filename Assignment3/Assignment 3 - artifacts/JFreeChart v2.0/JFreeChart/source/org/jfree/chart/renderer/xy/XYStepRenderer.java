@@ -80,180 +80,168 @@ import org.jfree.ui.RectangleEdge;
 import org.jfree.util.PublicCloneable;
 
 /**
- * Line/Step item renderer for an {@link XYPlot}.  This class draws lines 
- * between data points, only allowing horizontal or vertical lines (steps).
+ * Line/Step item renderer for an {@link XYPlot}. This class draws lines between
+ * data points, only allowing horizontal or vertical lines (steps).
  *
  * @author Roger Studner
  */
-public class XYStepRenderer extends XYLineAndShapeRenderer 
-                            implements XYItemRenderer, 
-                                       Cloneable,
-                                       PublicCloneable,
-                                       Serializable {
+public class XYStepRenderer extends XYLineAndShapeRenderer
+		implements XYItemRenderer, Cloneable, PublicCloneable, Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = -8918141928884796108L;
-    
-    /**
-     * Constructs a new renderer with no tooltip or URL generation.
-     */
-    public XYStepRenderer() {
-        this(null, null);
-    }
+	/** For serialization. */
+	private static final long serialVersionUID = -8918141928884796108L;
 
-    /**
-     * Constructs a new renderer.
-     *
-     * @param toolTipGenerator  the item label generator.
-     * @param urlGenerator  the URL generator.
-     */
-    public XYStepRenderer(XYToolTipGenerator toolTipGenerator,
-                          XYURLGenerator urlGenerator) {
-        super();
-        setBaseToolTipGenerator(toolTipGenerator);
-        setURLGenerator(urlGenerator);
-        setShapesVisible(false);
-    }
+	/**
+	 * Constructs a new renderer with no tooltip or URL generation.
+	 */
+	public XYStepRenderer() {
+		this(null, null);
+	}
 
-    /**
-     * Draws the visual representation of a single data item.
-     *
-     * @param g2  the graphics device.
-     * @param state  the renderer state.
-     * @param dataArea  the area within which the data is being drawn.
-     * @param info  collects information about the drawing.
-     * @param plot  the plot (can be used to obtain standard color 
-     *              information etc).
-     * @param domainAxis  the domain axis.
-     * @param rangeAxis  the vertical axis.
-     * @param dataset  the dataset.
-     * @param series  the series index (zero-based).
-     * @param item  the item index (zero-based).
-     * @param crosshairState  crosshair information for the plot 
-     *                        (<code>null</code> permitted).
-     * @param pass  the pass index (ignored here).
-     */
-    public void drawItem(Graphics2D g2, 
-                         XYItemRendererState state,
-                         Rectangle2D dataArea, 
-                         PlotRenderingInfo info,
-                         XYPlot plot, 
-                         ValueAxis domainAxis, 
-                         ValueAxis rangeAxis,
-                         XYDataset dataset, 
-                         int series, 
-                         int item,
-                         CrosshairState crosshairState, 
-                         int pass) {
+	/**
+	 * Constructs a new renderer.
+	 *
+	 * @param toolTipGenerator
+	 *            the item label generator.
+	 * @param urlGenerator
+	 *            the URL generator.
+	 */
+	public XYStepRenderer(XYToolTipGenerator toolTipGenerator, XYURLGenerator urlGenerator) {
+		super();
+		setBaseToolTipGenerator(toolTipGenerator);
+		setURLGenerator(urlGenerator);
+		setShapesVisible(false);
+	}
 
-        // do nothing if item is not visible
-        if (!getItemVisible(series, item)) {
-            return;   
-        }
+	/**
+	 * Draws the visual representation of a single data item.
+	 *
+	 * @param g2
+	 *            the graphics device.
+	 * @param state
+	 *            the renderer state.
+	 * @param dataArea
+	 *            the area within which the data is being drawn.
+	 * @param info
+	 *            collects information about the drawing.
+	 * @param plot
+	 *            the plot (can be used to obtain standard color information etc).
+	 * @param domainAxis
+	 *            the domain axis.
+	 * @param rangeAxis
+	 *            the vertical axis.
+	 * @param dataset
+	 *            the dataset.
+	 * @param series
+	 *            the series index (zero-based).
+	 * @param item
+	 *            the item index (zero-based).
+	 * @param crosshairState
+	 *            crosshair information for the plot (<code>null</code> permitted).
+	 * @param pass
+	 *            the pass index (ignored here).
+	 */
+	public void drawItem(Graphics2D g2, XYItemRendererState state, Rectangle2D dataArea, PlotRenderingInfo info,
+			XYPlot plot, ValueAxis domainAxis, ValueAxis rangeAxis, XYDataset dataset, int series, int item,
+			CrosshairState crosshairState, int pass) {
 
-        PlotOrientation orientation = plot.getOrientation();
-        
-        Paint seriesPaint = getItemPaint(series, item);
-        Stroke seriesStroke = getItemStroke(series, item);
-        g2.setPaint(seriesPaint);
-        g2.setStroke(seriesStroke);
+		// do nothing if item is not visible
+		if (!getItemVisible(series, item)) {
+			return;
+		}
 
-        // get the data point...
-        double x1 = dataset.getXValue(series, item);
-        double y1 = dataset.getYValue(series, item);
-        if (Double.isNaN(y1)) {
-            return;
-        }
+		PlotOrientation orientation = plot.getOrientation();
 
-        RectangleEdge xAxisLocation = plot.getDomainAxisEdge();
-        RectangleEdge yAxisLocation = plot.getRangeAxisEdge();
-        double transX1 = domainAxis.valueToJava2D(x1, dataArea, xAxisLocation);
-        double transY1 = rangeAxis.valueToJava2D(y1, dataArea, yAxisLocation);
+		Paint seriesPaint = getItemPaint(series, item);
+		Stroke seriesStroke = getItemStroke(series, item);
+		g2.setPaint(seriesPaint);
+		g2.setStroke(seriesStroke);
 
-        if (item > 0) {
-            // get the previous data point...
-            double x0 = dataset.getXValue(series, item - 1);
-            double y0 = dataset.getYValue(series, item - 1);
-            if (!Double.isNaN(y0)) {
-                double transX0 = domainAxis.valueToJava2D(x0, dataArea, 
-                        xAxisLocation);
-                double transY0 = rangeAxis.valueToJava2D(y0, dataArea, 
-                        yAxisLocation);
+		// get the data point...
+		double x1 = dataset.getXValue(series, item);
+		double y1 = dataset.getYValue(series, item);
+		if (Double.isNaN(y1)) {
+			return;
+		}
 
-                Line2D line = state.workingLine;
-                if (orientation == PlotOrientation.HORIZONTAL) {
-                    if (transY0 == transY1) { //this represents the situation 
-                                              // for drawing a horizontal bar.
-                        line.setLine(transY0, transX0, transY1, transX1);
-                        g2.draw(line);
-                    }
-                    else {  //this handles the need to perform a 'step'.
-                        line.setLine(transY0, transX0, transY1, transX0);
-                        g2.draw(line);
-                        line.setLine(transY1, transX0, transY1, transX1);
-                        g2.draw(line);
-                    }
-                }
-                else if (orientation == PlotOrientation.VERTICAL) {
-                    if (transY0 == transY1) { // this represents the situation 
-                                              // for drawing a horizontal bar.
-                        line.setLine(transX0, transY0, transX1, transY1);
-                        g2.draw(line);
-                    }
-                    else {  //this handles the need to perform a 'step'.
-                        line.setLine(transX0, transY0, transX1, transY0);
-                        g2.draw(line);
-                        line.setLine(transX1, transY0, transX1, transY1);
-                        g2.draw(line);
-                    }
-                }
+		RectangleEdge xAxisLocation = plot.getDomainAxisEdge();
+		RectangleEdge yAxisLocation = plot.getRangeAxisEdge();
+		double transX1 = domainAxis.valueToJava2D(x1, dataArea, xAxisLocation);
+		double transY1 = rangeAxis.valueToJava2D(y1, dataArea, yAxisLocation);
 
-            }
-        }
+		if (item > 0) {
+			// get the previous data point...
+			double x0 = dataset.getXValue(series, item - 1);
+			double y0 = dataset.getYValue(series, item - 1);
+			if (!Double.isNaN(y0)) {
+				double transX0 = domainAxis.valueToJava2D(x0, dataArea, xAxisLocation);
+				double transY0 = rangeAxis.valueToJava2D(y0, dataArea, yAxisLocation);
 
-        updateCrosshairValues(crosshairState, x1, y1, transX1, transY1, 
-                orientation);
-        
-        // collect entity and tool tip information...
-        if (state.getInfo() != null) {
-            EntityCollection entities 
-                = state.getInfo().getOwner().getEntityCollection();
-            if (entities != null) {
-                int r = getDefaultEntityRadius();
-                Shape shape = orientation == PlotOrientation.VERTICAL
-                    ? new Rectangle2D.Double(transX1 - r, transY1 - r, 2 * r, 
-                            2 * r)
-                    : new Rectangle2D.Double(transY1 - r, transX1 - r, 2 * r, 
-                            2 * r);           
-                if (shape != null) {
-                    String tip = null;
-                    XYToolTipGenerator generator 
-                        = getToolTipGenerator(series, item);
-                    if (generator != null) {
-                        tip = generator.generateToolTip(dataset, series, item);
-                    }
-                    String url = null;
-                    if (getURLGenerator() != null) {
-                        url = getURLGenerator().generateURL(dataset, series, 
-                                item);
-                    }
-                    XYItemEntity entity = new XYItemEntity(shape, dataset, 
-                            series, item, tip, url);
-                    entities.add(entity);
-                }
-            }
-        }
-    }
+				Line2D line = state.workingLine;
+				if (orientation == PlotOrientation.HORIZONTAL) {
+					if (transY0 == transY1) { // this represents the situation
+												// for drawing a horizontal bar.
+						line.setLine(transY0, transX0, transY1, transX1);
+						g2.draw(line);
+					} else { // this handles the need to perform a 'step'.
+						line.setLine(transY0, transX0, transY1, transX0);
+						g2.draw(line);
+						line.setLine(transY1, transX0, transY1, transX1);
+						g2.draw(line);
+					}
+				} else if (orientation == PlotOrientation.VERTICAL) {
+					if (transY0 == transY1) { // this represents the situation
+												// for drawing a horizontal bar.
+						line.setLine(transX0, transY0, transX1, transY1);
+						g2.draw(line);
+					} else { // this handles the need to perform a 'step'.
+						line.setLine(transX0, transY0, transX1, transY0);
+						g2.draw(line);
+						line.setLine(transX1, transY0, transX1, transY1);
+						g2.draw(line);
+					}
+				}
 
-    /**
-     * Returns a clone of the renderer.
-     * 
-     * @return A clone.
-     * 
-     * @throws CloneNotSupportedException  if the renderer cannot be cloned.
-     */
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
+			}
+		}
+
+		updateCrosshairValues(crosshairState, x1, y1, transX1, transY1, orientation);
+
+		// collect entity and tool tip information...
+		if (state.getInfo() != null) {
+			EntityCollection entities = state.getInfo().getOwner().getEntityCollection();
+			if (entities != null) {
+				int r = getDefaultEntityRadius();
+				Shape shape = orientation == PlotOrientation.VERTICAL
+						? new Rectangle2D.Double(transX1 - r, transY1 - r, 2 * r, 2 * r)
+						: new Rectangle2D.Double(transY1 - r, transX1 - r, 2 * r, 2 * r);
+				if (shape != null) {
+					String tip = null;
+					XYToolTipGenerator generator = getToolTipGenerator(series, item);
+					if (generator != null) {
+						tip = generator.generateToolTip(dataset, series, item);
+					}
+					String url = null;
+					if (getURLGenerator() != null) {
+						url = getURLGenerator().generateURL(dataset, series, item);
+					}
+					XYItemEntity entity = new XYItemEntity(shape, dataset, series, item, tip, url);
+					entities.add(entity);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Returns a clone of the renderer.
+	 * 
+	 * @return A clone.
+	 * 
+	 * @throws CloneNotSupportedException
+	 *             if the renderer cannot be cloned.
+	 */
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
 
 }

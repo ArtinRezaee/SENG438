@@ -43,16 +43,14 @@ package org.jfree.chart.renderer.category;
 
 import java.io.Serializable;
 
-
 /**
  * A default renderer for the {@link org.jfree.chart.plot.CategoryPlot} class.
  */
-public class DefaultCategoryItemRenderer extends LineAndShapeRenderer
-                                         implements Serializable {
-    
-    /** For serialization. */
-    private static final long serialVersionUID = -7793786349384231896L;
-    
-    // no new methods
-    
+public class DefaultCategoryItemRenderer extends LineAndShapeRenderer implements Serializable {
+
+	/** For serialization. */
+	private static final long serialVersionUID = -7793786349384231896L;
+
+	// no new methods
+
 }

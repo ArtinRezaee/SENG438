@@ -52,226 +52,227 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Wrapper for a <code>java.util.Date</code> object that allows it to be used 
- * as a {@link RegularTimePeriod}.  This class is immutable, which is a 
- * requirement for all {@link RegularTimePeriod} subclasses.
+ * Wrapper for a <code>java.util.Date</code> object that allows it to be used as
+ * a {@link RegularTimePeriod}. This class is immutable, which is a requirement
+ * for all {@link RegularTimePeriod} subclasses.
  */
-public class FixedMillisecond extends RegularTimePeriod 
-                              implements Serializable {
+public class FixedMillisecond extends RegularTimePeriod implements Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = 7867521484545646931L;
-    
-    /** The millisecond. */
-    private Date time;
+	/** For serialization. */
+	private static final long serialVersionUID = 7867521484545646931L;
 
-    /**
-     * Constructs a millisecond based on the current system time.
-     */
-    public FixedMillisecond() {
-        this(new Date());
-    }
+	/** The millisecond. */
+	private Date time;
 
-    /**
-     * Constructs a millisecond.
-     *
-     * @param millisecond  the millisecond (same encoding as java.util.Date).
-     */
-    public FixedMillisecond(long millisecond) {
-        this(new Date(millisecond));
-    }
+	/**
+	 * Constructs a millisecond based on the current system time.
+	 */
+	public FixedMillisecond() {
+		this(new Date());
+	}
 
-    /**
-     * Constructs a millisecond.
-     *
-     * @param time  the time.
-     */
-    public FixedMillisecond(Date time) {
-        this.time = time;
-    }
+	/**
+	 * Constructs a millisecond.
+	 *
+	 * @param millisecond
+	 *            the millisecond (same encoding as java.util.Date).
+	 */
+	public FixedMillisecond(long millisecond) {
+		this(new Date(millisecond));
+	}
 
-    /**
-     * Returns the date/time.
-     *
-     * @return The date/time.
-     */
-    public Date getTime() {
-        return this.time;
-    }
+	/**
+	 * Constructs a millisecond.
+	 *
+	 * @param time
+	 *            the time.
+	 */
+	public FixedMillisecond(Date time) {
+		this.time = time;
+	}
 
-    /**
-     * Returns the millisecond preceding this one.
-     *
-     * @return The millisecond preceding this one.
-     */
-    public RegularTimePeriod previous() {
-        RegularTimePeriod result = null;
-        long t = this.time.getTime();
-        if (t != Long.MIN_VALUE) {
-            result = new FixedMillisecond(t - 1);
-        }
-        return result;
-    }
+	/**
+	 * Returns the date/time.
+	 *
+	 * @return The date/time.
+	 */
+	public Date getTime() {
+		return this.time;
+	}
 
-    /**
-     * Returns the millisecond following this one.
-     *
-     * @return The millisecond following this one.
-     */
-    public RegularTimePeriod next() {
-        RegularTimePeriod result = null;
-        long t = this.time.getTime();
-        if (t != Long.MAX_VALUE) {
-            result = new FixedMillisecond(t + 1);
-        }
-        return result;
-    }
+	/**
+	 * Returns the millisecond preceding this one.
+	 *
+	 * @return The millisecond preceding this one.
+	 */
+	public RegularTimePeriod previous() {
+		RegularTimePeriod result = null;
+		long t = this.time.getTime();
+		if (t != Long.MIN_VALUE) {
+			result = new FixedMillisecond(t - 1);
+		}
+		return result;
+	}
 
-    /**
-     * Tests the equality of this object against an arbitrary Object.
-     *
-     * @param object  the object to compare
-     *
-     * @return A boolean.
-     */
-    public boolean equals(Object object) {
-        if (object instanceof FixedMillisecond) {
-            FixedMillisecond m = (FixedMillisecond) object;
-            return this.time.equals(m.getTime());
-        }
-        else {
-            return false;
-        }
+	/**
+	 * Returns the millisecond following this one.
+	 *
+	 * @return The millisecond following this one.
+	 */
+	public RegularTimePeriod next() {
+		RegularTimePeriod result = null;
+		long t = this.time.getTime();
+		if (t != Long.MAX_VALUE) {
+			result = new FixedMillisecond(t + 1);
+		}
+		return result;
+	}
 
-    }
+	/**
+	 * Tests the equality of this object against an arbitrary Object.
+	 *
+	 * @param object
+	 *            the object to compare
+	 *
+	 * @return A boolean.
+	 */
+	public boolean equals(Object object) {
+		if (object instanceof FixedMillisecond) {
+			FixedMillisecond m = (FixedMillisecond) object;
+			return this.time.equals(m.getTime());
+		} else {
+			return false;
+		}
 
-    /**
-     * Returns a hash code for this object instance.
-     * 
-     * @return A hash code.
-     */
-    public int hashCode() {
-        return this.time.hashCode();
-    }
+	}
 
-    /**
-     * Returns an integer indicating the order of this Millisecond object
-     * relative to the specified
-     * object: negative == before, zero == same, positive == after.
-     *
-     * @param o1    the object to compare.
-     *
-     * @return negative == before, zero == same, positive == after.
-     */
-    public int compareTo(Object o1) {
+	/**
+	 * Returns a hash code for this object instance.
+	 * 
+	 * @return A hash code.
+	 */
+	public int hashCode() {
+		return this.time.hashCode();
+	}
 
-        int result;
-        long difference;
+	/**
+	 * Returns an integer indicating the order of this Millisecond object relative
+	 * to the specified object: negative == before, zero == same, positive == after.
+	 *
+	 * @param o1
+	 *            the object to compare.
+	 *
+	 * @return negative == before, zero == same, positive == after.
+	 */
+	public int compareTo(Object o1) {
 
-        // CASE 1 : Comparing to another Second object
-        // -------------------------------------------
-        if (o1 instanceof FixedMillisecond) {
-            FixedMillisecond t1 = (FixedMillisecond) o1;
-            difference = this.time.getTime() - t1.time.getTime();
-            if (difference > 0) {
-                result = 1;
-            }
-            else {
-                if (difference < 0) {
-                   result = -1;
-                }
-                else {
-                    result = 0;
-                }
-            }
-        }
+		int result;
+		long difference;
 
-        // CASE 2 : Comparing to another TimePeriod object
-        // -----------------------------------------------
-        else if (o1 instanceof RegularTimePeriod) {
-            // more difficult case - evaluate later...
-            result = 0;
-        }
+		// CASE 1 : Comparing to another Second object
+		// -------------------------------------------
+		if (o1 instanceof FixedMillisecond) {
+			FixedMillisecond t1 = (FixedMillisecond) o1;
+			difference = this.time.getTime() - t1.time.getTime();
+			if (difference > 0) {
+				result = 1;
+			} else {
+				if (difference < 0) {
+					result = -1;
+				} else {
+					result = 0;
+				}
+			}
+		}
 
-        // CASE 3 : Comparing to a non-TimePeriod object
-        // ---------------------------------------------
-        else {
-            // consider time periods to be ordered after general objects
-            result = 1;
-        }
+		// CASE 2 : Comparing to another TimePeriod object
+		// -----------------------------------------------
+		else if (o1 instanceof RegularTimePeriod) {
+			// more difficult case - evaluate later...
+			result = 0;
+		}
 
-        return result;
+		// CASE 3 : Comparing to a non-TimePeriod object
+		// ---------------------------------------------
+		else {
+			// consider time periods to be ordered after general objects
+			result = 1;
+		}
 
-    }
+		return result;
 
-    /**
-     * Returns the first millisecond of the time period.
-     *
-     * @return The first millisecond of the time period.
-     */
-    public long getFirstMillisecond() {
-        return this.time.getTime();
-    }
+	}
 
+	/**
+	 * Returns the first millisecond of the time period.
+	 *
+	 * @return The first millisecond of the time period.
+	 */
+	public long getFirstMillisecond() {
+		return this.time.getTime();
+	}
 
-    /**
-     * Returns the first millisecond of the time period.
-     *
-     * @param calendar  the calendar.
-     *
-     * @return The first millisecond of the time period.
-     */
-    public long getFirstMillisecond(Calendar calendar) {
-        return this.time.getTime();
-    }
+	/**
+	 * Returns the first millisecond of the time period.
+	 *
+	 * @param calendar
+	 *            the calendar.
+	 *
+	 * @return The first millisecond of the time period.
+	 */
+	public long getFirstMillisecond(Calendar calendar) {
+		return this.time.getTime();
+	}
 
-    /**
-     * Returns the last millisecond of the time period.
-     *
-     * @return The last millisecond of the time period.
-     */
-    public long getLastMillisecond() {
-        return this.time.getTime();
-    }
+	/**
+	 * Returns the last millisecond of the time period.
+	 *
+	 * @return The last millisecond of the time period.
+	 */
+	public long getLastMillisecond() {
+		return this.time.getTime();
+	}
 
-    /**
-     * Returns the last millisecond of the time period.
-     *
-     * @param calendar  the calendar.
-     *
-     * @return The last millisecond of the time period.
-     */
-    public long getLastMillisecond(Calendar calendar) {
-        return this.time.getTime();
-    }
+	/**
+	 * Returns the last millisecond of the time period.
+	 *
+	 * @param calendar
+	 *            the calendar.
+	 *
+	 * @return The last millisecond of the time period.
+	 */
+	public long getLastMillisecond(Calendar calendar) {
+		return this.time.getTime();
+	}
 
-    /**
-     * Returns the millisecond closest to the middle of the time period.
-     *
-     * @return The millisecond closest to the middle of the time period.
-     */
-    public long getMiddleMillisecond() {
-        return this.time.getTime();
-    }
+	/**
+	 * Returns the millisecond closest to the middle of the time period.
+	 *
+	 * @return The millisecond closest to the middle of the time period.
+	 */
+	public long getMiddleMillisecond() {
+		return this.time.getTime();
+	}
 
-    /**
-     * Returns the millisecond closest to the middle of the time period.
-     *
-     * @param calendar  the calendar.
-     *
-     * @return The millisecond closest to the middle of the time period.
-     */
-    public long getMiddleMillisecond(Calendar calendar) {
-        return this.time.getTime();
-    }
+	/**
+	 * Returns the millisecond closest to the middle of the time period.
+	 *
+	 * @param calendar
+	 *            the calendar.
+	 *
+	 * @return The millisecond closest to the middle of the time period.
+	 */
+	public long getMiddleMillisecond(Calendar calendar) {
+		return this.time.getTime();
+	}
 
-    /**
-     * Returns a serial index number for the millisecond.
-     *
-     * @return The serial index number.
-     */
-    public long getSerialIndex() {
-        return this.time.getTime();
-    }
+	/**
+	 * Returns a serial index number for the millisecond.
+	 *
+	 * @return The serial index number.
+	 */
+	public long getSerialIndex() {
+		return this.time.getTime();
+	}
 
 }

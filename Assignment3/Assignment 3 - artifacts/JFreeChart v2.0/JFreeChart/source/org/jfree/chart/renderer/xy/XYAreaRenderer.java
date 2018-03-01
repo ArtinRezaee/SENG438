@@ -104,568 +104,518 @@ import org.jfree.util.PublicCloneable;
 import org.jfree.util.ShapeUtilities;
 
 /**
- * Area item renderer for an {@link XYPlot}.  This class can draw (a) shapes at
- * each point, or (b) lines between points, or (c) both shapes and lines, 
- * or (d) filled areas, or (e) filled areas and shapes.
+ * Area item renderer for an {@link XYPlot}. This class can draw (a) shapes at
+ * each point, or (b) lines between points, or (c) both shapes and lines, or (d)
+ * filled areas, or (e) filled areas and shapes.
  */
-public class XYAreaRenderer extends AbstractXYItemRenderer 
-                            implements XYItemRenderer, 
-                                       Cloneable,
-                                       PublicCloneable,
-                                       Serializable {
+public class XYAreaRenderer extends AbstractXYItemRenderer
+		implements XYItemRenderer, Cloneable, PublicCloneable, Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = -4481971353973876747L;
-    
-    /**
-     * A state object used by this renderer.
-     */
-    static class XYAreaRendererState extends XYItemRendererState {
-        
-        /** Working storage for the area under one series. */
-        public Polygon area;
-        
-        /** Working line that can be recycled. */
-        public Line2D line;
-        
-        /**
-         * Creates a new state.
-         * 
-         * @param info  the plot rendering info.
-         */
-        public XYAreaRendererState(PlotRenderingInfo info) {
-            super(info);
-            this.area = new Polygon();
-            this.line = new Line2D.Double();
-        }
-        
-    }
-    
-    /** Useful constant for specifying the type of rendering (shapes only). */
-    public static final int SHAPES = 1;
+	/** For serialization. */
+	private static final long serialVersionUID = -4481971353973876747L;
 
-    /** Useful constant for specifying the type of rendering (lines only). */
-    public static final int LINES = 2;
+	/**
+	 * A state object used by this renderer.
+	 */
+	static class XYAreaRendererState extends XYItemRendererState {
 
-    /** 
-     * Useful constant for specifying the type of rendering (shapes and lines).
-     */
-    public static final int SHAPES_AND_LINES = 3;
+		/** Working storage for the area under one series. */
+		public Polygon area;
 
-    /** Useful constant for specifying the type of rendering (area only). */
-    public static final int AREA = 4;
+		/** Working line that can be recycled. */
+		public Line2D line;
 
-    /** 
-     * Useful constant for specifying the type of rendering (area and shapes). 
-     */
-    public static final int AREA_AND_SHAPES = 5;
+		/**
+		 * Creates a new state.
+		 * 
+		 * @param info
+		 *            the plot rendering info.
+		 */
+		public XYAreaRendererState(PlotRenderingInfo info) {
+			super(info);
+			this.area = new Polygon();
+			this.line = new Line2D.Double();
+		}
 
-    /** A flag indicating whether or not shapes are drawn at each XY point. */
-    private boolean plotShapes;
+	}
 
-    /** A flag indicating whether or not lines are drawn between XY points. */
-    private boolean plotLines;
+	/** Useful constant for specifying the type of rendering (shapes only). */
+	public static final int SHAPES = 1;
 
-    /** A flag indicating whether or not Area are drawn at each XY point. */
-    private boolean plotArea;
+	/** Useful constant for specifying the type of rendering (lines only). */
+	public static final int LINES = 2;
 
-    /** A flag that controls whether or not the outline is shown. */
-    private boolean showOutline;
+	/**
+	 * Useful constant for specifying the type of rendering (shapes and lines).
+	 */
+	public static final int SHAPES_AND_LINES = 3;
 
-    /** 
-     * The shape used to represent an area in each legend item (this should 
-     * never be <code>null</code>). 
-     */
-    private transient Shape legendArea;
+	/** Useful constant for specifying the type of rendering (area only). */
+	public static final int AREA = 4;
 
-    /**
-     * Constructs a new renderer.
-     */
-    public XYAreaRenderer() {
-        this(AREA);
-    }
+	/**
+	 * Useful constant for specifying the type of rendering (area and shapes).
+	 */
+	public static final int AREA_AND_SHAPES = 5;
 
-    /**
-     * Constructs a new renderer.
-     *
-     * @param type  the type of the renderer.
-     */
-    public XYAreaRenderer(int type) {
-        this(type, null, null);
-    }
+	/** A flag indicating whether or not shapes are drawn at each XY point. */
+	private boolean plotShapes;
 
-    /**
-     * Constructs a new renderer.
-     * <p>
-     * To specify the type of renderer, use one of the constants: SHAPES, LINES,
-     * SHAPES_AND_LINES, AREA or AREA_AND_SHAPES.
-     *
-     * @param type  the type of renderer.
-     * @param toolTipGenerator  the tool tip generator to use 
-     *                          (<code>null</code> permitted).
-     * @param urlGenerator  the URL generator (<code>null</code> permitted).
-     */
-    public XYAreaRenderer(int type, XYToolTipGenerator toolTipGenerator, 
-                          XYURLGenerator urlGenerator) {
+	/** A flag indicating whether or not lines are drawn between XY points. */
+	private boolean plotLines;
 
-        super();
-        setBaseToolTipGenerator(toolTipGenerator);
-        setURLGenerator(urlGenerator);
+	/** A flag indicating whether or not Area are drawn at each XY point. */
+	private boolean plotArea;
 
-        if (type == SHAPES) {
-            this.plotShapes = true;
-        }
-        if (type == LINES) {
-            this.plotLines = true;
-        }
-        if (type == SHAPES_AND_LINES) {
-            this.plotShapes = true;
-            this.plotLines = true;
-        }
-        if (type == AREA) {
-            this.plotArea = true;
-        }
-        if (type == AREA_AND_SHAPES) {
-            this.plotArea = true;
-            this.plotShapes = true;
-        }
-        this.showOutline = false;
-        GeneralPath area = new GeneralPath();
-        area.moveTo(0.0f, -4.0f);
-        area.lineTo(3.0f, -2.0f);
-        area.lineTo(4.0f, 4.0f);
-        area.lineTo(-4.0f, 4.0f);
-        area.lineTo(-3.0f, -2.0f);
-        area.closePath();
-        this.legendArea = area;
+	/** A flag that controls whether or not the outline is shown. */
+	private boolean showOutline;
 
-    }
+	/**
+	 * The shape used to represent an area in each legend item (this should never be
+	 * <code>null</code>).
+	 */
+	private transient Shape legendArea;
 
-    /**
-     * Returns a flag that controls whether or not outlines of the areas are 
-     * drawn.
-     *
-     * @return The flag.
-     */
-    public boolean isOutline() {
-        return this.showOutline;
-    }
+	/**
+	 * Constructs a new renderer.
+	 */
+	public XYAreaRenderer() {
+		this(AREA);
+	}
 
-    /**
-     * Sets a flag that controls whether or not outlines of the areas are drawn.
-     *
-     * @param show  the flag.
-     */
-    public void setOutline(boolean show) {
-        this.showOutline = show;
-    }
+	/**
+	 * Constructs a new renderer.
+	 *
+	 * @param type
+	 *            the type of the renderer.
+	 */
+	public XYAreaRenderer(int type) {
+		this(type, null, null);
+	}
 
-    /**
-     * Returns true if shapes are being plotted by the renderer.
-     *
-     * @return <code>true</code> if shapes are being plotted by the renderer.
-     */
-    public boolean getPlotShapes() {
-        return this.plotShapes;
-    }
+	/**
+	 * Constructs a new renderer.
+	 * <p>
+	 * To specify the type of renderer, use one of the constants: SHAPES, LINES,
+	 * SHAPES_AND_LINES, AREA or AREA_AND_SHAPES.
+	 *
+	 * @param type
+	 *            the type of renderer.
+	 * @param toolTipGenerator
+	 *            the tool tip generator to use (<code>null</code> permitted).
+	 * @param urlGenerator
+	 *            the URL generator (<code>null</code> permitted).
+	 */
+	public XYAreaRenderer(int type, XYToolTipGenerator toolTipGenerator, XYURLGenerator urlGenerator) {
 
-    /**
-     * Returns true if lines are being plotted by the renderer.
-     *
-     * @return <code>true</code> if lines are being plotted by the renderer.
-     */
-    public boolean getPlotLines() {
-        return this.plotLines;
-    }
+		super();
+		setBaseToolTipGenerator(toolTipGenerator);
+		setURLGenerator(urlGenerator);
 
-    /**
-     * Returns true if Area is being plotted by the renderer.
-     *
-     * @return <code>true</code> if Area is being plotted by the renderer.
-     */
-    public boolean getPlotArea() {
-        return this.plotArea;
-    }
+		if (type == SHAPES) {
+			this.plotShapes = true;
+		}
+		if (type == LINES) {
+			this.plotLines = true;
+		}
+		if (type == SHAPES_AND_LINES) {
+			this.plotShapes = true;
+			this.plotLines = true;
+		}
+		if (type == AREA) {
+			this.plotArea = true;
+		}
+		if (type == AREA_AND_SHAPES) {
+			this.plotArea = true;
+			this.plotShapes = true;
+		}
+		this.showOutline = false;
+		GeneralPath area = new GeneralPath();
+		area.moveTo(0.0f, -4.0f);
+		area.lineTo(3.0f, -2.0f);
+		area.lineTo(4.0f, 4.0f);
+		area.lineTo(-4.0f, 4.0f);
+		area.lineTo(-3.0f, -2.0f);
+		area.closePath();
+		this.legendArea = area;
 
-    /**
-     * Returns the shape used to represent an area in the legend.
-     * 
-     * @return The legend area (never <code>null</code>).
-     */
-    public Shape getLegendArea() {
-        return this.legendArea;   
-    }
-    
-    /**
-     * Sets the shape used as an area in each legend item and sends a 
-     * {@link RendererChangeEvent} to all registered listeners.
-     * 
-     * @param area  the area (<code>null</code> not permitted).
-     */
-    public void setLegendArea(Shape area) {
-        if (area == null) {
-            throw new IllegalArgumentException("Null 'area' argument.");   
-        }
-        this.legendArea = area;
-        notifyListeners(new RendererChangeEvent(this));
-    }
+	}
 
-    /**
-     * Initialises the renderer and returns a state object that should be 
-     * passed to all subsequent calls to the drawItem() method.
-     *
-     * @param g2  the graphics device.
-     * @param dataArea  the area inside the axes.
-     * @param plot  the plot.
-     * @param data  the data.
-     * @param info  an optional info collection object to return data back to 
-     *              the caller.
-     *
-     * @return A state object for use by the renderer.
-     */
-    public XYItemRendererState initialise(Graphics2D g2,
-                                          Rectangle2D dataArea,
-                                          XYPlot plot,
-                                          XYDataset data,
-                                          PlotRenderingInfo info) {
-        XYAreaRendererState state = new XYAreaRendererState(info);
-        return state;
-    }
+	/**
+	 * Returns a flag that controls whether or not outlines of the areas are drawn.
+	 *
+	 * @return The flag.
+	 */
+	public boolean isOutline() {
+		return this.showOutline;
+	}
 
-    /**
-     * Returns a default legend item for the specified series.  Subclasses 
-     * should override this method to generate customised items.
-     *
-     * @param datasetIndex  the dataset index (zero-based).
-     * @param series  the series index (zero-based).
-     *
-     * @return A legend item for the series.
-     */
-    public LegendItem getLegendItem(int datasetIndex, int series) {
-        LegendItem result = null;
-        XYPlot xyplot = getPlot();
-        if (xyplot != null) {
-            XYDataset dataset = xyplot.getDataset(datasetIndex);
-            if (dataset != null) {
-                XYSeriesLabelGenerator lg = getLegendItemLabelGenerator();
-                String label = lg.generateLabel(dataset, series);
-                String description = label;
-                String toolTipText = null;
-                if (getLegendItemToolTipGenerator() != null) {
-                    toolTipText = getLegendItemToolTipGenerator().generateLabel(
-                        dataset, series
-                    );
-                }
-                String urlText = null;
-                if (getLegendItemURLGenerator() != null) {
-                    urlText = getLegendItemURLGenerator().generateLabel(
-                        dataset, series
-                    );
-                }
-                Paint paint = getSeriesPaint(series);
-                result = new LegendItem(label, description, toolTipText, 
-                        urlText, this.legendArea, paint);
-            }
-        }
-        return result;
-    }
+	/**
+	 * Sets a flag that controls whether or not outlines of the areas are drawn.
+	 *
+	 * @param show
+	 *            the flag.
+	 */
+	public void setOutline(boolean show) {
+		this.showOutline = show;
+	}
 
-    /**
-     * Draws the visual representation of a single data item.
-     *
-     * @param g2  the graphics device.
-     * @param state  the renderer state.
-     * @param dataArea  the area within which the data is being drawn.
-     * @param info  collects information about the drawing.
-     * @param plot  the plot (can be used to obtain standard color information 
-     *              etc).
-     * @param domainAxis  the domain axis.
-     * @param rangeAxis  the range axis.
-     * @param dataset  the dataset.
-     * @param series  the series index (zero-based).
-     * @param item  the item index (zero-based).
-     * @param crosshairState  crosshair information for the plot 
-     *                        (<code>null</code> permitted).
-     * @param pass  the pass index.
-     */
-    public void drawItem(Graphics2D g2,
-                         XYItemRendererState state,
-                         Rectangle2D dataArea,
-                         PlotRenderingInfo info,
-                         XYPlot plot,
-                         ValueAxis domainAxis,
-                         ValueAxis rangeAxis,
-                         XYDataset dataset,
-                         int series,
-                         int item,
-                         CrosshairState crosshairState,
-                         int pass) {
-        
-        if (!getItemVisible(series, item)) {
-            return;   
-        }
-        XYAreaRendererState areaState = (XYAreaRendererState) state;
-        
-        // get the data point...
-        double x1 = dataset.getXValue(series, item);
-        double y1 = dataset.getYValue(series, item);
-        if (Double.isNaN(y1)) {
-            y1 = 0.0;
-        }
-        double transX1 = domainAxis.valueToJava2D(
-            x1, dataArea, plot.getDomainAxisEdge()
-        );
-        double transY1 = rangeAxis.valueToJava2D(
-            y1, dataArea, plot.getRangeAxisEdge()
-        );
-        
-        // get the previous point and the next point so we can calculate a 
-        // "hot spot" for the area (used by the chart entity)...
-        int itemCount = dataset.getItemCount(series);
-        double x0 = dataset.getXValue(series, Math.max(item - 1, 0));
-        double y0 = dataset.getYValue(series, Math.max(item - 1, 0));
-        if (Double.isNaN(y0)) {
-            y0 = 0.0;
-        }
-        double transX0 = domainAxis.valueToJava2D(
-            x0, dataArea, plot.getDomainAxisEdge()
-        );
-        double transY0 = rangeAxis.valueToJava2D(
-            y0, dataArea, plot.getRangeAxisEdge()
-        );
-        
-        double x2 = dataset.getXValue(
-            series, Math.min(item + 1, itemCount - 1)
-        );
-        double y2 = dataset.getYValue(
-            series, Math.min(item + 1, itemCount - 1)
-        );
-        if (Double.isNaN(y2)) {
-            y2 = 0.0;
-        }
-        double transX2 = domainAxis.valueToJava2D(
-            x2, dataArea, plot.getDomainAxisEdge()
-        );
-        double transY2 = rangeAxis.valueToJava2D(
-            y2, dataArea, plot.getRangeAxisEdge()
-        );
-        
-        double transZero = rangeAxis.valueToJava2D(
-            0.0, dataArea, plot.getRangeAxisEdge()
-        );
-        Polygon hotspot = null;
-        if (plot.getOrientation() == PlotOrientation.HORIZONTAL) {
-            hotspot = new Polygon();
-            hotspot.addPoint(
-                (int) transZero, (int) ((transX0 + transX1) / 2.0)
-            );
-            hotspot.addPoint(
-                (int) ((transY0 + transY1) / 2.0), 
-                (int) ((transX0 + transX1) / 2.0)
-            );
-            hotspot.addPoint((int) transY1, (int) transX1);
-            hotspot.addPoint(
-                (int) ((transY1 + transY2) / 2.0), 
-                (int) ((transX1 + transX2) / 2.0)
-            );
-            hotspot.addPoint(
-                (int) transZero, (int) ((transX1 + transX2) / 2.0)
-            );
-        }
-        else {  // vertical orientation
-            hotspot = new Polygon();
-            hotspot.addPoint(
-                (int) ((transX0 + transX1) / 2.0), (int) transZero
-            );
-            hotspot.addPoint(
-                (int) ((transX0 + transX1) / 2.0), 
-                (int) ((transY0 + transY1) / 2.0)
-            );
-            hotspot.addPoint((int) transX1, (int) transY1);
-            hotspot.addPoint(
-                (int) ((transX1 + transX2) / 2.0), 
-                (int) ((transY1 + transY2) / 2.0)
-            );
-            hotspot.addPoint(
-                (int) ((transX1 + transX2) / 2.0), (int) transZero
-            );
-        }
-        
-        if (item == 0) {  // create a new area polygon for the series
-            areaState.area = new Polygon();
-            // the first point is (x, 0)
-            double zero = rangeAxis.valueToJava2D(
-                0.0, dataArea, plot.getRangeAxisEdge()
-            );
-            if (plot.getOrientation() == PlotOrientation.VERTICAL) {
-                areaState.area.addPoint((int) transX1, (int) zero);
-            }
-            else if (plot.getOrientation() == PlotOrientation.HORIZONTAL) {
-                areaState.area.addPoint((int) zero, (int) transX1);
-            }
-        }
+	/**
+	 * Returns true if shapes are being plotted by the renderer.
+	 *
+	 * @return <code>true</code> if shapes are being plotted by the renderer.
+	 */
+	public boolean getPlotShapes() {
+		return this.plotShapes;
+	}
 
-        // Add each point to Area (x, y)
-        if (plot.getOrientation() == PlotOrientation.VERTICAL) {
-            areaState.area.addPoint((int) transX1, (int) transY1);
-        }
-        else if (plot.getOrientation() == PlotOrientation.HORIZONTAL) {
-            areaState.area.addPoint((int) transY1, (int) transX1);
-        }
-        
-        PlotOrientation orientation = plot.getOrientation();
-        Paint paint = getItemPaint(series, item);
-        Stroke stroke = getItemStroke(series, item);
-        g2.setPaint(paint);
-        g2.setStroke(stroke);
-        
-        Shape shape = null;
-        if (getPlotShapes()) {
-            shape = getItemShape(series, item);
-            if (orientation == PlotOrientation.VERTICAL) {
-                shape = ShapeUtilities.createTranslatedShape(
-                    shape, transX1, transY1
-                );
-            }
-            else if (orientation == PlotOrientation.HORIZONTAL) {
-                shape = ShapeUtilities.createTranslatedShape(
-                    shape, transY1, transX1
-                );
-            }
-            g2.draw(shape);
-        }
+	/**
+	 * Returns true if lines are being plotted by the renderer.
+	 *
+	 * @return <code>true</code> if lines are being plotted by the renderer.
+	 */
+	public boolean getPlotLines() {
+		return this.plotLines;
+	}
 
-        if (getPlotLines()) {
-            if (item > 0) {
-                if (plot.getOrientation() == PlotOrientation.VERTICAL) {
-                    areaState.line.setLine(transX0, transY0, transX1, transY1);
-                }
-                else if (plot.getOrientation() == PlotOrientation.HORIZONTAL) {
-                    areaState.line.setLine(transY0, transX0, transY1, transX1);
-                }
-                g2.draw(areaState.line);
-            }
-        }
+	/**
+	 * Returns true if Area is being plotted by the renderer.
+	 *
+	 * @return <code>true</code> if Area is being plotted by the renderer.
+	 */
+	public boolean getPlotArea() {
+		return this.plotArea;
+	}
 
-        // Check if the item is the last item for the series.
-        // and number of items > 0.  We can't draw an area for a single point.
-        if (getPlotArea() && item > 0 && item == (itemCount - 1)) {
+	/**
+	 * Returns the shape used to represent an area in the legend.
+	 * 
+	 * @return The legend area (never <code>null</code>).
+	 */
+	public Shape getLegendArea() {
+		return this.legendArea;
+	}
 
-            if (orientation == PlotOrientation.VERTICAL) {
-                // Add the last point (x,0)
-                areaState.area.addPoint((int) transX1, (int) transZero);
-            }
-            else if (orientation == PlotOrientation.HORIZONTAL) {
-                // Add the last point (x,0)
-                areaState.area.addPoint((int) transZero, (int) transX1);
-            }
+	/**
+	 * Sets the shape used as an area in each legend item and sends a
+	 * {@link RendererChangeEvent} to all registered listeners.
+	 * 
+	 * @param area
+	 *            the area (<code>null</code> not permitted).
+	 */
+	public void setLegendArea(Shape area) {
+		if (area == null) {
+			throw new IllegalArgumentException("Null 'area' argument.");
+		}
+		this.legendArea = area;
+		notifyListeners(new RendererChangeEvent(this));
+	}
 
-            g2.fill(areaState.area);
+	/**
+	 * Initialises the renderer and returns a state object that should be passed to
+	 * all subsequent calls to the drawItem() method.
+	 *
+	 * @param g2
+	 *            the graphics device.
+	 * @param dataArea
+	 *            the area inside the axes.
+	 * @param plot
+	 *            the plot.
+	 * @param data
+	 *            the data.
+	 * @param info
+	 *            an optional info collection object to return data back to the
+	 *            caller.
+	 *
+	 * @return A state object for use by the renderer.
+	 */
+	public XYItemRendererState initialise(Graphics2D g2, Rectangle2D dataArea, XYPlot plot, XYDataset data,
+			PlotRenderingInfo info) {
+		XYAreaRendererState state = new XYAreaRendererState(info);
+		return state;
+	}
 
-            // draw an outline around the Area.
-            if (isOutline()) {
-                g2.setStroke(getItemOutlineStroke(series, item));
-                g2.setPaint(getItemOutlinePaint(series, item));
-                g2.draw(areaState.area);
-            }
-        }
+	/**
+	 * Returns a default legend item for the specified series. Subclasses should
+	 * override this method to generate customised items.
+	 *
+	 * @param datasetIndex
+	 *            the dataset index (zero-based).
+	 * @param series
+	 *            the series index (zero-based).
+	 *
+	 * @return A legend item for the series.
+	 */
+	public LegendItem getLegendItem(int datasetIndex, int series) {
+		LegendItem result = null;
+		XYPlot xyplot = getPlot();
+		if (xyplot != null) {
+			XYDataset dataset = xyplot.getDataset(datasetIndex);
+			if (dataset != null) {
+				XYSeriesLabelGenerator lg = getLegendItemLabelGenerator();
+				String label = lg.generateLabel(dataset, series);
+				String description = label;
+				String toolTipText = null;
+				if (getLegendItemToolTipGenerator() != null) {
+					toolTipText = getLegendItemToolTipGenerator().generateLabel(dataset, series);
+				}
+				String urlText = null;
+				if (getLegendItemURLGenerator() != null) {
+					urlText = getLegendItemURLGenerator().generateLabel(dataset, series);
+				}
+				Paint paint = getSeriesPaint(series);
+				result = new LegendItem(label, description, toolTipText, urlText, this.legendArea, paint);
+			}
+		}
+		return result;
+	}
 
-        updateCrosshairValues(
-            crosshairState, x1, y1, transX1, transY1, orientation
-        );
-        
-        // collect entity and tool tip information...
-        if (state.getInfo() != null) {
-            EntityCollection entities 
-                = state.getInfo().getOwner().getEntityCollection();
-            if (entities != null && hotspot != null) {
-                String tip = null;
-                XYToolTipGenerator generator 
-                    = getToolTipGenerator(series, item);
-                if (generator != null) {
-                    tip = generator.generateToolTip(dataset, series, item);
-                }
-                String url = null;
-                if (getURLGenerator() != null) {
-                    url = getURLGenerator().generateURL(dataset, series, item);
-                }
-                XYItemEntity entity = new XYItemEntity(
-                    hotspot, dataset, series, item, tip, url
-                );
-                entities.add(entity);
-            }
-        }
+	/**
+	 * Draws the visual representation of a single data item.
+	 *
+	 * @param g2
+	 *            the graphics device.
+	 * @param state
+	 *            the renderer state.
+	 * @param dataArea
+	 *            the area within which the data is being drawn.
+	 * @param info
+	 *            collects information about the drawing.
+	 * @param plot
+	 *            the plot (can be used to obtain standard color information etc).
+	 * @param domainAxis
+	 *            the domain axis.
+	 * @param rangeAxis
+	 *            the range axis.
+	 * @param dataset
+	 *            the dataset.
+	 * @param series
+	 *            the series index (zero-based).
+	 * @param item
+	 *            the item index (zero-based).
+	 * @param crosshairState
+	 *            crosshair information for the plot (<code>null</code> permitted).
+	 * @param pass
+	 *            the pass index.
+	 */
+	public void drawItem(Graphics2D g2, XYItemRendererState state, Rectangle2D dataArea, PlotRenderingInfo info,
+			XYPlot plot, ValueAxis domainAxis, ValueAxis rangeAxis, XYDataset dataset, int series, int item,
+			CrosshairState crosshairState, int pass) {
 
-    }
+		if (!getItemVisible(series, item)) {
+			return;
+		}
+		XYAreaRendererState areaState = (XYAreaRendererState) state;
 
-    /**
-     * Returns a clone of the renderer.
-     * 
-     * @return A clone.
-     * 
-     * @throws CloneNotSupportedException  if the renderer cannot be cloned.
-     */
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
-    
-    /**
-     * Tests this renderer for equality with an arbitrary object.
-     * 
-     * @param obj  the object (<code>null</code> permitted).
-     * 
-     * @return A boolean.
-     */
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;   
-        }
-        if (!(obj instanceof XYAreaRenderer)) {
-            return false;   
-        }
-        XYAreaRenderer that = (XYAreaRenderer) obj;
-        if (this.plotArea != that.plotArea) {
-            return false;   
-        }
-        if (this.plotLines != that.plotLines) {
-            return false;   
-        }
-        if (this.plotShapes != that.plotShapes) {
-            return false;   
-        }
-        if (this.showOutline != that.showOutline) {
-            return false;   
-        }
-        if (!ShapeUtilities.equal(this.legendArea, that.legendArea)) {
-            return false;   
-        }
-        return true;
-    }
-    
-    /**
-     * Provides serialization support.
-     *
-     * @param stream  the input stream.
-     *
-     * @throws IOException  if there is an I/O error.
-     * @throws ClassNotFoundException  if there is a classpath problem.
-     */
-    private void readObject(ObjectInputStream stream) 
-            throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        this.legendArea = SerialUtilities.readShape(stream);
-    }
-    
-    /**
-     * Provides serialization support.
-     *
-     * @param stream  the output stream.
-     *
-     * @throws IOException  if there is an I/O error.
-     */
-    private void writeObject(ObjectOutputStream stream) throws IOException {
-        stream.defaultWriteObject();
-        SerialUtilities.writeShape(this.legendArea, stream);
-    }
+		// get the data point...
+		double x1 = dataset.getXValue(series, item);
+		double y1 = dataset.getYValue(series, item);
+		if (Double.isNaN(y1)) {
+			y1 = 0.0;
+		}
+		double transX1 = domainAxis.valueToJava2D(x1, dataArea, plot.getDomainAxisEdge());
+		double transY1 = rangeAxis.valueToJava2D(y1, dataArea, plot.getRangeAxisEdge());
+
+		// get the previous point and the next point so we can calculate a
+		// "hot spot" for the area (used by the chart entity)...
+		int itemCount = dataset.getItemCount(series);
+		double x0 = dataset.getXValue(series, Math.max(item - 1, 0));
+		double y0 = dataset.getYValue(series, Math.max(item - 1, 0));
+		if (Double.isNaN(y0)) {
+			y0 = 0.0;
+		}
+		double transX0 = domainAxis.valueToJava2D(x0, dataArea, plot.getDomainAxisEdge());
+		double transY0 = rangeAxis.valueToJava2D(y0, dataArea, plot.getRangeAxisEdge());
+
+		double x2 = dataset.getXValue(series, Math.min(item + 1, itemCount - 1));
+		double y2 = dataset.getYValue(series, Math.min(item + 1, itemCount - 1));
+		if (Double.isNaN(y2)) {
+			y2 = 0.0;
+		}
+		double transX2 = domainAxis.valueToJava2D(x2, dataArea, plot.getDomainAxisEdge());
+		double transY2 = rangeAxis.valueToJava2D(y2, dataArea, plot.getRangeAxisEdge());
+
+		double transZero = rangeAxis.valueToJava2D(0.0, dataArea, plot.getRangeAxisEdge());
+		Polygon hotspot = null;
+		if (plot.getOrientation() == PlotOrientation.HORIZONTAL) {
+			hotspot = new Polygon();
+			hotspot.addPoint((int) transZero, (int) ((transX0 + transX1) / 2.0));
+			hotspot.addPoint((int) ((transY0 + transY1) / 2.0), (int) ((transX0 + transX1) / 2.0));
+			hotspot.addPoint((int) transY1, (int) transX1);
+			hotspot.addPoint((int) ((transY1 + transY2) / 2.0), (int) ((transX1 + transX2) / 2.0));
+			hotspot.addPoint((int) transZero, (int) ((transX1 + transX2) / 2.0));
+		} else { // vertical orientation
+			hotspot = new Polygon();
+			hotspot.addPoint((int) ((transX0 + transX1) / 2.0), (int) transZero);
+			hotspot.addPoint((int) ((transX0 + transX1) / 2.0), (int) ((transY0 + transY1) / 2.0));
+			hotspot.addPoint((int) transX1, (int) transY1);
+			hotspot.addPoint((int) ((transX1 + transX2) / 2.0), (int) ((transY1 + transY2) / 2.0));
+			hotspot.addPoint((int) ((transX1 + transX2) / 2.0), (int) transZero);
+		}
+
+		if (item == 0) { // create a new area polygon for the series
+			areaState.area = new Polygon();
+			// the first point is (x, 0)
+			double zero = rangeAxis.valueToJava2D(0.0, dataArea, plot.getRangeAxisEdge());
+			if (plot.getOrientation() == PlotOrientation.VERTICAL) {
+				areaState.area.addPoint((int) transX1, (int) zero);
+			} else if (plot.getOrientation() == PlotOrientation.HORIZONTAL) {
+				areaState.area.addPoint((int) zero, (int) transX1);
+			}
+		}
+
+		// Add each point to Area (x, y)
+		if (plot.getOrientation() == PlotOrientation.VERTICAL) {
+			areaState.area.addPoint((int) transX1, (int) transY1);
+		} else if (plot.getOrientation() == PlotOrientation.HORIZONTAL) {
+			areaState.area.addPoint((int) transY1, (int) transX1);
+		}
+
+		PlotOrientation orientation = plot.getOrientation();
+		Paint paint = getItemPaint(series, item);
+		Stroke stroke = getItemStroke(series, item);
+		g2.setPaint(paint);
+		g2.setStroke(stroke);
+
+		Shape shape = null;
+		if (getPlotShapes()) {
+			shape = getItemShape(series, item);
+			if (orientation == PlotOrientation.VERTICAL) {
+				shape = ShapeUtilities.createTranslatedShape(shape, transX1, transY1);
+			} else if (orientation == PlotOrientation.HORIZONTAL) {
+				shape = ShapeUtilities.createTranslatedShape(shape, transY1, transX1);
+			}
+			g2.draw(shape);
+		}
+
+		if (getPlotLines()) {
+			if (item > 0) {
+				if (plot.getOrientation() == PlotOrientation.VERTICAL) {
+					areaState.line.setLine(transX0, transY0, transX1, transY1);
+				} else if (plot.getOrientation() == PlotOrientation.HORIZONTAL) {
+					areaState.line.setLine(transY0, transX0, transY1, transX1);
+				}
+				g2.draw(areaState.line);
+			}
+		}
+
+		// Check if the item is the last item for the series.
+		// and number of items > 0. We can't draw an area for a single point.
+		if (getPlotArea() && item > 0 && item == (itemCount - 1)) {
+
+			if (orientation == PlotOrientation.VERTICAL) {
+				// Add the last point (x,0)
+				areaState.area.addPoint((int) transX1, (int) transZero);
+			} else if (orientation == PlotOrientation.HORIZONTAL) {
+				// Add the last point (x,0)
+				areaState.area.addPoint((int) transZero, (int) transX1);
+			}
+
+			g2.fill(areaState.area);
+
+			// draw an outline around the Area.
+			if (isOutline()) {
+				g2.setStroke(getItemOutlineStroke(series, item));
+				g2.setPaint(getItemOutlinePaint(series, item));
+				g2.draw(areaState.area);
+			}
+		}
+
+		updateCrosshairValues(crosshairState, x1, y1, transX1, transY1, orientation);
+
+		// collect entity and tool tip information...
+		if (state.getInfo() != null) {
+			EntityCollection entities = state.getInfo().getOwner().getEntityCollection();
+			if (entities != null && hotspot != null) {
+				String tip = null;
+				XYToolTipGenerator generator = getToolTipGenerator(series, item);
+				if (generator != null) {
+					tip = generator.generateToolTip(dataset, series, item);
+				}
+				String url = null;
+				if (getURLGenerator() != null) {
+					url = getURLGenerator().generateURL(dataset, series, item);
+				}
+				XYItemEntity entity = new XYItemEntity(hotspot, dataset, series, item, tip, url);
+				entities.add(entity);
+			}
+		}
+
+	}
+
+	/**
+	 * Returns a clone of the renderer.
+	 * 
+	 * @return A clone.
+	 * 
+	 * @throws CloneNotSupportedException
+	 *             if the renderer cannot be cloned.
+	 */
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+
+	/**
+	 * Tests this renderer for equality with an arbitrary object.
+	 * 
+	 * @param obj
+	 *            the object (<code>null</code> permitted).
+	 * 
+	 * @return A boolean.
+	 */
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof XYAreaRenderer)) {
+			return false;
+		}
+		XYAreaRenderer that = (XYAreaRenderer) obj;
+		if (this.plotArea != that.plotArea) {
+			return false;
+		}
+		if (this.plotLines != that.plotLines) {
+			return false;
+		}
+		if (this.plotShapes != that.plotShapes) {
+			return false;
+		}
+		if (this.showOutline != that.showOutline) {
+			return false;
+		}
+		if (!ShapeUtilities.equal(this.legendArea, that.legendArea)) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Provides serialization support.
+	 *
+	 * @param stream
+	 *            the input stream.
+	 *
+	 * @throws IOException
+	 *             if there is an I/O error.
+	 * @throws ClassNotFoundException
+	 *             if there is a classpath problem.
+	 */
+	private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+		stream.defaultReadObject();
+		this.legendArea = SerialUtilities.readShape(stream);
+	}
+
+	/**
+	 * Provides serialization support.
+	 *
+	 * @param stream
+	 *            the output stream.
+	 *
+	 * @throws IOException
+	 *             if there is an I/O error.
+	 */
+	private void writeObject(ObjectOutputStream stream) throws IOException {
+		stream.defaultWriteObject();
+		SerialUtilities.writeShape(this.legendArea, stream);
+	}
 }
-

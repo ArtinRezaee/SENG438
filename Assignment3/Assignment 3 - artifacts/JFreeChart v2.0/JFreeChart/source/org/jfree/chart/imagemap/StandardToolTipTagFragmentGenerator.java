@@ -37,7 +37,7 @@
  * 12-Aug-2003 : Version 1 (RA);
  * 
  */
- 
+
 package org.jfree.chart.imagemap;
 
 /**
@@ -45,18 +45,18 @@ package org.jfree.chart.imagemap;
  *
  * @author Richard Atkinson
  */
-public class StandardToolTipTagFragmentGenerator 
-    implements ToolTipTagFragmentGenerator {
+public class StandardToolTipTagFragmentGenerator implements ToolTipTagFragmentGenerator {
 
-    /**
-     * Generates a tooltip string to go in an HTML image map.
-     *
-     * @param toolTipText  the tooltip.
-     * 
-     * @return The formatted HTML area tag attribute(s).
-     */
-    public String generateToolTipFragment(String toolTipText) {
-        return " title=\"" + toolTipText + "\" alt=\"\"";
-    }
+	/**
+	 * Generates a tooltip string to go in an HTML image map.
+	 *
+	 * @param toolTipText
+	 *            the tooltip.
+	 * 
+	 * @return The formatted HTML area tag attribute(s).
+	 */
+	public String generateToolTipFragment(String toolTipText) {
+		return " title=\"" + toolTipText + "\" alt=\"\"";
+	}
 
 }

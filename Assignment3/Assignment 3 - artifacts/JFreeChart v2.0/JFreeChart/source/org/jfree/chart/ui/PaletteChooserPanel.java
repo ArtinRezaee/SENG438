@@ -53,31 +53,32 @@ import javax.swing.JPanel;
  */
 public class PaletteChooserPanel extends JPanel {
 
-    /** A combo for selecting the stroke. */
-    private JComboBox selector;
+	/** A combo for selecting the stroke. */
+	private JComboBox selector;
 
-    /**
-     * Constructor.
-     *
-     * @param current  the current palette sample.
-     * @param available  an array of 'available' palette samples.
-     */
-    public PaletteChooserPanel(PaletteSample current, 
-                               PaletteSample[] available) {
-        setLayout(new BorderLayout());
-        this.selector = new JComboBox(available);
-        this.selector.setSelectedItem(current);
-        this.selector.setRenderer(new PaletteSample(new RainbowPalette()));
-        add(this.selector);
-    }
+	/**
+	 * Constructor.
+	 *
+	 * @param current
+	 *            the current palette sample.
+	 * @param available
+	 *            an array of 'available' palette samples.
+	 */
+	public PaletteChooserPanel(PaletteSample current, PaletteSample[] available) {
+		setLayout(new BorderLayout());
+		this.selector = new JComboBox(available);
+		this.selector.setSelectedItem(current);
+		this.selector.setRenderer(new PaletteSample(new RainbowPalette()));
+		add(this.selector);
+	}
 
-    /**
-     * Returns the selected palette.
-     *
-     * @return The selected palette.
-     */
-    public ColorPalette getSelectedPalette() {
-        PaletteSample sample = (PaletteSample) this.selector.getSelectedItem();
-        return sample.getPalette();
-    }
+	/**
+	 * Returns the selected palette.
+	 *
+	 * @return The selected palette.
+	 */
+	public ColorPalette getSelectedPalette() {
+		PaletteSample sample = (PaletteSample) this.selector.getSelectedItem();
+		return sample.getPalette();
+	}
 }

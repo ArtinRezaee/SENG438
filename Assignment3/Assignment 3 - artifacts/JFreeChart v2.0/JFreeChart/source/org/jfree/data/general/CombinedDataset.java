@@ -62,569 +62,597 @@ import org.jfree.data.xy.IntervalXYDataset;
 import org.jfree.data.xy.XYDataset;
 
 /**
- * This class can combine instances of {@link XYDataset}, {@link OHLCDataset} 
- * and {@link IntervalXYDataset} together exposing the union of all the series 
- * under one dataset.  
+ * This class can combine instances of {@link XYDataset}, {@link OHLCDataset}
+ * and {@link IntervalXYDataset} together exposing the union of all the series
+ * under one dataset.
  *
  * @author Bill Kelemen (bill@kelemen-usa.com)
  */
 public class CombinedDataset extends AbstractIntervalXYDataset
-                             implements XYDataset, 
-                                        OHLCDataset, 
-                                        IntervalXYDataset,
-                                        CombinationDataset {
+		implements XYDataset, OHLCDataset, IntervalXYDataset, CombinationDataset {
 
-    /** Storage for the datasets we combine. */
-    private List datasetInfo = new java.util.ArrayList();
+	/** Storage for the datasets we combine. */
+	private List datasetInfo = new java.util.ArrayList();
 
-    /**
-     * Default constructor for an empty combination.
-     */
-    public CombinedDataset() {
-        super();
-    }
+	/**
+	 * Default constructor for an empty combination.
+	 */
+	public CombinedDataset() {
+		super();
+	}
 
-    /**
-     * Creates a CombinedDataset initialized with an array of SeriesDatasets.
-     *
-     * @param data  array of SeriesDataset that contains the SeriesDatasets to 
-     *              combine.
-     */
-    public CombinedDataset(SeriesDataset[] data) {
-        add(data);
-    }
+	/**
+	 * Creates a CombinedDataset initialized with an array of SeriesDatasets.
+	 *
+	 * @param data
+	 *            array of SeriesDataset that contains the SeriesDatasets to
+	 *            combine.
+	 */
+	public CombinedDataset(SeriesDataset[] data) {
+		add(data);
+	}
 
-    /**
-     * Adds one SeriesDataset to the combination. Listeners are notified of the
-     * change.
-     *
-     * @param data  the SeriesDataset to add.
-     */
-    public void add(SeriesDataset data) {
-        fastAdd(data);
-        DatasetChangeEvent event = new DatasetChangeEvent(this, this);
-        notifyListeners(event);
-    }
+	/**
+	 * Adds one SeriesDataset to the combination. Listeners are notified of the
+	 * change.
+	 *
+	 * @param data
+	 *            the SeriesDataset to add.
+	 */
+	public void add(SeriesDataset data) {
+		fastAdd(data);
+		DatasetChangeEvent event = new DatasetChangeEvent(this, this);
+		notifyListeners(event);
+	}
 
-    /**
-     * Adds an array of SeriesDataset's to the combination. Listeners are
-     * notified of the change.
-     *
-     * @param data  array of SeriesDataset to add
-     */
-    public void add(SeriesDataset[] data) {
+	/**
+	 * Adds an array of SeriesDataset's to the combination. Listeners are notified
+	 * of the change.
+	 *
+	 * @param data
+	 *            array of SeriesDataset to add
+	 */
+	public void add(SeriesDataset[] data) {
 
-        for (int i = 0; i < data.length; i++) {
-            fastAdd(data[i]);
-        }
-        DatasetChangeEvent event = new DatasetChangeEvent(this, this);
-        notifyListeners(event);
+		for (int i = 0; i < data.length; i++) {
+			fastAdd(data[i]);
+		}
+		DatasetChangeEvent event = new DatasetChangeEvent(this, this);
+		notifyListeners(event);
 
-    }
+	}
 
-    /**
-     * Adds one series from a SeriesDataset to the combination. Listeners are
-     * notified of the change.
-     *
-     * @param data  the SeriesDataset where series is contained
-     * @param series  series to add
-     */
-    public void add(SeriesDataset data, int series) {
-        add(new SubSeriesDataset(data, series));
-    }
+	/**
+	 * Adds one series from a SeriesDataset to the combination. Listeners are
+	 * notified of the change.
+	 *
+	 * @param data
+	 *            the SeriesDataset where series is contained
+	 * @param series
+	 *            series to add
+	 */
+	public void add(SeriesDataset data, int series) {
+		add(new SubSeriesDataset(data, series));
+	}
 
-    /**
-     * Fast add of a SeriesDataset. Does not notify listeners of the change.
-     *
-     * @param data  SeriesDataset to add
-     */
-    private void fastAdd(SeriesDataset data) {
-        for (int i = 0; i < data.getSeriesCount(); i++) {
-            this.datasetInfo.add(new DatasetInfo(data, i));
-        }
-    }
+	/**
+	 * Fast add of a SeriesDataset. Does not notify listeners of the change.
+	 *
+	 * @param data
+	 *            SeriesDataset to add
+	 */
+	private void fastAdd(SeriesDataset data) {
+		for (int i = 0; i < data.getSeriesCount(); i++) {
+			this.datasetInfo.add(new DatasetInfo(data, i));
+		}
+	}
 
-    ///////////////////////////////////////////////////////////////////////////
-    // From SeriesDataset
-    ///////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////
+	// From SeriesDataset
+	///////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Returns the number of series in the dataset.
-     *
-     * @return The number of series in the dataset.
-     */
-    public int getSeriesCount() {
-        return this.datasetInfo.size();
-    }
+	/**
+	 * Returns the number of series in the dataset.
+	 *
+	 * @return The number of series in the dataset.
+	 */
+	public int getSeriesCount() {
+		return this.datasetInfo.size();
+	}
 
-    /**
-     * Returns the key for a series.
-     *
-     * @param series  the series (zero-based index).
-     *
-     * @return The key for a series.
-     */
-    public Comparable getSeriesKey(int series) {
-        DatasetInfo di = getDatasetInfo(series);
-        return di.data.getSeriesKey(di.series);
-    }
+	/**
+	 * Returns the key for a series.
+	 *
+	 * @param series
+	 *            the series (zero-based index).
+	 *
+	 * @return The key for a series.
+	 */
+	public Comparable getSeriesKey(int series) {
+		DatasetInfo di = getDatasetInfo(series);
+		return di.data.getSeriesKey(di.series);
+	}
 
-    ///////////////////////////////////////////////////////////////////////////
-    // From XYDataset
-    ///////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////
+	// From XYDataset
+	///////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Returns the X-value for the specified series and item.
-     * <P>
-     * Note:  throws <code>ClassCastException</code> if the series is not from 
-     * a {@link XYDataset}.
-     *
-     * @param series  the index of the series of interest (zero-based).
-     * @param item  the index of the item of interest (zero-based).
-     *
-     * @return The X-value for the specified series and item.
-     */
-    public Number getX(int series, int item) {
-        DatasetInfo di = getDatasetInfo(series);
-        return ((XYDataset) di.data).getX(di.series, item);
-    }
+	/**
+	 * Returns the X-value for the specified series and item.
+	 * <P>
+	 * Note: throws <code>ClassCastException</code> if the series is not from a
+	 * {@link XYDataset}.
+	 *
+	 * @param series
+	 *            the index of the series of interest (zero-based).
+	 * @param item
+	 *            the index of the item of interest (zero-based).
+	 *
+	 * @return The X-value for the specified series and item.
+	 */
+	public Number getX(int series, int item) {
+		DatasetInfo di = getDatasetInfo(series);
+		return ((XYDataset) di.data).getX(di.series, item);
+	}
 
-    /**
-     * Returns the Y-value for the specified series and item.
-     * <P>
-     * Note:  throws <code>ClassCastException</code> if the series is not from 
-     * a {@link XYDataset}.
-     *
-     * @param series  the index of the series of interest (zero-based).
-     * @param item  the index of the item of interest (zero-based).
-     *
-     * @return The Y-value for the specified series and item.
-     */
-    public Number getY(int series, int item) {
-        DatasetInfo di = getDatasetInfo(series);
-        return ((XYDataset) di.data).getY(di.series, item);
-    }
+	/**
+	 * Returns the Y-value for the specified series and item.
+	 * <P>
+	 * Note: throws <code>ClassCastException</code> if the series is not from a
+	 * {@link XYDataset}.
+	 *
+	 * @param series
+	 *            the index of the series of interest (zero-based).
+	 * @param item
+	 *            the index of the item of interest (zero-based).
+	 *
+	 * @return The Y-value for the specified series and item.
+	 */
+	public Number getY(int series, int item) {
+		DatasetInfo di = getDatasetInfo(series);
+		return ((XYDataset) di.data).getY(di.series, item);
+	}
 
-    /**
-     * Returns the number of items in a series.
-     * <P>
-     * Note:  throws <code>ClassCastException</code> if the series is not from 
-     * a {@link XYDataset}.
-     *
-     * @param series  the index of the series of interest (zero-based).
-     *
-     * @return The number of items in a series.
-     */
-    public int getItemCount(int series) {
-        DatasetInfo di = getDatasetInfo(series);
-        return ((XYDataset) di.data).getItemCount(di.series);
-    }
+	/**
+	 * Returns the number of items in a series.
+	 * <P>
+	 * Note: throws <code>ClassCastException</code> if the series is not from a
+	 * {@link XYDataset}.
+	 *
+	 * @param series
+	 *            the index of the series of interest (zero-based).
+	 *
+	 * @return The number of items in a series.
+	 */
+	public int getItemCount(int series) {
+		DatasetInfo di = getDatasetInfo(series);
+		return ((XYDataset) di.data).getItemCount(di.series);
+	}
 
-    ///////////////////////////////////////////////////////////////////////////
-    // From HighLowDataset
-    ///////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////
+	// From HighLowDataset
+	///////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Returns the high-value for the specified series and item.
-     * <P>
-     * Note:  throws <code>ClassCastException</code> if the series is not from a
-     * {@link OHLCDataset}.
-     *
-     * @param series  the index of the series of interest (zero-based).
-     * @param item  the index of the item of interest (zero-based).
-     *
-     * @return The high-value for the specified series and item.
-     */
-    public Number getHigh(int series, int item) {
-        DatasetInfo di = getDatasetInfo(series);
-        return ((OHLCDataset) di.data).getHigh(di.series, item);
-    }
+	/**
+	 * Returns the high-value for the specified series and item.
+	 * <P>
+	 * Note: throws <code>ClassCastException</code> if the series is not from a
+	 * {@link OHLCDataset}.
+	 *
+	 * @param series
+	 *            the index of the series of interest (zero-based).
+	 * @param item
+	 *            the index of the item of interest (zero-based).
+	 *
+	 * @return The high-value for the specified series and item.
+	 */
+	public Number getHigh(int series, int item) {
+		DatasetInfo di = getDatasetInfo(series);
+		return ((OHLCDataset) di.data).getHigh(di.series, item);
+	}
 
-    /**
-     * Returns the high-value (as a double primitive) for an item within a 
-     * series.
-     * 
-     * @param series  the series (zero-based index).
-     * @param item  the item (zero-based index).
-     * 
-     * @return The high-value.
-     */
-    public double getHighValue(int series, int item) {
-        double result = Double.NaN;
-        Number high = getHigh(series, item);
-        if (high != null) {
-            result = high.doubleValue();   
-        }
-        return result;   
-    }
+	/**
+	 * Returns the high-value (as a double primitive) for an item within a series.
+	 * 
+	 * @param series
+	 *            the series (zero-based index).
+	 * @param item
+	 *            the item (zero-based index).
+	 * 
+	 * @return The high-value.
+	 */
+	public double getHighValue(int series, int item) {
+		double result = Double.NaN;
+		Number high = getHigh(series, item);
+		if (high != null) {
+			result = high.doubleValue();
+		}
+		return result;
+	}
 
-    /**
-     * Returns the low-value for the specified series and item.
-     * <P>
-     * Note:  throws <code>ClassCastException</code> if the series is not from a
-     * {@link OHLCDataset}.
-     *
-     * @param series  the index of the series of interest (zero-based).
-     * @param item  the index of the item of interest (zero-based).
-     *
-     * @return The low-value for the specified series and item.
-     */
-    public Number getLow(int series, int item) {
-        DatasetInfo di = getDatasetInfo(series);
-        return ((OHLCDataset) di.data).getLow(di.series, item);
-    }
+	/**
+	 * Returns the low-value for the specified series and item.
+	 * <P>
+	 * Note: throws <code>ClassCastException</code> if the series is not from a
+	 * {@link OHLCDataset}.
+	 *
+	 * @param series
+	 *            the index of the series of interest (zero-based).
+	 * @param item
+	 *            the index of the item of interest (zero-based).
+	 *
+	 * @return The low-value for the specified series and item.
+	 */
+	public Number getLow(int series, int item) {
+		DatasetInfo di = getDatasetInfo(series);
+		return ((OHLCDataset) di.data).getLow(di.series, item);
+	}
 
-    /**
-     * Returns the low-value (as a double primitive) for an item within a 
-     * series.
-     * 
-     * @param series  the series (zero-based index).
-     * @param item  the item (zero-based index).
-     * 
-     * @return The low-value.
-     */
-    public double getLowValue(int series, int item) {
-        double result = Double.NaN;
-        Number low = getLow(series, item);
-        if (low != null) {
-            result = low.doubleValue();   
-        }
-        return result;   
-    }
+	/**
+	 * Returns the low-value (as a double primitive) for an item within a series.
+	 * 
+	 * @param series
+	 *            the series (zero-based index).
+	 * @param item
+	 *            the item (zero-based index).
+	 * 
+	 * @return The low-value.
+	 */
+	public double getLowValue(int series, int item) {
+		double result = Double.NaN;
+		Number low = getLow(series, item);
+		if (low != null) {
+			result = low.doubleValue();
+		}
+		return result;
+	}
 
-    /**
-     * Returns the open-value for the specified series and item.
-     * <P>
-     * Note:  throws <code>ClassCastException</code> if the series is not from a
-     * {@link OHLCDataset}.
-     *
-     * @param series  the index of the series of interest (zero-based).
-     * @param item  the index of the item of interest (zero-based).
-     *
-     * @return The open-value for the specified series and item.
-     */
-    public Number getOpen(int series, int item) {
-        DatasetInfo di = getDatasetInfo(series);
-        return ((OHLCDataset) di.data).getOpen(di.series, item);
-    }
+	/**
+	 * Returns the open-value for the specified series and item.
+	 * <P>
+	 * Note: throws <code>ClassCastException</code> if the series is not from a
+	 * {@link OHLCDataset}.
+	 *
+	 * @param series
+	 *            the index of the series of interest (zero-based).
+	 * @param item
+	 *            the index of the item of interest (zero-based).
+	 *
+	 * @return The open-value for the specified series and item.
+	 */
+	public Number getOpen(int series, int item) {
+		DatasetInfo di = getDatasetInfo(series);
+		return ((OHLCDataset) di.data).getOpen(di.series, item);
+	}
 
-    /**
-     * Returns the open-value (as a double primitive) for an item within a 
-     * series.
-     * 
-     * @param series  the series (zero-based index).
-     * @param item  the item (zero-based index).
-     * 
-     * @return The open-value.
-     */
-    public double getOpenValue(int series, int item) {
-        double result = Double.NaN;
-        Number open = getOpen(series, item);
-        if (open != null) {
-            result = open.doubleValue();   
-        }
-        return result;   
-    }
+	/**
+	 * Returns the open-value (as a double primitive) for an item within a series.
+	 * 
+	 * @param series
+	 *            the series (zero-based index).
+	 * @param item
+	 *            the item (zero-based index).
+	 * 
+	 * @return The open-value.
+	 */
+	public double getOpenValue(int series, int item) {
+		double result = Double.NaN;
+		Number open = getOpen(series, item);
+		if (open != null) {
+			result = open.doubleValue();
+		}
+		return result;
+	}
 
-    /**
-     * Returns the close-value for the specified series and item.
-     * <P>
-     * Note:  throws <code>ClassCastException</code> if the series is not from a
-     * {@link OHLCDataset}.
-     *
-     * @param series  the index of the series of interest (zero-based).
-     * @param item  the index of the item of interest (zero-based).
-     *
-     * @return The close-value for the specified series and item.
-     */
-    public Number getClose(int series, int item) {
-        DatasetInfo di = getDatasetInfo(series);
-        return ((OHLCDataset) di.data).getClose(di.series, item);
-    }
+	/**
+	 * Returns the close-value for the specified series and item.
+	 * <P>
+	 * Note: throws <code>ClassCastException</code> if the series is not from a
+	 * {@link OHLCDataset}.
+	 *
+	 * @param series
+	 *            the index of the series of interest (zero-based).
+	 * @param item
+	 *            the index of the item of interest (zero-based).
+	 *
+	 * @return The close-value for the specified series and item.
+	 */
+	public Number getClose(int series, int item) {
+		DatasetInfo di = getDatasetInfo(series);
+		return ((OHLCDataset) di.data).getClose(di.series, item);
+	}
 
-    /**
-     * Returns the close-value (as a double primitive) for an item within a 
-     * series.
-     * 
-     * @param series  the series (zero-based index).
-     * @param item  the item (zero-based index).
-     * 
-     * @return The close-value.
-     */
-    public double getCloseValue(int series, int item) {
-        double result = Double.NaN;
-        Number close = getClose(series, item);
-        if (close != null) {
-            result = close.doubleValue();   
-        }
-        return result;   
-    }
+	/**
+	 * Returns the close-value (as a double primitive) for an item within a series.
+	 * 
+	 * @param series
+	 *            the series (zero-based index).
+	 * @param item
+	 *            the item (zero-based index).
+	 * 
+	 * @return The close-value.
+	 */
+	public double getCloseValue(int series, int item) {
+		double result = Double.NaN;
+		Number close = getClose(series, item);
+		if (close != null) {
+			result = close.doubleValue();
+		}
+		return result;
+	}
 
-    /**
-     * Returns the volume value for the specified series and item.
-     * <P>
-     * Note:  throws <code>ClassCastException</code> if the series is not from a
-     * {@link OHLCDataset}.
-     *
-     * @param series  the index of the series of interest (zero-based).
-     * @param item  the index of the item of interest (zero-based).
-     *
-     * @return The volume value for the specified series and item.
-     */
-    public Number getVolume(int series, int item) {
-        DatasetInfo di = getDatasetInfo(series);
-        return ((OHLCDataset) di.data).getVolume(di.series, item);
-    }
+	/**
+	 * Returns the volume value for the specified series and item.
+	 * <P>
+	 * Note: throws <code>ClassCastException</code> if the series is not from a
+	 * {@link OHLCDataset}.
+	 *
+	 * @param series
+	 *            the index of the series of interest (zero-based).
+	 * @param item
+	 *            the index of the item of interest (zero-based).
+	 *
+	 * @return The volume value for the specified series and item.
+	 */
+	public Number getVolume(int series, int item) {
+		DatasetInfo di = getDatasetInfo(series);
+		return ((OHLCDataset) di.data).getVolume(di.series, item);
+	}
 
-    /**
-     * Returns the volume-value (as a double primitive) for an item within a 
-     * series.
-     * 
-     * @param series  the series (zero-based index).
-     * @param item  the item (zero-based index).
-     * 
-     * @return The volume-value.
-     */
-    public double getVolumeValue(int series, int item) {
-        double result = Double.NaN;
-        Number volume = getVolume(series, item);
-        if (volume != null) {
-            result = volume.doubleValue();   
-        }
-        return result;   
-    }
+	/**
+	 * Returns the volume-value (as a double primitive) for an item within a series.
+	 * 
+	 * @param series
+	 *            the series (zero-based index).
+	 * @param item
+	 *            the item (zero-based index).
+	 * 
+	 * @return The volume-value.
+	 */
+	public double getVolumeValue(int series, int item) {
+		double result = Double.NaN;
+		Number volume = getVolume(series, item);
+		if (volume != null) {
+			result = volume.doubleValue();
+		}
+		return result;
+	}
 
-    ///////////////////////////////////////////////////////////////////////////
-    // From IntervalXYDataset
-    ///////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////
+	// From IntervalXYDataset
+	///////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Returns the starting X value for the specified series and item.
-     *
-     * @param series  the index of the series of interest (zero-based).
-     * @param item  the index of the item of interest (zero-based).
-     *
-     * @return The value.
-     */
-    public Number getStartX(int series, int item) {
-        DatasetInfo di = getDatasetInfo(series);
-        if (di.data instanceof IntervalXYDataset) {
-            return ((IntervalXYDataset) di.data).getStartX(di.series, item);
-        }
-        else {
-            return getX(series, item);
-        }
-    }
+	/**
+	 * Returns the starting X value for the specified series and item.
+	 *
+	 * @param series
+	 *            the index of the series of interest (zero-based).
+	 * @param item
+	 *            the index of the item of interest (zero-based).
+	 *
+	 * @return The value.
+	 */
+	public Number getStartX(int series, int item) {
+		DatasetInfo di = getDatasetInfo(series);
+		if (di.data instanceof IntervalXYDataset) {
+			return ((IntervalXYDataset) di.data).getStartX(di.series, item);
+		} else {
+			return getX(series, item);
+		}
+	}
 
-    /**
-     * Returns the ending X value for the specified series and item.
-     *
-     * @param series  the index of the series of interest (zero-based).
-     * @param item  the index of the item of interest (zero-based).
-     *
-     * @return The value.
-     */
-    public Number getEndX(int series, int item) {
-        DatasetInfo di = getDatasetInfo(series);
-        if (di.data instanceof IntervalXYDataset) {
-            return ((IntervalXYDataset) di.data).getEndX(di.series, item);
-        }
-        else {
-            return getX(series, item);
-        }
-    }
+	/**
+	 * Returns the ending X value for the specified series and item.
+	 *
+	 * @param series
+	 *            the index of the series of interest (zero-based).
+	 * @param item
+	 *            the index of the item of interest (zero-based).
+	 *
+	 * @return The value.
+	 */
+	public Number getEndX(int series, int item) {
+		DatasetInfo di = getDatasetInfo(series);
+		if (di.data instanceof IntervalXYDataset) {
+			return ((IntervalXYDataset) di.data).getEndX(di.series, item);
+		} else {
+			return getX(series, item);
+		}
+	}
 
-    /**
-     * Returns the starting Y value for the specified series and item.
-     *
-     * @param series  the index of the series of interest (zero-based).
-     * @param item  the index of the item of interest (zero-based).
-     *
-     * @return The starting Y value for the specified series and item.
-     */
-    public Number getStartY(int series, int item) {
-        DatasetInfo di = getDatasetInfo(series);
-        if (di.data instanceof IntervalXYDataset) {
-            return ((IntervalXYDataset) di.data).getStartY(di.series, item);
-        }
-        else {
-            return getY(series, item);
-        }
-    }
+	/**
+	 * Returns the starting Y value for the specified series and item.
+	 *
+	 * @param series
+	 *            the index of the series of interest (zero-based).
+	 * @param item
+	 *            the index of the item of interest (zero-based).
+	 *
+	 * @return The starting Y value for the specified series and item.
+	 */
+	public Number getStartY(int series, int item) {
+		DatasetInfo di = getDatasetInfo(series);
+		if (di.data instanceof IntervalXYDataset) {
+			return ((IntervalXYDataset) di.data).getStartY(di.series, item);
+		} else {
+			return getY(series, item);
+		}
+	}
 
-    /**
-     * Returns the ending Y value for the specified series and item.
-     *
-     * @param series  the index of the series of interest (zero-based).
-     * @param item  the index of the item of interest (zero-based).
-     *
-     * @return The ending Y value for the specified series and item.
-     */
-    public Number getEndY(int series, int item) {
-        DatasetInfo di = getDatasetInfo(series);
-        if (di.data instanceof IntervalXYDataset) {
-            return ((IntervalXYDataset) di.data).getEndY(di.series, item);
-        }
-        else {
-            return getY(series, item);
-        }
-    }
+	/**
+	 * Returns the ending Y value for the specified series and item.
+	 *
+	 * @param series
+	 *            the index of the series of interest (zero-based).
+	 * @param item
+	 *            the index of the item of interest (zero-based).
+	 *
+	 * @return The ending Y value for the specified series and item.
+	 */
+	public Number getEndY(int series, int item) {
+		DatasetInfo di = getDatasetInfo(series);
+		if (di.data instanceof IntervalXYDataset) {
+			return ((IntervalXYDataset) di.data).getEndY(di.series, item);
+		} else {
+			return getY(series, item);
+		}
+	}
 
-    ///////////////////////////////////////////////////////////////////////////
-    // New methods from CombinationDataset
-    ///////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////
+	// New methods from CombinationDataset
+	///////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Returns the parent Dataset of this combination. If there is more than
-     * one parent, or a child is found that is not a CombinationDataset, then
-     * returns <code>null</code>.
-     *
-     * @return The parent Dataset of this combination or <code>null</code>.
-     */
-    public SeriesDataset getParent() {
+	/**
+	 * Returns the parent Dataset of this combination. If there is more than one
+	 * parent, or a child is found that is not a CombinationDataset, then returns
+	 * <code>null</code>.
+	 *
+	 * @return The parent Dataset of this combination or <code>null</code>.
+	 */
+	public SeriesDataset getParent() {
 
-        SeriesDataset parent = null;
-        for (int i = 0; i < this.datasetInfo.size(); i++) {
-            SeriesDataset child = getDatasetInfo(i).data;
-            if (child instanceof CombinationDataset) {
-                SeriesDataset childParent 
-                    = ((CombinationDataset) child).getParent();
-                if (parent == null) {
-                    parent = childParent;
-                }
-                else if (parent != childParent) {
-                    return null;
-                }
-            }
-            else {
-                return null;
-            }
-        }
-        return parent;
+		SeriesDataset parent = null;
+		for (int i = 0; i < this.datasetInfo.size(); i++) {
+			SeriesDataset child = getDatasetInfo(i).data;
+			if (child instanceof CombinationDataset) {
+				SeriesDataset childParent = ((CombinationDataset) child).getParent();
+				if (parent == null) {
+					parent = childParent;
+				} else if (parent != childParent) {
+					return null;
+				}
+			} else {
+				return null;
+			}
+		}
+		return parent;
 
-    }
+	}
 
-    /**
-     * Returns a map or indirect indexing form our series into parent's series.
-     * Prior to calling this method, the client should check getParent() to make
-     * sure the CombinationDataset uses the same parent. If not, the map
-     * returned by this method will be invalid or null.
-     *
-     * @return A map or indirect indexing form our series into parent's series.
-     *
-     * @see #getParent()
-     */
-    public int[] getMap() {
+	/**
+	 * Returns a map or indirect indexing form our series into parent's series.
+	 * Prior to calling this method, the client should check getParent() to make
+	 * sure the CombinationDataset uses the same parent. If not, the map returned by
+	 * this method will be invalid or null.
+	 *
+	 * @return A map or indirect indexing form our series into parent's series.
+	 *
+	 * @see #getParent()
+	 */
+	public int[] getMap() {
 
-        int[] map = null;
-        for (int i = 0; i < this.datasetInfo.size(); i++) {
-            SeriesDataset child = getDatasetInfo(i).data;
-            if (child instanceof CombinationDataset) {
-                int[] childMap = ((CombinationDataset) child).getMap();
-                if (childMap == null) {
-                    return null;
-                }
-                map = joinMap(map, childMap);
-            }
-            else {
-                return null;
-            }
-        }
-        return map;
-    }
+		int[] map = null;
+		for (int i = 0; i < this.datasetInfo.size(); i++) {
+			SeriesDataset child = getDatasetInfo(i).data;
+			if (child instanceof CombinationDataset) {
+				int[] childMap = ((CombinationDataset) child).getMap();
+				if (childMap == null) {
+					return null;
+				}
+				map = joinMap(map, childMap);
+			} else {
+				return null;
+			}
+		}
+		return map;
+	}
 
-    ///////////////////////////////////////////////////////////////////////////
-    // New Methods
-    ///////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////
+	// New Methods
+	///////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Returns the child position.
-     *
-     * @param child  the child dataset.
-     *
-     * @return The position.
-     */
-    public int getChildPosition(Dataset child) {
+	/**
+	 * Returns the child position.
+	 *
+	 * @param child
+	 *            the child dataset.
+	 *
+	 * @return The position.
+	 */
+	public int getChildPosition(Dataset child) {
 
-        int n = 0;
-        for (int i = 0; i < this.datasetInfo.size(); i++) {
-            SeriesDataset childDataset = getDatasetInfo(i).data;
-            if (childDataset instanceof CombinedDataset) {
-                int m = ((CombinedDataset) childDataset)
-                    .getChildPosition(child);
-                if (m >= 0) {
-                    return n + m;
-                }
-                n++;
-            }
-            else {
-                if (child == childDataset) {
-                    return n;
-                }
-                n++;
-            }
-        }
-        return -1;
-    }
+		int n = 0;
+		for (int i = 0; i < this.datasetInfo.size(); i++) {
+			SeriesDataset childDataset = getDatasetInfo(i).data;
+			if (childDataset instanceof CombinedDataset) {
+				int m = ((CombinedDataset) childDataset).getChildPosition(child);
+				if (m >= 0) {
+					return n + m;
+				}
+				n++;
+			} else {
+				if (child == childDataset) {
+					return n;
+				}
+				n++;
+			}
+		}
+		return -1;
+	}
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Private
-    ///////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////
+	// Private
+	///////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Returns the DatasetInfo object associated with the series.
-     *
-     * @param series  the index of the series.
-     *
-     * @return The DatasetInfo object associated with the series.
-     */
-    private DatasetInfo getDatasetInfo(int series) {
-        return (DatasetInfo) this.datasetInfo.get(series);
-    }
+	/**
+	 * Returns the DatasetInfo object associated with the series.
+	 *
+	 * @param series
+	 *            the index of the series.
+	 *
+	 * @return The DatasetInfo object associated with the series.
+	 */
+	private DatasetInfo getDatasetInfo(int series) {
+		return (DatasetInfo) this.datasetInfo.get(series);
+	}
 
-    /**
-     * Joins two map arrays (int[]) together.
-     *
-     * @param a  the first array.
-     * @param b  the second array.
-     *
-     * @return A copy of { a[], b[] }.
-     */
-    private int[] joinMap(int[] a, int[] b) {
-        if (a == null) {
-            return b;
-        }
-        if (b == null) {
-            return a;
-        }
-        int[] result = new int[a.length + b.length];
-        System.arraycopy(a, 0, result, 0, a.length);
-        System.arraycopy(b, 0, result, a.length, b.length);
-        return result;
-    }
+	/**
+	 * Joins two map arrays (int[]) together.
+	 *
+	 * @param a
+	 *            the first array.
+	 * @param b
+	 *            the second array.
+	 *
+	 * @return A copy of { a[], b[] }.
+	 */
+	private int[] joinMap(int[] a, int[] b) {
+		if (a == null) {
+			return b;
+		}
+		if (b == null) {
+			return a;
+		}
+		int[] result = new int[a.length + b.length];
+		System.arraycopy(a, 0, result, 0, a.length);
+		System.arraycopy(b, 0, result, a.length, b.length);
+		return result;
+	}
 
-    /**
-     * Private class to store as pairs (SeriesDataset, series) for all combined
-     * series.
-     */
-    private class DatasetInfo {
+	/**
+	 * Private class to store as pairs (SeriesDataset, series) for all combined
+	 * series.
+	 */
+	private class DatasetInfo {
 
-        /** The dataset. */
-        private SeriesDataset data;
+		/** The dataset. */
+		private SeriesDataset data;
 
-        /** The series. */
-        private int series;
+		/** The series. */
+		private int series;
 
-        /**
-         * Creates a new dataset info record.
-         *
-         * @param data  the dataset.
-         * @param series  the series.
-         */
-        DatasetInfo(SeriesDataset data, int series) {
-            this.data = data;
-            this.series = series;
-        }
-    }
+		/**
+		 * Creates a new dataset info record.
+		 *
+		 * @param data
+		 *            the dataset.
+		 * @param series
+		 *            the series.
+		 */
+		DatasetInfo(SeriesDataset data, int series) {
+			this.data = data;
+			this.series = series;
+		}
+	}
 
 }

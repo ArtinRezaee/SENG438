@@ -63,310 +63,331 @@ import org.jfree.data.general.DefaultValueDataset;
 import org.jfree.ui.RectangleInsets;
 
 /**
- * An initial quick and dirty.  The concept behind this class would be to
+ * An initial quick and dirty. The concept behind this class would be to
  * generate a gui bean that could be used within JBuilder, Netbeans etc...
  *
- * Copyright (c) 2002
- * Australian Antarctic Division
+ * Copyright (c) 2002 Australian Antarctic Division
  *
  * @author Bryan Scott
  */
 public class JThermometer extends JPanel implements Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = 1079905665515589820L;
-    
-    /** The dataset. */
-    private DefaultValueDataset data;
+	/** For serialization. */
+	private static final long serialVersionUID = 1079905665515589820L;
 
-    /** The chart. */
-    private JFreeChart chart;
+	/** The dataset. */
+	private DefaultValueDataset data;
 
-    /** The chart panel. */
-    private ChartPanel panel;
+	/** The chart. */
+	private JFreeChart chart;
 
-    /** The thermometer plot. */
-    private ThermometerPlot plot = new ThermometerPlot();
+	/** The chart panel. */
+	private ChartPanel panel;
 
-    /**
-     * Default constructor.
-     */
-    public JThermometer() {
-        super(new CardLayout());
-        //this.plot.setInsets(new RectangleInsets(5.0, 5.0, 5.0, 5.0));
-        this.plot.setMargin(new RectangleInsets(5.0, 5.0, 5.0, 5.0));
-        this.data = new DefaultValueDataset();
-        //data.setRange(new Double(-60000), new Double(60000));
-        this.plot.setDataset(this.data);
-        this.chart = new JFreeChart(
-            null, JFreeChart.DEFAULT_TITLE_FONT, this.plot, false
-        );
-        this.panel = new ChartPanel(this.chart);
-        add(this.panel, "Panel");
-        setBackground(getBackground());
-    }
+	/** The thermometer plot. */
+	private ThermometerPlot plot = new ThermometerPlot();
 
-    /**
-     * Adds a subtitle to the chart.
-     *
-     * @param subtitle  the subtitle.
-     */
-    public void addSubtitle(Title subtitle) {
-        this.chart.addSubtitle(subtitle);
-    }
+	/**
+	 * Default constructor.
+	 */
+	public JThermometer() {
+		super(new CardLayout());
+		// this.plot.setInsets(new RectangleInsets(5.0, 5.0, 5.0, 5.0));
+		this.plot.setMargin(new RectangleInsets(5.0, 5.0, 5.0, 5.0));
+		this.data = new DefaultValueDataset();
+		// data.setRange(new Double(-60000), new Double(60000));
+		this.plot.setDataset(this.data);
+		this.chart = new JFreeChart(null, JFreeChart.DEFAULT_TITLE_FONT, this.plot, false);
+		this.panel = new ChartPanel(this.chart);
+		add(this.panel, "Panel");
+		setBackground(getBackground());
+	}
 
-    /**
-     * Adds a subtitle to the chart.
-     *
-     * @param subtitle  the subtitle.
-     */
-    public void addSubtitle(String subtitle) {
-        this.chart.addSubtitle(new TextTitle(subtitle));
-    }
+	/**
+	 * Adds a subtitle to the chart.
+	 *
+	 * @param subtitle
+	 *            the subtitle.
+	 */
+	public void addSubtitle(Title subtitle) {
+		this.chart.addSubtitle(subtitle);
+	}
 
-    /**
-     * Adds a subtitle to the chart.
-     *
-     * @param subtitle  the subtitle.
-     * @param font  the subtitle font.
-     */
-    public void addSubtitle(String subtitle, Font font) {
-        this.chart.addSubtitle(new TextTitle(subtitle, font));
-    }
+	/**
+	 * Adds a subtitle to the chart.
+	 *
+	 * @param subtitle
+	 *            the subtitle.
+	 */
+	public void addSubtitle(String subtitle) {
+		this.chart.addSubtitle(new TextTitle(subtitle));
+	}
 
-    /**
-     * Sets the value format for the thermometer.
-     *
-     * @param df  the formatter.
-     */
-    public void setValueFormat(DecimalFormat df) {
-        this.plot.setValueFormat(df);
-    }
+	/**
+	 * Adds a subtitle to the chart.
+	 *
+	 * @param subtitle
+	 *            the subtitle.
+	 * @param font
+	 *            the subtitle font.
+	 */
+	public void addSubtitle(String subtitle, Font font) {
+		this.chart.addSubtitle(new TextTitle(subtitle, font));
+	}
 
-    /**
-     * Sets the lower and upper bounds for the thermometer.
-     *
-     * @param lower  the lower bound.
-     * @param upper  the upper bound.
-     */
-    public void setRange(double lower, double upper) {
-        this.plot.setRange(lower, upper);
-    }
+	/**
+	 * Sets the value format for the thermometer.
+	 *
+	 * @param df
+	 *            the formatter.
+	 */
+	public void setValueFormat(DecimalFormat df) {
+		this.plot.setValueFormat(df);
+	}
 
-    /**
-     * Sets the range.
-     *
-     * @param range  the range type.
-     * @param displayLow  the low value.
-     * @param displayHigh  the high value.
-     */
-    public void setSubrangeInfo(int range, double displayLow, 
-                                double displayHigh) {
-        this.plot.setSubrangeInfo(range, displayLow, displayHigh);
-    }
+	/**
+	 * Sets the lower and upper bounds for the thermometer.
+	 *
+	 * @param lower
+	 *            the lower bound.
+	 * @param upper
+	 *            the upper bound.
+	 */
+	public void setRange(double lower, double upper) {
+		this.plot.setRange(lower, upper);
+	}
 
-    /**
-     * Sets the range.
-     *
-     * @param range  the range type.
-     * @param rangeLow  the low value for the range.
-     * @param rangeHigh  the high value for the range.
-     * @param displayLow  the low value for display.
-     * @param displayHigh  the high value for display.
-     */
-    public void setSubrangeInfo(int range,
-                             double rangeLow, double rangeHigh,
-                             double displayLow, double displayHigh) {
+	/**
+	 * Sets the range.
+	 *
+	 * @param range
+	 *            the range type.
+	 * @param displayLow
+	 *            the low value.
+	 * @param displayHigh
+	 *            the high value.
+	 */
+	public void setSubrangeInfo(int range, double displayLow, double displayHigh) {
+		this.plot.setSubrangeInfo(range, displayLow, displayHigh);
+	}
 
-        this.plot.setSubrangeInfo(range, rangeLow, rangeHigh, displayLow, 
-                displayHigh);
+	/**
+	 * Sets the range.
+	 *
+	 * @param range
+	 *            the range type.
+	 * @param rangeLow
+	 *            the low value for the range.
+	 * @param rangeHigh
+	 *            the high value for the range.
+	 * @param displayLow
+	 *            the low value for display.
+	 * @param displayHigh
+	 *            the high value for display.
+	 */
+	public void setSubrangeInfo(int range, double rangeLow, double rangeHigh, double displayLow, double displayHigh) {
 
-    }
+		this.plot.setSubrangeInfo(range, rangeLow, rangeHigh, displayLow, displayHigh);
 
-    /**
-     * Sets the location at which the temperature value is displayed.
-     *
-     * @param loc  the location.
-     */
-    public void setValueLocation(int loc) {
-        this.plot.setValueLocation(loc);
-        this.panel.repaint();
-    }
+	}
 
-    /**
-     * Sets the value paint.
-     *
-     * @param paint  the paint.
-     */
-    public void setValuePaint(Paint paint) {
-        this.plot.setValuePaint(paint);
-    }
+	/**
+	 * Sets the location at which the temperature value is displayed.
+	 *
+	 * @param loc
+	 *            the location.
+	 */
+	public void setValueLocation(int loc) {
+		this.plot.setValueLocation(loc);
+		this.panel.repaint();
+	}
 
-    /**
-     * Returns the value of the thermometer.
-     *
-     * @return The value.
-     */
-    public Number getValue() {
-        if (this.data != null) {
-            return this.data.getValue();
-        }
-        else {
-            return null;
-        }
-    }
+	/**
+	 * Sets the value paint.
+	 *
+	 * @param paint
+	 *            the paint.
+	 */
+	public void setValuePaint(Paint paint) {
+		this.plot.setValuePaint(paint);
+	}
 
-    /**
-     * Sets the value of the thermometer.
-     *
-     * @param value  the value.
-     */
-    public void setValue(double value) {
-        setValue(new Double(value));
-    }
+	/**
+	 * Returns the value of the thermometer.
+	 *
+	 * @return The value.
+	 */
+	public Number getValue() {
+		if (this.data != null) {
+			return this.data.getValue();
+		} else {
+			return null;
+		}
+	}
 
-    /**
-     * Sets the value of the thermometer.
-     *
-     * @param value  the value.
-     */
-    public void setValue(Number value) {
-        if (this.data != null) {
-            this.data.setValue(value);
-        }
-    }
+	/**
+	 * Sets the value of the thermometer.
+	 *
+	 * @param value
+	 *            the value.
+	 */
+	public void setValue(double value) {
+		setValue(new Double(value));
+	}
 
-    /**
-     * Sets the unit type.
-     *
-     * @param i  the unit type.
-     */
-    public void setUnits(int i) {
-        if (this.plot != null) {
-            this.plot.setUnits(i);
-        }
-    }
+	/**
+	 * Sets the value of the thermometer.
+	 *
+	 * @param value
+	 *            the value.
+	 */
+	public void setValue(Number value) {
+		if (this.data != null) {
+			this.data.setValue(value);
+		}
+	}
 
-    /**
-     * Sets the foreground color.
-     *
-     * @param fg  the foreground color.
-     */
-    public void setForeground(Color fg) {
-        super.setForeground(fg);
-        if (this.plot != null) {
-            this.plot.setThermometerPaint(fg);
-        }
-    }
+	/**
+	 * Sets the unit type.
+	 *
+	 * @param i
+	 *            the unit type.
+	 */
+	public void setUnits(int i) {
+		if (this.plot != null) {
+			this.plot.setUnits(i);
+		}
+	}
 
-    /**
-     * Sets the background color.
-     *
-     * @param bg  the background color.
-     */
-    public void setBackground(Color bg) {
-        super.setBackground(bg);
-        if (this.plot != null) {
-            this.plot.setBackgroundPaint(bg);
-        }
-        if (this.chart != null) {
-            this.chart.setBackgroundPaint(bg);
-        }
-        if (this.panel != null) {
-            this.panel.setBackground(bg);
-        }
-    }
+	/**
+	 * Sets the foreground color.
+	 *
+	 * @param fg
+	 *            the foreground color.
+	 */
+	public void setForeground(Color fg) {
+		super.setForeground(fg);
+		if (this.plot != null) {
+			this.plot.setThermometerPaint(fg);
+		}
+	}
 
-    /**
-     * Sets the value font.
-     *
-     * @param f  the font.
-     */
-    public void setValueFont(Font f) {
-        if (this.plot != null) {
-            this.plot.setValueFont(f);
-        }
-    }
+	/**
+	 * Sets the background color.
+	 *
+	 * @param bg
+	 *            the background color.
+	 */
+	public void setBackground(Color bg) {
+		super.setBackground(bg);
+		if (this.plot != null) {
+			this.plot.setBackgroundPaint(bg);
+		}
+		if (this.chart != null) {
+			this.chart.setBackgroundPaint(bg);
+		}
+		if (this.panel != null) {
+			this.panel.setBackground(bg);
+		}
+	}
 
-    /**
-     * Returns the tick label font.
-     *
-     * @return The tick label font.
-     */
-    public Font getTickLabelFont() {
-        ValueAxis axis = this.plot.getRangeAxis();
-        return axis.getTickLabelFont();
-    }
+	/**
+	 * Sets the value font.
+	 *
+	 * @param f
+	 *            the font.
+	 */
+	public void setValueFont(Font f) {
+		if (this.plot != null) {
+			this.plot.setValueFont(f);
+		}
+	}
 
-    /**
-     * Sets the tick label font.
-     *
-     * @param font  the font.
-     */
-    public void setTickLabelFont(Font font) {
-        ValueAxis axis = this.plot.getRangeAxis();
-        axis.setTickLabelFont(font);
-    }
+	/**
+	 * Returns the tick label font.
+	 *
+	 * @return The tick label font.
+	 */
+	public Font getTickLabelFont() {
+		ValueAxis axis = this.plot.getRangeAxis();
+		return axis.getTickLabelFont();
+	}
 
-    /**
-     * Increases or decreases the tick font size.
-     *
-     * @param delta  the change in size.
-     */
-    public void changeTickFontSize(int delta) {
-        Font f = getTickLabelFont();
-        String fName = f.getFontName();
-        Font newFont = new Font(fName, f.getStyle(), (f.getSize() + delta));
-        setTickLabelFont(newFont);
-    }
+	/**
+	 * Sets the tick label font.
+	 *
+	 * @param font
+	 *            the font.
+	 */
+	public void setTickLabelFont(Font font) {
+		ValueAxis axis = this.plot.getRangeAxis();
+		axis.setTickLabelFont(font);
+	}
 
-    /**
-     * Sets the tick font style.
-     *
-     * @param style  the style.
-     */
-    public void setTickFontStyle(int style) {
-        Font f = getTickLabelFont();
-        String fName = f.getFontName();
-        Font newFont = new Font(fName, style, f.getSize());
-        setTickLabelFont(newFont);
-    }
+	/**
+	 * Increases or decreases the tick font size.
+	 *
+	 * @param delta
+	 *            the change in size.
+	 */
+	public void changeTickFontSize(int delta) {
+		Font f = getTickLabelFont();
+		String fName = f.getFontName();
+		Font newFont = new Font(fName, f.getStyle(), (f.getSize() + delta));
+		setTickLabelFont(newFont);
+	}
 
-    /**
-     * Sets the flag that controls whether or not the display range follows the
-     * data value.
-     *
-     * @param flag  the new value of the flag.
-     */
-    public void setFollowDataInSubranges(boolean flag) {
-        this.plot.setFollowDataInSubranges(flag);
-    }
+	/**
+	 * Sets the tick font style.
+	 *
+	 * @param style
+	 *            the style.
+	 */
+	public void setTickFontStyle(int style) {
+		Font f = getTickLabelFont();
+		String fName = f.getFontName();
+		Font newFont = new Font(fName, style, f.getSize());
+		setTickLabelFont(newFont);
+	}
 
-    /**
-     * Sets the flag that controls whether or not value lines are displayed.
-     *
-     * @param b  the new flag value.
-     */
-    public void setShowValueLines(boolean b) {
-        this.plot.setShowValueLines(b);
-    }
+	/**
+	 * Sets the flag that controls whether or not the display range follows the data
+	 * value.
+	 *
+	 * @param flag
+	 *            the new value of the flag.
+	 */
+	public void setFollowDataInSubranges(boolean flag) {
+		this.plot.setFollowDataInSubranges(flag);
+	}
 
-    /**
-     * Sets the location for the axis.
-     * 
-     * @param location  the location.
-     */
-    public void setShowAxisLocation(int location) {
-        this.plot.setAxisLocation(location);
-    }
+	/**
+	 * Sets the flag that controls whether or not value lines are displayed.
+	 *
+	 * @param b
+	 *            the new flag value.
+	 */
+	public void setShowValueLines(boolean b) {
+		this.plot.setShowValueLines(b);
+	}
 
-    /**
-     * Returns the location for the axis.
-     * 
-     * @return The location.
-     */
-    public int getShowAxisLocation() {
-      return this.plot.getAxisLocation();
-    }
+	/**
+	 * Sets the location for the axis.
+	 * 
+	 * @param location
+	 *            the location.
+	 */
+	public void setShowAxisLocation(int location) {
+		this.plot.setAxisLocation(location);
+	}
+
+	/**
+	 * Returns the location for the axis.
+	 * 
+	 * @return The location.
+	 */
+	public int getShowAxisLocation() {
+		return this.plot.getAxisLocation();
+	}
 
 }

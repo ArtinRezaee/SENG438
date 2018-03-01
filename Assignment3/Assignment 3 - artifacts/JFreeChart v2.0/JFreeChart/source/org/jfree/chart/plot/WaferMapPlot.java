@@ -70,393 +70,376 @@ import org.jfree.ui.RectangleInsets;
 /**
  * A wafer map plot.
  */
-public class WaferMapPlot extends Plot implements RendererChangeListener,
-                                                  Cloneable,
-                                                  Serializable {
+public class WaferMapPlot extends Plot implements RendererChangeListener, Cloneable, Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = 4668320403707308155L;
-    
-    /** The default grid line stroke. */
-    public static final Stroke DEFAULT_GRIDLINE_STROKE = new BasicStroke(0.5f,
-        BasicStroke.CAP_BUTT,
-        BasicStroke.JOIN_BEVEL,
-        0.0f,
-        new float[] {2.0f, 2.0f},
-        0.0f);
+	/** For serialization. */
+	private static final long serialVersionUID = 4668320403707308155L;
 
-    /** The default grid line paint. */
-    public static final Paint DEFAULT_GRIDLINE_PAINT = Color.lightGray;
+	/** The default grid line stroke. */
+	public static final Stroke DEFAULT_GRIDLINE_STROKE = new BasicStroke(0.5f, BasicStroke.CAP_BUTT,
+			BasicStroke.JOIN_BEVEL, 0.0f, new float[] { 2.0f, 2.0f }, 0.0f);
 
-    /** The default crosshair visibility. */
-    public static final boolean DEFAULT_CROSSHAIR_VISIBLE = false;
+	/** The default grid line paint. */
+	public static final Paint DEFAULT_GRIDLINE_PAINT = Color.lightGray;
 
-    /** The default crosshair stroke. */
-    public static final Stroke DEFAULT_CROSSHAIR_STROKE 
-        = DEFAULT_GRIDLINE_STROKE;
+	/** The default crosshair visibility. */
+	public static final boolean DEFAULT_CROSSHAIR_VISIBLE = false;
 
-    /** The default crosshair paint. */
-    public static final Paint DEFAULT_CROSSHAIR_PAINT = Color.blue;
+	/** The default crosshair stroke. */
+	public static final Stroke DEFAULT_CROSSHAIR_STROKE = DEFAULT_GRIDLINE_STROKE;
 
-    /** The resourceBundle for the localization. */
-    protected static ResourceBundle localizationResources = 
-        ResourceBundle.getBundle("org.jfree.chart.plot.LocalizationBundle");
+	/** The default crosshair paint. */
+	public static final Paint DEFAULT_CROSSHAIR_PAINT = Color.blue;
 
-    /** The plot orientation. 
-     *  vertical = notch down
-     *  horizontal = notch right
-     */
-    private PlotOrientation orientation;
+	/** The resourceBundle for the localization. */
+	protected static ResourceBundle localizationResources = ResourceBundle
+			.getBundle("org.jfree.chart.plot.LocalizationBundle");
 
-    /** The dataset. */
-    private WaferMapDataset dataset;
+	/**
+	 * The plot orientation. vertical = notch down horizontal = notch right
+	 */
+	private PlotOrientation orientation;
 
-    /** 
-     * Object responsible for drawing the visual representation of each point 
-     * on the plot. 
-     */
-    private WaferMapRenderer renderer;
+	/** The dataset. */
+	private WaferMapDataset dataset;
 
-    /**
-     * Creates a new plot with no dataset.
-     */
-    public WaferMapPlot() {
-        this(null);   
-    }
+	/**
+	 * Object responsible for drawing the visual representation of each point on the
+	 * plot.
+	 */
+	private WaferMapRenderer renderer;
 
-    /**
-     * Creates a new plot.
-     * 
-     * @param dataset  the dataset (<code>null</code> permitted).
-     */
-    public WaferMapPlot(WaferMapDataset dataset) {
-        this(dataset, null);
-    }
+	/**
+	 * Creates a new plot with no dataset.
+	 */
+	public WaferMapPlot() {
+		this(null);
+	}
 
-    /**
-     * Creates a new plot.
-     *
-     * @param dataset  the dataset (<code>null</code> permitted).
-     * @param renderer  the renderer (<code>null</code> permitted).
-     */
-    public WaferMapPlot(WaferMapDataset dataset, WaferMapRenderer renderer) {
+	/**
+	 * Creates a new plot.
+	 * 
+	 * @param dataset
+	 *            the dataset (<code>null</code> permitted).
+	 */
+	public WaferMapPlot(WaferMapDataset dataset) {
+		this(dataset, null);
+	}
 
-        super();
+	/**
+	 * Creates a new plot.
+	 *
+	 * @param dataset
+	 *            the dataset (<code>null</code> permitted).
+	 * @param renderer
+	 *            the renderer (<code>null</code> permitted).
+	 */
+	public WaferMapPlot(WaferMapDataset dataset, WaferMapRenderer renderer) {
 
-        this.orientation = PlotOrientation.VERTICAL;
-        
-        this.dataset = dataset;
-        if (dataset != null) {
-            dataset.addChangeListener(this);
-        }
+		super();
 
-        this.renderer = renderer;
-        if (renderer != null) {
-            renderer.setPlot(this);
-            renderer.addChangeListener(this);
-        }
+		this.orientation = PlotOrientation.VERTICAL;
 
-    }
+		this.dataset = dataset;
+		if (dataset != null) {
+			dataset.addChangeListener(this);
+		}
 
-    /**
-     * Returns the plot type as a string.
-     *
-     * @return A short string describing the type of plot.
-     */
-    public String getPlotType() {
-        return ("WMAP_Plot");
-    }
+		this.renderer = renderer;
+		if (renderer != null) {
+			renderer.setPlot(this);
+			renderer.addChangeListener(this);
+		}
 
-    /**
-     * Returns the dataset
-     * 
-     * @return The dataset.
-     */
-    public WaferMapDataset getDataset() {
-        return this.dataset;
-    }
+	}
 
-    /**
-     * Sets the dataset used by the plot and sends a {@link PlotChangeEvent}
-     * to all registered listeners.
-     * 
-     * @param dataset  the dataset (<code>null</code> permitted).
-     */
-    public void setDataset(WaferMapDataset dataset) {
-        // if there is an existing dataset, remove the plot from the list of 
-        // change listeners...
-        if (this.dataset != null) {
-            this.dataset.removeChangeListener(this);
-        }
+	/**
+	 * Returns the plot type as a string.
+	 *
+	 * @return A short string describing the type of plot.
+	 */
+	public String getPlotType() {
+		return ("WMAP_Plot");
+	}
 
-        // set the new dataset, and register the chart as a change listener...
-        this.dataset = dataset;
-        if (dataset != null) {
-            setDatasetGroup(dataset.getGroup());
-            dataset.addChangeListener(this);
-        }
+	/**
+	 * Returns the dataset
+	 * 
+	 * @return The dataset.
+	 */
+	public WaferMapDataset getDataset() {
+		return this.dataset;
+	}
 
-        // send a dataset change event to self to trigger plot change event
-        datasetChanged(new DatasetChangeEvent(this, dataset));
-    }
+	/**
+	 * Sets the dataset used by the plot and sends a {@link PlotChangeEvent} to all
+	 * registered listeners.
+	 * 
+	 * @param dataset
+	 *            the dataset (<code>null</code> permitted).
+	 */
+	public void setDataset(WaferMapDataset dataset) {
+		// if there is an existing dataset, remove the plot from the list of
+		// change listeners...
+		if (this.dataset != null) {
+			this.dataset.removeChangeListener(this);
+		}
 
-    /**
-     * Sets the item renderer, and notifies all listeners of a change to the 
-     * plot.  If the renderer is set to <code>null</code>, no chart will be 
-     * drawn.
-     *
-     * @param renderer  the new renderer (<code>null</code> permitted).
-     */
-    public void setRenderer(WaferMapRenderer renderer) {
+		// set the new dataset, and register the chart as a change listener...
+		this.dataset = dataset;
+		if (dataset != null) {
+			setDatasetGroup(dataset.getGroup());
+			dataset.addChangeListener(this);
+		}
 
-        if (this.renderer != null) {
-            this.renderer.removeChangeListener(this);
-        }
+		// send a dataset change event to self to trigger plot change event
+		datasetChanged(new DatasetChangeEvent(this, dataset));
+	}
 
-        this.renderer = renderer;
-        if (renderer != null) {
-            renderer.setPlot(this);
-        }
+	/**
+	 * Sets the item renderer, and notifies all listeners of a change to the plot.
+	 * If the renderer is set to <code>null</code>, no chart will be drawn.
+	 *
+	 * @param renderer
+	 *            the new renderer (<code>null</code> permitted).
+	 */
+	public void setRenderer(WaferMapRenderer renderer) {
 
-        notifyListeners(new PlotChangeEvent(this));
+		if (this.renderer != null) {
+			this.renderer.removeChangeListener(this);
+		}
 
-    }
-    
-    /**
-     * Arranges the contents of the block, within the given constraints, and 
-     * returns the block size.
-     * 
-     * @param g2  the graphics device.
-     * @param constraint  the constraint (<code>null</code> not permitted).
-     * @param params  the layout parameters (<code>null</code> not permitted).
-     * 
-     * @return The layout result.
-     */
-    public ArrangeResult arrange(Graphics2D g2, RectangleConstraint constraint, 
-            ArrangeParams params) {
-        
-        // there isn't any content to arrange, so we just need to return the
-        // size for the given constraint
-        ArrangeResult result = params.getRecyclableResult();
-        double w = constraint.calculateConstrainedWidth(getDefaultWidth());
-        double h = constraint.calculateConstrainedHeight(getDefaultHeight());
-        if (result != null) {
-            result.setSize(w, h);
-        }
-        else {
-            result = new ArrangeResult(w, h, null);
-        }
-        return result;
-        
-    }
-    
-    /**
-     * Draws the wafermap view.
-     * 
-     * @param g2  the graphics device.
-     * @param plotArea  the plot area.
-     * @param state  the plot state.
-     * @param info  the plot rendering info.
-     */
-    public void draw(Graphics2D g2, Rectangle2D plotArea, Point2D anchor,
-                     PlotState state, 
-                     PlotRenderingInfo info) {
+		this.renderer = renderer;
+		if (renderer != null) {
+			renderer.setPlot(this);
+		}
 
-        // if the plot area is too small, just return...
-        boolean b1 = (plotArea.getWidth() <= MINIMUM_WIDTH_TO_DRAW);
-        boolean b2 = (plotArea.getHeight() <= MINIMUM_HEIGHT_TO_DRAW);
-        if (b1 || b2) {
-            return;
-        }
+		notifyListeners(new PlotChangeEvent(this));
 
-        // record the plot area...
-        if (info != null) {
-            info.setPlotArea(plotArea);
-        }
+	}
 
-        // adjust the drawing area for the plot insets (if any)...
-        //RectangleInsets insets = getInsets();
-        //insets.trim(plotArea);
-        RectangleInsets margin = getMargin();
-        margin.trim(plotArea);
+	/**
+	 * Arranges the contents of the block, within the given constraints, and returns
+	 * the block size.
+	 * 
+	 * @param g2
+	 *            the graphics device.
+	 * @param constraint
+	 *            the constraint (<code>null</code> not permitted).
+	 * @param params
+	 *            the layout parameters (<code>null</code> not permitted).
+	 * 
+	 * @return The layout result.
+	 */
+	public ArrangeResult arrange(Graphics2D g2, RectangleConstraint constraint, ArrangeParams params) {
 
-        drawChipGrid(g2, plotArea);       
-        drawWaferEdge(g2, plotArea);
-        
-    }
+		// there isn't any content to arrange, so we just need to return the
+		// size for the given constraint
+		ArrangeResult result = params.getRecyclableResult();
+		double w = constraint.calculateConstrainedWidth(getDefaultWidth());
+		double h = constraint.calculateConstrainedHeight(getDefaultHeight());
+		if (result != null) {
+			result.setSize(w, h);
+		} else {
+			result = new ArrangeResult(w, h, null);
+		}
+		return result;
 
-    /**
-     * Calculates and draws the chip locations on the wafer.
-     * 
-     * @param g2  the graphics device.
-     * @param plotArea  the plot area.
-     */
-    protected void drawChipGrid(Graphics2D g2, Rectangle2D plotArea) {
-        
-        Shape savedClip = g2.getClip();
-        g2.setClip(getWaferEdge(plotArea));
-        Rectangle2D chip = new Rectangle2D.Double();
-        int xchips = 35;
-        int ychips = 20;
-        double space = 1d;
-        if (this.dataset != null) {
-            xchips = this.dataset.getMaxChipX() + 2;
-            ychips = this.dataset.getMaxChipY() + 2;
-            space = this.dataset.getChipSpace();
-        }
-        double startX = plotArea.getX();
-        double startY = plotArea.getY();
-        double chipWidth = 1d;
-        double chipHeight = 1d;
-        if (plotArea.getWidth() != plotArea.getHeight()) {
-            double major = 0d;
-            double minor = 0d;
-            if (plotArea.getWidth() > plotArea.getHeight()) {
-                major = plotArea.getWidth();
-                minor = plotArea.getHeight();
-            } 
-            else {
-                major = plotArea.getHeight();
-                minor = plotArea.getWidth();
-            } 
-            //set upperLeft point
-            if (plotArea.getWidth() == minor) { // x is minor
-                startY += (major - minor) / 2;
-                chipWidth = (plotArea.getWidth() - (space * xchips - 1)) 
-                    / xchips;
-                chipHeight = (plotArea.getWidth() - (space * ychips - 1)) 
-                    / ychips;
-            }
-            else { // y is minor
-                startX += (major - minor) / 2;
-                chipWidth = (plotArea.getHeight() - (space * xchips - 1)) 
-                    / xchips;
-                chipHeight = (plotArea.getHeight() - (space * ychips - 1)) 
-                    / ychips;
-            }
-        }
-        
-        for (int x = 1; x <= xchips; x++) {
-            double upperLeftX = (startX - chipWidth) + (chipWidth * x) 
-                + (space * (x - 1));
-            for (int y = 1; y <= ychips; y++) {
-                double upperLeftY = (startY - chipHeight) + (chipHeight * y) 
-                    + (space * (y - 1));
-                chip.setFrame(upperLeftX, upperLeftY, chipWidth, chipHeight);
-                g2.setColor(Color.white);
-                if (this.dataset.getChipValue(x - 1, ychips - y - 1) != null) {
-                    g2.setPaint(
-                        this.renderer.getChipColor(
-                            this.dataset.getChipValue(x - 1, ychips - y - 1)
-                        )
-                    );
-                } 
-                g2.fill(chip);
-                g2.setColor(Color.lightGray);
-                g2.draw(chip);
-            }
-        }
-        g2.setClip(savedClip);
-    }
+	}
 
-    /**
-     * Calculates the location of the waferedge.
-     * 
-     * @param plotArea  the plot area.
-     * 
-     * @return The wafer edge.
-     */
-    protected Ellipse2D getWaferEdge(Rectangle2D plotArea) {
-        Ellipse2D edge = new Ellipse2D.Double();
-        double diameter = plotArea.getWidth();
-        double upperLeftX = plotArea.getX();
-        double upperLeftY = plotArea.getY();
-        //get major dimension
-        if (plotArea.getWidth() != plotArea.getHeight()) {
-            double major = 0d;
-            double minor = 0d;
-            if (plotArea.getWidth() > plotArea.getHeight()) {
-                major = plotArea.getWidth();
-                minor = plotArea.getHeight();
-            } 
-            else {
-                major = plotArea.getHeight();
-                minor = plotArea.getWidth();
-            } 
-            //ellipse diameter is the minor dimension
-            diameter = minor;
-            //set upperLeft point
-            if (plotArea.getWidth() == minor) { // x is minor
-                upperLeftY = plotArea.getY() + (major - minor) / 2;
-            }
-            else { // y is minor
-                upperLeftX = plotArea.getX() + (major - minor) / 2;
-            }
-        }
-        edge.setFrame(upperLeftX, upperLeftY, diameter, diameter); 
-        return edge;        
-    }
+	/**
+	 * Draws the wafermap view.
+	 * 
+	 * @param g2
+	 *            the graphics device.
+	 * @param plotArea
+	 *            the plot area.
+	 * @param state
+	 *            the plot state.
+	 * @param info
+	 *            the plot rendering info.
+	 */
+	public void draw(Graphics2D g2, Rectangle2D plotArea, Point2D anchor, PlotState state, PlotRenderingInfo info) {
 
-    /**
-     * Draws the waferedge, including the notch.
-     * 
-     * @param g2  the graphics device.
-     * @param plotArea  the plot area.
-     */
-    protected void drawWaferEdge(Graphics2D g2, Rectangle2D plotArea) {
-        // draw the wafer
-        Ellipse2D waferEdge = getWaferEdge(plotArea);
-        g2.setColor(Color.black);
-        g2.draw(waferEdge);
-        // calculate and draw the notch
-        // horizontal orientation is considered notch right
-        // vertical orientation is considered notch down
-        Arc2D notch = null;
-        Rectangle2D waferFrame = waferEdge.getFrame();
-        double notchDiameter = waferFrame.getWidth() * 0.04;
-        if (this.orientation == PlotOrientation.HORIZONTAL) {
-            Rectangle2D notchFrame = 
-                new Rectangle2D.Double(
-                    waferFrame.getX() + waferFrame.getWidth() 
-                    - (notchDiameter / 2), waferFrame.getY()
-                    + (waferFrame.getHeight() / 2) - (notchDiameter / 2),
-                    notchDiameter, notchDiameter
-                );
-            notch = new Arc2D.Double(notchFrame, 90d, 180d, Arc2D.OPEN);
-        }
-        else {
-            Rectangle2D notchFrame = 
-                new Rectangle2D.Double(
-                    waferFrame.getX() + (waferFrame.getWidth() / 2) 
-                    - (notchDiameter / 2), waferFrame.getY() 
-                    + waferFrame.getHeight() - (notchDiameter / 2),
-                    notchDiameter, notchDiameter
-                );
-            notch = new Arc2D.Double(notchFrame, 0d, 180d, Arc2D.OPEN);        
-        }
-        g2.setColor(Color.white);
-        g2.fill(notch);
-        g2.setColor(Color.black);
-        g2.draw(notch);
-        
-    }
+		// if the plot area is too small, just return...
+		boolean b1 = (plotArea.getWidth() <= MINIMUM_WIDTH_TO_DRAW);
+		boolean b2 = (plotArea.getHeight() <= MINIMUM_HEIGHT_TO_DRAW);
+		if (b1 || b2) {
+			return;
+		}
 
-    /**
-     * Return the legend items from the renderer.
-     * 
-     * @return The legend items.
-     */
-    public LegendItemCollection getLegendItems() {
-        return this.renderer.getLegendCollection();
-    }
+		// record the plot area...
+		if (info != null) {
+			info.setPlotArea(plotArea);
+		}
 
-    /**
-     * Notifies all registered listeners of a renderer change.
-     *
-     * @param event  the event.
-     */
-    public void rendererChanged(RendererChangeEvent event) {
-        notifyListeners(new PlotChangeEvent(this));
-    }
+		// adjust the drawing area for the plot insets (if any)...
+		// RectangleInsets insets = getInsets();
+		// insets.trim(plotArea);
+		RectangleInsets margin = getMargin();
+		margin.trim(plotArea);
+
+		drawChipGrid(g2, plotArea);
+		drawWaferEdge(g2, plotArea);
+
+	}
+
+	/**
+	 * Calculates and draws the chip locations on the wafer.
+	 * 
+	 * @param g2
+	 *            the graphics device.
+	 * @param plotArea
+	 *            the plot area.
+	 */
+	protected void drawChipGrid(Graphics2D g2, Rectangle2D plotArea) {
+
+		Shape savedClip = g2.getClip();
+		g2.setClip(getWaferEdge(plotArea));
+		Rectangle2D chip = new Rectangle2D.Double();
+		int xchips = 35;
+		int ychips = 20;
+		double space = 1d;
+		if (this.dataset != null) {
+			xchips = this.dataset.getMaxChipX() + 2;
+			ychips = this.dataset.getMaxChipY() + 2;
+			space = this.dataset.getChipSpace();
+		}
+		double startX = plotArea.getX();
+		double startY = plotArea.getY();
+		double chipWidth = 1d;
+		double chipHeight = 1d;
+		if (plotArea.getWidth() != plotArea.getHeight()) {
+			double major = 0d;
+			double minor = 0d;
+			if (plotArea.getWidth() > plotArea.getHeight()) {
+				major = plotArea.getWidth();
+				minor = plotArea.getHeight();
+			} else {
+				major = plotArea.getHeight();
+				minor = plotArea.getWidth();
+			}
+			// set upperLeft point
+			if (plotArea.getWidth() == minor) { // x is minor
+				startY += (major - minor) / 2;
+				chipWidth = (plotArea.getWidth() - (space * xchips - 1)) / xchips;
+				chipHeight = (plotArea.getWidth() - (space * ychips - 1)) / ychips;
+			} else { // y is minor
+				startX += (major - minor) / 2;
+				chipWidth = (plotArea.getHeight() - (space * xchips - 1)) / xchips;
+				chipHeight = (plotArea.getHeight() - (space * ychips - 1)) / ychips;
+			}
+		}
+
+		for (int x = 1; x <= xchips; x++) {
+			double upperLeftX = (startX - chipWidth) + (chipWidth * x) + (space * (x - 1));
+			for (int y = 1; y <= ychips; y++) {
+				double upperLeftY = (startY - chipHeight) + (chipHeight * y) + (space * (y - 1));
+				chip.setFrame(upperLeftX, upperLeftY, chipWidth, chipHeight);
+				g2.setColor(Color.white);
+				if (this.dataset.getChipValue(x - 1, ychips - y - 1) != null) {
+					g2.setPaint(this.renderer.getChipColor(this.dataset.getChipValue(x - 1, ychips - y - 1)));
+				}
+				g2.fill(chip);
+				g2.setColor(Color.lightGray);
+				g2.draw(chip);
+			}
+		}
+		g2.setClip(savedClip);
+	}
+
+	/**
+	 * Calculates the location of the waferedge.
+	 * 
+	 * @param plotArea
+	 *            the plot area.
+	 * 
+	 * @return The wafer edge.
+	 */
+	protected Ellipse2D getWaferEdge(Rectangle2D plotArea) {
+		Ellipse2D edge = new Ellipse2D.Double();
+		double diameter = plotArea.getWidth();
+		double upperLeftX = plotArea.getX();
+		double upperLeftY = plotArea.getY();
+		// get major dimension
+		if (plotArea.getWidth() != plotArea.getHeight()) {
+			double major = 0d;
+			double minor = 0d;
+			if (plotArea.getWidth() > plotArea.getHeight()) {
+				major = plotArea.getWidth();
+				minor = plotArea.getHeight();
+			} else {
+				major = plotArea.getHeight();
+				minor = plotArea.getWidth();
+			}
+			// ellipse diameter is the minor dimension
+			diameter = minor;
+			// set upperLeft point
+			if (plotArea.getWidth() == minor) { // x is minor
+				upperLeftY = plotArea.getY() + (major - minor) / 2;
+			} else { // y is minor
+				upperLeftX = plotArea.getX() + (major - minor) / 2;
+			}
+		}
+		edge.setFrame(upperLeftX, upperLeftY, diameter, diameter);
+		return edge;
+	}
+
+	/**
+	 * Draws the waferedge, including the notch.
+	 * 
+	 * @param g2
+	 *            the graphics device.
+	 * @param plotArea
+	 *            the plot area.
+	 */
+	protected void drawWaferEdge(Graphics2D g2, Rectangle2D plotArea) {
+		// draw the wafer
+		Ellipse2D waferEdge = getWaferEdge(plotArea);
+		g2.setColor(Color.black);
+		g2.draw(waferEdge);
+		// calculate and draw the notch
+		// horizontal orientation is considered notch right
+		// vertical orientation is considered notch down
+		Arc2D notch = null;
+		Rectangle2D waferFrame = waferEdge.getFrame();
+		double notchDiameter = waferFrame.getWidth() * 0.04;
+		if (this.orientation == PlotOrientation.HORIZONTAL) {
+			Rectangle2D notchFrame = new Rectangle2D.Double(
+					waferFrame.getX() + waferFrame.getWidth() - (notchDiameter / 2),
+					waferFrame.getY() + (waferFrame.getHeight() / 2) - (notchDiameter / 2), notchDiameter,
+					notchDiameter);
+			notch = new Arc2D.Double(notchFrame, 90d, 180d, Arc2D.OPEN);
+		} else {
+			Rectangle2D notchFrame = new Rectangle2D.Double(
+					waferFrame.getX() + (waferFrame.getWidth() / 2) - (notchDiameter / 2),
+					waferFrame.getY() + waferFrame.getHeight() - (notchDiameter / 2), notchDiameter, notchDiameter);
+			notch = new Arc2D.Double(notchFrame, 0d, 180d, Arc2D.OPEN);
+		}
+		g2.setColor(Color.white);
+		g2.fill(notch);
+		g2.setColor(Color.black);
+		g2.draw(notch);
+
+	}
+
+	/**
+	 * Return the legend items from the renderer.
+	 * 
+	 * @return The legend items.
+	 */
+	public LegendItemCollection getLegendItems() {
+		return this.renderer.getLegendCollection();
+	}
+
+	/**
+	 * Notifies all registered listeners of a renderer change.
+	 *
+	 * @param event
+	 *            the event.
+	 */
+	public void rendererChanged(RendererChangeEvent event) {
+		notifyListeners(new PlotChangeEvent(this));
+	}
 
 }

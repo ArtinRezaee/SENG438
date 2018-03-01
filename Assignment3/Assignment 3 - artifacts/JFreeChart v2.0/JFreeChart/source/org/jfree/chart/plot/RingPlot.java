@@ -79,429 +79,412 @@ import org.jfree.util.UnitType;
  * A customised pie plot that leaves a hole in the middle.
  */
 public class RingPlot extends PiePlot implements Cloneable, Serializable {
-    
-    /** For serialization. */
-    private static final long serialVersionUID = 1556064784129676620L;
-    
-    /** 
-     * A flag that controls whether or not separators are drawn between the
-     * sections of the chart.
-     */
-    private boolean sectionSeparatorsVisible;
-    
-    /** The stroke used to draw separators. */
-    private transient Stroke separatorStroke;
-    
-    /** The paint used to draw separators. */
-    private transient Paint separatorPaint;
-    
-    /** 
-     * The length of the inner separator extension (as a percentage of the
-     * depth of the sections). 
-     */
-    private double innerSeparatorExtension;
-    
-    /** 
-     * The length of the outer separator extension (as a percentage of the
-     * depth of the sections). 
-     */
-    private double outerSeparatorExtension;
 
-    /** 
-     * The depth of the section as a percentage of the diameter.  
-     */
-    private double sectionDepth;
-   
-    /**
-     * Creates a new plot with a <code>null</code> dataset.
-     */
-    public RingPlot() {
-        this(null);   
-    }
-    
-    /**
-     * Creates a new plot for the specified dataset.
-     * 
-     * @param dataset  the dataset (<code>null</code> permitted).
-     */
-    public RingPlot(PieDataset dataset) {
-        super(dataset);
-        this.sectionSeparatorsVisible = true;
-        this.separatorStroke = new BasicStroke(0.5f);
-        this.separatorPaint = Color.gray;
-        this.innerSeparatorExtension = 0.20;  // twenty percent
-        this.outerSeparatorExtension = 0.20;  // twenty percent
-        this.sectionDepth = 0.10; // 10%
-        this.setPassesRequired(3);
-    }
-    
-    /**
-     * Returns a flag that indicates whether or not separators are drawn between
-     * the sections in the chart.
-     * 
-     * @return A boolean.
-     */
-    public boolean getSectionSeparatorsVisible() {
-        return this.sectionSeparatorsVisible;
-    }
-    
-    /**
-     * Sets the flag that controls whether or not separators are drawn between 
-     * the sections in the chart, and sends a {@link PlotChangeEvent} to all
-     * registered listeners.
-     * 
-     * @param visible  the flag.
-     */
-    public void setSectionSeparatorsVisible(boolean visible) {
-        this.sectionSeparatorsVisible = visible;
-        notifyListeners(new PlotChangeEvent(this));
-    }
-    
-    /**
-     * Returns the separator stroke.
-     * 
-     * @return The stroke (never <code>null</code>).
-     */
-    public Stroke getSeparatorStroke() {
-        return this.separatorStroke;
-    }
-    
-    /**
-     * Sets the stroke used to draw the separator between sections.
-     * 
-     * @param stroke  the stroke (<code>null</code> not permitted).
-     */
-    public void setSeparatorStroke(Stroke stroke) {
-        if (stroke == null) {
-            throw new IllegalArgumentException("Null 'stroke' argument.");
-        }
-        this.separatorStroke = stroke;
-        notifyListeners(new PlotChangeEvent(this));
-    }
-    
-    /**
-     * Returns the separator paint.
-     * 
-     * @return The paint (never <code>null</code>).
-     */
-    public Paint getSeparatorPaint() {
-        return this.separatorPaint;
-    }
-    
-    /**
-     * Sets the paint used to draw the separator between sections.
-     * 
-     * @param paint  the paint (<code>null</code> not permitted).
-     */
-    public void setSeparatorPaint(Paint paint) {
-        if (paint == null) {
-            throw new IllegalArgumentException("Null 'paint' argument.");
-        }
-        this.separatorPaint = paint;
-        notifyListeners(new PlotChangeEvent(this));
-    }
-    
-    /**
-     * Returns the length of the inner extension of the separator line that
-     * is drawn between sections, expressed as a percentage of the depth of
-     * the section.
-     * 
-     * @return The inner separator extension (as a percentage).
-     */
-    public double getInnerSeparatorExtension() {
-        return this.innerSeparatorExtension;
-    }
-    
-    /**
-     * Sets the length of the inner extension of the separator line that is
-     * drawn between sections, as a percentage of the depth of the 
-     * sections, and sends a {@link PlotChangeEvent} to all registered 
-     * listeners.
-     * 
-     * @param percent  the percentage.
-     */
-    public void setInnerSeparatorExtension(double percent) {
-        this.innerSeparatorExtension = percent;
-        notifyListeners(new PlotChangeEvent(this));
-    }
-    
-    /**
-     * Returns the length of the outer extension of the separator line that
-     * is drawn between sections, expressed as a percentage of the depth of
-     * the section.
-     * 
-     * @return The outer separator extension (as a percentage).
-     */
-    public double getOuterSeparatorExtension() {
-        return this.outerSeparatorExtension;
-    }
-    
-    /**
-     * Sets the length of the outer extension of the separator line that is
-     * drawn between sections, as a percentage of the depth of the 
-     * sections, and sends a {@link PlotChangeEvent} to all registered 
-     * listeners.
-     * 
-     * @param percent  the percentage.
-     */
-    public void setOuterSeparatorExtension(double percent) {
-        this.outerSeparatorExtension = percent;
-        notifyListeners(new PlotChangeEvent(this));
-    }
-    
-    /**
-     * @return Returns the sectionDepth.
-     */
-    public double getSectionDepth() {
-        return sectionDepth;
-    }
-	
-    /**
-     * The section depth is given as percentage of the external diameter.
-     * Specifying 0.5 results in a straightforward pie chart.
-     * 
-     * @param sectionDepth
-     *            The sectionDepth to set.
-     */
-    public void setSectionDepth(double sectionDepth) {
-        this.sectionDepth = sectionDepth;
-    }
-	
-    /**
-     * Draws a single data item.
-     *
-     * @param g2  the graphics device (<code>null</code> not permitted).
-     * @param section  the section index.
-     * @param dataArea  the data plot area.
-     * @param state  state information for one chart.
-     * @param currentPass  the current pass index.
-     */
-    protected void drawItem(Graphics2D g2,
-                            int section,
-                            Rectangle2D dataArea,
-                            PiePlotState state,
-                            int currentPass) {
-    
-        PieDataset dataset = getDataset();
-        Number n = dataset.getValue(section);
-        if (n == null) {
-            return;   
-        }
-        double value = n.doubleValue();
-        double angle1 = 0.0;
-        double angle2 = 0.0;
-        
-        Rotation direction = getDirection();
-        if (direction == Rotation.CLOCKWISE) {
-            angle1 = state.getLatestAngle();
-            angle2 = angle1 - value / state.getTotal() * 360.0;
-        }
-        else if (direction == Rotation.ANTICLOCKWISE) {
-            angle1 = state.getLatestAngle();
-            angle2 = angle1 + value / state.getTotal() * 360.0;         
-        }
-        else {
-            throw new IllegalStateException("Rotation type not recognised.");   
-        }
-        
-        double angle = (angle2 - angle1);
-        if (Math.abs(angle) > getMinimumArcAngleToDraw()) {
-            double ep = 0.0;
-            double mep = getMaximumExplodePercent();
-            if (mep > 0.0) {
-                ep = getExplodePercent(section) / mep;                
-            }
-            Rectangle2D arcBounds = getArcBounds(
-                state.getPieArea(), state.getExplodedPieArea(),
-                angle1, angle, ep
-            );            
-            Arc2D.Double arc = new Arc2D.Double(
-                arcBounds, angle1, angle, Arc2D.OPEN
-            );
+	/** For serialization. */
+	private static final long serialVersionUID = 1556064784129676620L;
 
-            // create the bounds for the inner arc
-            RectangleInsets s = new RectangleInsets(UnitType.RELATIVE, 
-	            sectionDepth, sectionDepth, sectionDepth, sectionDepth);
-            Rectangle2D innerArcBounds = new Rectangle2D.Double();
-            innerArcBounds.setRect(arcBounds);
-            s.trim(innerArcBounds);
-            // calculate inner arc in reverse direction, for later 
-            // GeneralPath construction
-            Arc2D.Double arc2 = new Arc2D.Double(
-                innerArcBounds, angle1 + angle, -angle, Arc2D.OPEN
-            );
-            GeneralPath path = new GeneralPath();
-            path.moveTo(
-                (float) arc.getStartPoint().getX(), 
-                (float) arc.getStartPoint().getY()
-            );
-            path.append(arc.getPathIterator(null), false);
-            path.append(arc2.getPathIterator(null), true);
-            path.closePath();
-            
-            Line2D separator = new Line2D.Double(
-                arc2.getEndPoint(), arc.getStartPoint()
-            );
-            
-            if (currentPass == 0) {
-                Paint shadowPaint = getShadowPaint();
-                double shadowXOffset = getShadowXOffset();
-                double shadowYOffset = getShadowYOffset();
-                if (shadowPaint != null) {
-                    Shape shadowArc = ShapeUtilities.createTranslatedShape(
-                        path, (float) shadowXOffset, (float) shadowYOffset
-                    );
-                    g2.setPaint(shadowPaint);
-                    g2.fill(shadowArc);
-                }
-            }
-            else if (currentPass == 1) {
+	/**
+	 * A flag that controls whether or not separators are drawn between the sections
+	 * of the chart.
+	 */
+	private boolean sectionSeparatorsVisible;
 
-                Paint paint = getSectionPaint(section);
-                g2.setPaint(paint);
-                g2.fill(path);
-                Paint outlinePaint = getSectionOutlinePaint(section);
-                Stroke outlineStroke = getSectionOutlineStroke(section);
-                if (getSectionOutlinesVisible()) {
-                    g2.setPaint(outlinePaint);
-                    g2.setStroke(outlineStroke);
-                    g2.draw(path);
-                }
-                
-                // add an entity for the pie section
-                if (state.getInfo() != null) {
-                    EntityCollection entities = state.getEntityCollection();
-                    if (entities != null) {
-                        Comparable key = dataset.getKey(section);
-                        String tip = null;
-                        PieToolTipGenerator toolTipGenerator 
-                            = getToolTipGenerator();
-                        if (toolTipGenerator != null) {
-                            tip = toolTipGenerator.generateToolTip(
-                                dataset, key
-                            );
-                        }
-                        String url = null;
-                        PieURLGenerator urlGenerator = getURLGenerator();
-                        if (urlGenerator != null) {
-                            url = urlGenerator.generateURL(
-                                dataset, key, getPieIndex()
-                            );
-                        }
-                        PieSectionEntity entity = new PieSectionEntity(
-                            path, dataset, getPieIndex(), section, key, tip, url
-                        );
-                        entities.add(entity);
-                    }
-                }
-            }
-            else if (currentPass == 2) {
-            	// if there were 3 passes...
-                if (this.sectionSeparatorsVisible) {
-                    Line2D extendedSeparator = extendLine(separator,
-                        this.innerSeparatorExtension, 
-                        this.outerSeparatorExtension);
-                    g2.setStroke(this.separatorStroke);
-                    g2.setPaint(this.separatorPaint);
-                    g2.draw(extendedSeparator);
-                }
-            }
-        }    
-        state.setLatestAngle(angle2);
-    }
+	/** The stroke used to draw separators. */
+	private transient Stroke separatorStroke;
 
-    /**
-     * Tests this plot for equality with an arbitrary object.
-     * 
-     * @param obj  the object to test against (<code>null</code> permitted).
-     * 
-     * @return A boolean.
-     */
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof RingPlot)) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        RingPlot that = (RingPlot) obj;
-        if (this.sectionSeparatorsVisible != that.sectionSeparatorsVisible) {
-            return false;
-        }
-        if (!ObjectUtilities.equal(
-            this.separatorStroke, that.separatorStroke
-        )) {
-            return false;
-        }
-        if (!PaintUtilities.equal(this.separatorPaint, that.separatorPaint)) {
-            return false;
-        }
-        if (this.innerSeparatorExtension != that.innerSeparatorExtension) {
-            return false;
-        }
-        if (this.outerSeparatorExtension != that.outerSeparatorExtension) {
-            return false;
-        }        
-        return true;
-    }
-    
-    /**
-     * Creates a new line by extending an existing line.
-     * 
-     * @param line  the line (<code>null</code> not permitted).
-     * @param startPercent  the amount to extend the line at the start point 
-     *                      end.
-     * @param endPercent  the amount to extend the line at the end point end.
-     * 
-     * @return A new line.
-     */
-    private Line2D extendLine(Line2D line, double startPercent, 
-                              double endPercent) {
-        if (line == null) {
-            throw new IllegalArgumentException("Null 'line' argument.");
-        }
-        double x1 = line.getX1();
-        double x2 = line.getX2();
-        double deltaX = x2 - x1;
-        double y1 = line.getY1();
-        double y2 = line.getY2();
-        double deltaY = y2 - y1;
-        x1 = x1 - (startPercent * deltaX);
-        y1 = y1 - (startPercent * deltaY);
-        x2 = x2 + (endPercent * deltaX);
-        y2 = y2 + (endPercent * deltaY);
-        return new Line2D.Double(x1, y1, x2, y2);
-    }
-    
-    /**
-     * Provides serialization support.
-     *
-     * @param stream  the output stream.
-     *
-     * @throws IOException  if there is an I/O error.
-     */
-    private void writeObject(ObjectOutputStream stream) throws IOException {
-        stream.defaultWriteObject();
-        SerialUtilities.writeStroke(this.separatorStroke, stream);
-        SerialUtilities.writePaint(this.separatorPaint, stream);
-    }
+	/** The paint used to draw separators. */
+	private transient Paint separatorPaint;
 
-    /**
-     * Provides serialization support.
-     *
-     * @param stream  the input stream.
-     *
-     * @throws IOException  if there is an I/O error.
-     * @throws ClassNotFoundException  if there is a classpath problem.
-     */
-    private void readObject(ObjectInputStream stream) 
-        throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        this.separatorStroke = SerialUtilities.readStroke(stream);
-        this.separatorPaint = SerialUtilities.readPaint(stream);
-    }
-    
+	/**
+	 * The length of the inner separator extension (as a percentage of the depth of
+	 * the sections).
+	 */
+	private double innerSeparatorExtension;
+
+	/**
+	 * The length of the outer separator extension (as a percentage of the depth of
+	 * the sections).
+	 */
+	private double outerSeparatorExtension;
+
+	/**
+	 * The depth of the section as a percentage of the diameter.
+	 */
+	private double sectionDepth;
+
+	/**
+	 * Creates a new plot with a <code>null</code> dataset.
+	 */
+	public RingPlot() {
+		this(null);
+	}
+
+	/**
+	 * Creates a new plot for the specified dataset.
+	 * 
+	 * @param dataset
+	 *            the dataset (<code>null</code> permitted).
+	 */
+	public RingPlot(PieDataset dataset) {
+		super(dataset);
+		this.sectionSeparatorsVisible = true;
+		this.separatorStroke = new BasicStroke(0.5f);
+		this.separatorPaint = Color.gray;
+		this.innerSeparatorExtension = 0.20; // twenty percent
+		this.outerSeparatorExtension = 0.20; // twenty percent
+		this.sectionDepth = 0.10; // 10%
+		this.setPassesRequired(3);
+	}
+
+	/**
+	 * Returns a flag that indicates whether or not separators are drawn between the
+	 * sections in the chart.
+	 * 
+	 * @return A boolean.
+	 */
+	public boolean getSectionSeparatorsVisible() {
+		return this.sectionSeparatorsVisible;
+	}
+
+	/**
+	 * Sets the flag that controls whether or not separators are drawn between the
+	 * sections in the chart, and sends a {@link PlotChangeEvent} to all registered
+	 * listeners.
+	 * 
+	 * @param visible
+	 *            the flag.
+	 */
+	public void setSectionSeparatorsVisible(boolean visible) {
+		this.sectionSeparatorsVisible = visible;
+		notifyListeners(new PlotChangeEvent(this));
+	}
+
+	/**
+	 * Returns the separator stroke.
+	 * 
+	 * @return The stroke (never <code>null</code>).
+	 */
+	public Stroke getSeparatorStroke() {
+		return this.separatorStroke;
+	}
+
+	/**
+	 * Sets the stroke used to draw the separator between sections.
+	 * 
+	 * @param stroke
+	 *            the stroke (<code>null</code> not permitted).
+	 */
+	public void setSeparatorStroke(Stroke stroke) {
+		if (stroke == null) {
+			throw new IllegalArgumentException("Null 'stroke' argument.");
+		}
+		this.separatorStroke = stroke;
+		notifyListeners(new PlotChangeEvent(this));
+	}
+
+	/**
+	 * Returns the separator paint.
+	 * 
+	 * @return The paint (never <code>null</code>).
+	 */
+	public Paint getSeparatorPaint() {
+		return this.separatorPaint;
+	}
+
+	/**
+	 * Sets the paint used to draw the separator between sections.
+	 * 
+	 * @param paint
+	 *            the paint (<code>null</code> not permitted).
+	 */
+	public void setSeparatorPaint(Paint paint) {
+		if (paint == null) {
+			throw new IllegalArgumentException("Null 'paint' argument.");
+		}
+		this.separatorPaint = paint;
+		notifyListeners(new PlotChangeEvent(this));
+	}
+
+	/**
+	 * Returns the length of the inner extension of the separator line that is drawn
+	 * between sections, expressed as a percentage of the depth of the section.
+	 * 
+	 * @return The inner separator extension (as a percentage).
+	 */
+	public double getInnerSeparatorExtension() {
+		return this.innerSeparatorExtension;
+	}
+
+	/**
+	 * Sets the length of the inner extension of the separator line that is drawn
+	 * between sections, as a percentage of the depth of the sections, and sends a
+	 * {@link PlotChangeEvent} to all registered listeners.
+	 * 
+	 * @param percent
+	 *            the percentage.
+	 */
+	public void setInnerSeparatorExtension(double percent) {
+		this.innerSeparatorExtension = percent;
+		notifyListeners(new PlotChangeEvent(this));
+	}
+
+	/**
+	 * Returns the length of the outer extension of the separator line that is drawn
+	 * between sections, expressed as a percentage of the depth of the section.
+	 * 
+	 * @return The outer separator extension (as a percentage).
+	 */
+	public double getOuterSeparatorExtension() {
+		return this.outerSeparatorExtension;
+	}
+
+	/**
+	 * Sets the length of the outer extension of the separator line that is drawn
+	 * between sections, as a percentage of the depth of the sections, and sends a
+	 * {@link PlotChangeEvent} to all registered listeners.
+	 * 
+	 * @param percent
+	 *            the percentage.
+	 */
+	public void setOuterSeparatorExtension(double percent) {
+		this.outerSeparatorExtension = percent;
+		notifyListeners(new PlotChangeEvent(this));
+	}
+
+	/**
+	 * @return Returns the sectionDepth.
+	 */
+	public double getSectionDepth() {
+		return sectionDepth;
+	}
+
+	/**
+	 * The section depth is given as percentage of the external diameter. Specifying
+	 * 0.5 results in a straightforward pie chart.
+	 * 
+	 * @param sectionDepth
+	 *            The sectionDepth to set.
+	 */
+	public void setSectionDepth(double sectionDepth) {
+		this.sectionDepth = sectionDepth;
+	}
+
+	/**
+	 * Draws a single data item.
+	 *
+	 * @param g2
+	 *            the graphics device (<code>null</code> not permitted).
+	 * @param section
+	 *            the section index.
+	 * @param dataArea
+	 *            the data plot area.
+	 * @param state
+	 *            state information for one chart.
+	 * @param currentPass
+	 *            the current pass index.
+	 */
+	protected void drawItem(Graphics2D g2, int section, Rectangle2D dataArea, PiePlotState state, int currentPass) {
+
+		PieDataset dataset = getDataset();
+		Number n = dataset.getValue(section);
+		if (n == null) {
+			return;
+		}
+		double value = n.doubleValue();
+		double angle1 = 0.0;
+		double angle2 = 0.0;
+
+		Rotation direction = getDirection();
+		if (direction == Rotation.CLOCKWISE) {
+			angle1 = state.getLatestAngle();
+			angle2 = angle1 - value / state.getTotal() * 360.0;
+		} else if (direction == Rotation.ANTICLOCKWISE) {
+			angle1 = state.getLatestAngle();
+			angle2 = angle1 + value / state.getTotal() * 360.0;
+		} else {
+			throw new IllegalStateException("Rotation type not recognised.");
+		}
+
+		double angle = (angle2 - angle1);
+		if (Math.abs(angle) > getMinimumArcAngleToDraw()) {
+			double ep = 0.0;
+			double mep = getMaximumExplodePercent();
+			if (mep > 0.0) {
+				ep = getExplodePercent(section) / mep;
+			}
+			Rectangle2D arcBounds = getArcBounds(state.getPieArea(), state.getExplodedPieArea(), angle1, angle, ep);
+			Arc2D.Double arc = new Arc2D.Double(arcBounds, angle1, angle, Arc2D.OPEN);
+
+			// create the bounds for the inner arc
+			RectangleInsets s = new RectangleInsets(UnitType.RELATIVE, sectionDepth, sectionDepth, sectionDepth,
+					sectionDepth);
+			Rectangle2D innerArcBounds = new Rectangle2D.Double();
+			innerArcBounds.setRect(arcBounds);
+			s.trim(innerArcBounds);
+			// calculate inner arc in reverse direction, for later
+			// GeneralPath construction
+			Arc2D.Double arc2 = new Arc2D.Double(innerArcBounds, angle1 + angle, -angle, Arc2D.OPEN);
+			GeneralPath path = new GeneralPath();
+			path.moveTo((float) arc.getStartPoint().getX(), (float) arc.getStartPoint().getY());
+			path.append(arc.getPathIterator(null), false);
+			path.append(arc2.getPathIterator(null), true);
+			path.closePath();
+
+			Line2D separator = new Line2D.Double(arc2.getEndPoint(), arc.getStartPoint());
+
+			if (currentPass == 0) {
+				Paint shadowPaint = getShadowPaint();
+				double shadowXOffset = getShadowXOffset();
+				double shadowYOffset = getShadowYOffset();
+				if (shadowPaint != null) {
+					Shape shadowArc = ShapeUtilities.createTranslatedShape(path, (float) shadowXOffset,
+							(float) shadowYOffset);
+					g2.setPaint(shadowPaint);
+					g2.fill(shadowArc);
+				}
+			} else if (currentPass == 1) {
+
+				Paint paint = getSectionPaint(section);
+				g2.setPaint(paint);
+				g2.fill(path);
+				Paint outlinePaint = getSectionOutlinePaint(section);
+				Stroke outlineStroke = getSectionOutlineStroke(section);
+				if (getSectionOutlinesVisible()) {
+					g2.setPaint(outlinePaint);
+					g2.setStroke(outlineStroke);
+					g2.draw(path);
+				}
+
+				// add an entity for the pie section
+				if (state.getInfo() != null) {
+					EntityCollection entities = state.getEntityCollection();
+					if (entities != null) {
+						Comparable key = dataset.getKey(section);
+						String tip = null;
+						PieToolTipGenerator toolTipGenerator = getToolTipGenerator();
+						if (toolTipGenerator != null) {
+							tip = toolTipGenerator.generateToolTip(dataset, key);
+						}
+						String url = null;
+						PieURLGenerator urlGenerator = getURLGenerator();
+						if (urlGenerator != null) {
+							url = urlGenerator.generateURL(dataset, key, getPieIndex());
+						}
+						PieSectionEntity entity = new PieSectionEntity(path, dataset, getPieIndex(), section, key, tip,
+								url);
+						entities.add(entity);
+					}
+				}
+			} else if (currentPass == 2) {
+				// if there were 3 passes...
+				if (this.sectionSeparatorsVisible) {
+					Line2D extendedSeparator = extendLine(separator, this.innerSeparatorExtension,
+							this.outerSeparatorExtension);
+					g2.setStroke(this.separatorStroke);
+					g2.setPaint(this.separatorPaint);
+					g2.draw(extendedSeparator);
+				}
+			}
+		}
+		state.setLatestAngle(angle2);
+	}
+
+	/**
+	 * Tests this plot for equality with an arbitrary object.
+	 * 
+	 * @param obj
+	 *            the object to test against (<code>null</code> permitted).
+	 * 
+	 * @return A boolean.
+	 */
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof RingPlot)) {
+			return false;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		RingPlot that = (RingPlot) obj;
+		if (this.sectionSeparatorsVisible != that.sectionSeparatorsVisible) {
+			return false;
+		}
+		if (!ObjectUtilities.equal(this.separatorStroke, that.separatorStroke)) {
+			return false;
+		}
+		if (!PaintUtilities.equal(this.separatorPaint, that.separatorPaint)) {
+			return false;
+		}
+		if (this.innerSeparatorExtension != that.innerSeparatorExtension) {
+			return false;
+		}
+		if (this.outerSeparatorExtension != that.outerSeparatorExtension) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Creates a new line by extending an existing line.
+	 * 
+	 * @param line
+	 *            the line (<code>null</code> not permitted).
+	 * @param startPercent
+	 *            the amount to extend the line at the start point end.
+	 * @param endPercent
+	 *            the amount to extend the line at the end point end.
+	 * 
+	 * @return A new line.
+	 */
+	private Line2D extendLine(Line2D line, double startPercent, double endPercent) {
+		if (line == null) {
+			throw new IllegalArgumentException("Null 'line' argument.");
+		}
+		double x1 = line.getX1();
+		double x2 = line.getX2();
+		double deltaX = x2 - x1;
+		double y1 = line.getY1();
+		double y2 = line.getY2();
+		double deltaY = y2 - y1;
+		x1 = x1 - (startPercent * deltaX);
+		y1 = y1 - (startPercent * deltaY);
+		x2 = x2 + (endPercent * deltaX);
+		y2 = y2 + (endPercent * deltaY);
+		return new Line2D.Double(x1, y1, x2, y2);
+	}
+
+	/**
+	 * Provides serialization support.
+	 *
+	 * @param stream
+	 *            the output stream.
+	 *
+	 * @throws IOException
+	 *             if there is an I/O error.
+	 */
+	private void writeObject(ObjectOutputStream stream) throws IOException {
+		stream.defaultWriteObject();
+		SerialUtilities.writeStroke(this.separatorStroke, stream);
+		SerialUtilities.writePaint(this.separatorPaint, stream);
+	}
+
+	/**
+	 * Provides serialization support.
+	 *
+	 * @param stream
+	 *            the input stream.
+	 *
+	 * @throws IOException
+	 *             if there is an I/O error.
+	 * @throws ClassNotFoundException
+	 *             if there is a classpath problem.
+	 */
+	private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+		stream.defaultReadObject();
+		this.separatorStroke = SerialUtilities.readStroke(stream);
+		this.separatorPaint = SerialUtilities.readPaint(stream);
+	}
+
 }

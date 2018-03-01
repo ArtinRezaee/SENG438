@@ -65,262 +65,261 @@ import org.jfree.date.MonthConstants;
 import org.jfree.date.SerialDate;
 
 /**
- * Represents a year in the range 1900 to 9999.  This class is immutable, which
+ * Represents a year in the range 1900 to 9999. This class is immutable, which
  * is a requirement for all {@link RegularTimePeriod} subclasses.
  */
 public class Year extends RegularTimePeriod implements Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = -7659990929736074836L;
-    
-    /** The year. */
-    private int year;
+	/** For serialization. */
+	private static final long serialVersionUID = -7659990929736074836L;
 
-    /**
-     * Creates a new <code>Year</code>, based on the current system date/time.
-     */
-    public Year() {
-        this(new Date());
-    }
+	/** The year. */
+	private int year;
 
-    /**
-     * Creates a time period representing a single year.
-     *
-     * @param year  the year.
-     */
-    public Year(int year) {
+	/**
+	 * Creates a new <code>Year</code>, based on the current system date/time.
+	 */
+	public Year() {
+		this(new Date());
+	}
 
-        // check arguments...
-        if ((year < SerialDate.MINIMUM_YEAR_SUPPORTED)
-            || (year > SerialDate.MAXIMUM_YEAR_SUPPORTED)) {
+	/**
+	 * Creates a time period representing a single year.
+	 *
+	 * @param year
+	 *            the year.
+	 */
+	public Year(int year) {
 
-            throw new IllegalArgumentException(
-                "Year constructor: year (" + year + ") outside valid range.");
-        }
+		// check arguments...
+		if ((year < SerialDate.MINIMUM_YEAR_SUPPORTED) || (year > SerialDate.MAXIMUM_YEAR_SUPPORTED)) {
 
-        // initialise...
-        this.year = year;
+			throw new IllegalArgumentException("Year constructor: year (" + year + ") outside valid range.");
+		}
 
-    }
+		// initialise...
+		this.year = year;
 
-    /**
-     * Creates a new <code>Year</code>, based on a particular instant in time, 
-     * using the default time zone.
-     *
-     * @param time  the time.
-     */
-    public Year(Date time) {
-        this(time, RegularTimePeriod.DEFAULT_TIME_ZONE);
-    }
+	}
 
-    /**
-     * Constructs a year, based on a particular instant in time and a time zone.
-     *
-     * @param time  the time.
-     * @param zone  the time zone.
-     */
-    public Year(Date time, TimeZone zone) {
+	/**
+	 * Creates a new <code>Year</code>, based on a particular instant in time, using
+	 * the default time zone.
+	 *
+	 * @param time
+	 *            the time.
+	 */
+	public Year(Date time) {
+		this(time, RegularTimePeriod.DEFAULT_TIME_ZONE);
+	}
 
-        Calendar calendar = Calendar.getInstance(zone);
-        calendar.setTime(time);
-        this.year = calendar.get(Calendar.YEAR);
+	/**
+	 * Constructs a year, based on a particular instant in time and a time zone.
+	 *
+	 * @param time
+	 *            the time.
+	 * @param zone
+	 *            the time zone.
+	 */
+	public Year(Date time, TimeZone zone) {
 
-    }
+		Calendar calendar = Calendar.getInstance(zone);
+		calendar.setTime(time);
+		this.year = calendar.get(Calendar.YEAR);
 
-    /**
-     * Returns the year.
-     *
-     * @return The year.
-     */
-    public int getYear() {
-        return this.year;
-    }
+	}
 
-    /**
-     * Returns the year preceding this one.
-     *
-     * @return The year preceding this one (or <code>null</code> if the 
-     *         current year is 1900).
-     */
-    public RegularTimePeriod previous() {
-        if (this.year > SerialDate.MINIMUM_YEAR_SUPPORTED) {
-            return new Year(this.year - 1);
-        }
-        else {
-            return null;
-        }
-    }
+	/**
+	 * Returns the year.
+	 *
+	 * @return The year.
+	 */
+	public int getYear() {
+		return this.year;
+	}
 
-    /**
-     * Returns the year following this one.
-     *
-     * @return The year following this one (or <code>null</code> if the current
-     *         year is 9999).
-     */
-    public RegularTimePeriod next() {
-        if (this.year < SerialDate.MAXIMUM_YEAR_SUPPORTED) {
-            return new Year(this.year + 1);
-        }
-        else {
-            return null;
-        }
-    }
+	/**
+	 * Returns the year preceding this one.
+	 *
+	 * @return The year preceding this one (or <code>null</code> if the current year
+	 *         is 1900).
+	 */
+	public RegularTimePeriod previous() {
+		if (this.year > SerialDate.MINIMUM_YEAR_SUPPORTED) {
+			return new Year(this.year - 1);
+		} else {
+			return null;
+		}
+	}
 
-    /**
-     * Returns a serial index number for the year.
-     * <P>
-     * The implementation simply returns the year number (e.g. 2002).
-     *
-     * @return The serial index number.
-     */
-    public long getSerialIndex() {
-        return this.year;
-    }
+	/**
+	 * Returns the year following this one.
+	 *
+	 * @return The year following this one (or <code>null</code> if the current year
+	 *         is 9999).
+	 */
+	public RegularTimePeriod next() {
+		if (this.year < SerialDate.MAXIMUM_YEAR_SUPPORTED) {
+			return new Year(this.year + 1);
+		} else {
+			return null;
+		}
+	}
 
-    /**
-     * Returns the first millisecond of the year, evaluated using the supplied
-     * calendar (which determines the time zone).
-     *
-     * @param calendar  the calendar.
-     *
-     * @return The first millisecond of the year.
-     */
-    public long getFirstMillisecond(Calendar calendar) {
-        Day jan1 = new Day(1, MonthConstants.JANUARY, this.year);
-        return jan1.getFirstMillisecond(calendar);
-    }
+	/**
+	 * Returns a serial index number for the year.
+	 * <P>
+	 * The implementation simply returns the year number (e.g. 2002).
+	 *
+	 * @return The serial index number.
+	 */
+	public long getSerialIndex() {
+		return this.year;
+	}
 
-    /**
-     * Returns the last millisecond of the year, evaluated using the supplied
-     * calendar (which determines the time zone).
-     *
-     * @param calendar  the calendar.
-     *
-     * @return The last millisecond of the year.
-     */
-    public long getLastMillisecond(Calendar calendar) {
-        Day dec31 = new Day(31, MonthConstants.DECEMBER, this.year);
-        return dec31.getLastMillisecond(calendar);
-    }
+	/**
+	 * Returns the first millisecond of the year, evaluated using the supplied
+	 * calendar (which determines the time zone).
+	 *
+	 * @param calendar
+	 *            the calendar.
+	 *
+	 * @return The first millisecond of the year.
+	 */
+	public long getFirstMillisecond(Calendar calendar) {
+		Day jan1 = new Day(1, MonthConstants.JANUARY, this.year);
+		return jan1.getFirstMillisecond(calendar);
+	}
 
-    /**
-     * Tests the equality of this <code>Year</code> object to an arbitrary 
-     * object.  Returns <code>true</code> if the target is a <code>Year</code>
-     * instance representing the same year as this object.  In all other cases,
-     * returns <code>false</code>.
-     *
-     * @param object  the object.
-     *
-     * @return <code>true</code> if the year of this and the object are the 
-     *         same.
-     */
-    public boolean equals(Object object) {
-        if (object != null) {
-            if (object instanceof Year) {
-                Year target = (Year) object;
-                return (this.year == target.getYear());
-            }
-            else {
-                return false;
-            }
-        }
-        else {
-            return false;
-        }
-    }
-    
-    /**
-     * Returns a hash code for this object instance.  The approach described by
-     * Joshua Bloch in "Effective Java" has been used here:
-     * <p>
-     * <code>http://developer.java.sun.com/developer/Books/effectivejava
-     *     /Chapter3.pdf</code>
-     * 
-     * @return A hash code.
-     */
-    public int hashCode() {
-        int result = 17;
-        int c = this.year;
-        result = 37 * result + c;
-        return result;
-    }
+	/**
+	 * Returns the last millisecond of the year, evaluated using the supplied
+	 * calendar (which determines the time zone).
+	 *
+	 * @param calendar
+	 *            the calendar.
+	 *
+	 * @return The last millisecond of the year.
+	 */
+	public long getLastMillisecond(Calendar calendar) {
+		Day dec31 = new Day(31, MonthConstants.DECEMBER, this.year);
+		return dec31.getLastMillisecond(calendar);
+	}
 
-    /**
-     * Returns an integer indicating the order of this <code>Year</code> object
-     * relative to the specified object:
-     *
-     * negative == before, zero == same, positive == after.
-     *
-     * @param o1  the object to compare.
-     *
-     * @return negative == before, zero == same, positive == after.
-     */
-    public int compareTo(Object o1) {
+	/**
+	 * Tests the equality of this <code>Year</code> object to an arbitrary object.
+	 * Returns <code>true</code> if the target is a <code>Year</code> instance
+	 * representing the same year as this object. In all other cases, returns
+	 * <code>false</code>.
+	 *
+	 * @param object
+	 *            the object.
+	 *
+	 * @return <code>true</code> if the year of this and the object are the same.
+	 */
+	public boolean equals(Object object) {
+		if (object != null) {
+			if (object instanceof Year) {
+				Year target = (Year) object;
+				return (this.year == target.getYear());
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
 
-        int result;
+	/**
+	 * Returns a hash code for this object instance. The approach described by
+	 * Joshua Bloch in "Effective Java" has been used here:
+	 * <p>
+	 * <code>http://developer.java.sun.com/developer/Books/effectivejava
+	 *     /Chapter3.pdf</code>
+	 * 
+	 * @return A hash code.
+	 */
+	public int hashCode() {
+		int result = 17;
+		int c = this.year;
+		result = 37 * result + c;
+		return result;
+	}
 
-        // CASE 1 : Comparing to another Year object
-        // -----------------------------------------
-        if (o1 instanceof Year) {
-            Year y = (Year) o1;
-            result = this.year - y.getYear();
-        }
+	/**
+	 * Returns an integer indicating the order of this <code>Year</code> object
+	 * relative to the specified object:
+	 *
+	 * negative == before, zero == same, positive == after.
+	 *
+	 * @param o1
+	 *            the object to compare.
+	 *
+	 * @return negative == before, zero == same, positive == after.
+	 */
+	public int compareTo(Object o1) {
 
-        // CASE 2 : Comparing to another TimePeriod object
-        // -----------------------------------------------
-        else if (o1 instanceof RegularTimePeriod) {
-            // more difficult case - evaluate later...
-            result = 0;
-        }
+		int result;
 
-        // CASE 3 : Comparing to a non-TimePeriod object
-        // ---------------------------------------------
-        else {
-            // consider time periods to be ordered after general objects
-            result = 1;
-        }
+		// CASE 1 : Comparing to another Year object
+		// -----------------------------------------
+		if (o1 instanceof Year) {
+			Year y = (Year) o1;
+			result = this.year - y.getYear();
+		}
 
-        return result;
+		// CASE 2 : Comparing to another TimePeriod object
+		// -----------------------------------------------
+		else if (o1 instanceof RegularTimePeriod) {
+			// more difficult case - evaluate later...
+			result = 0;
+		}
 
-    }
+		// CASE 3 : Comparing to a non-TimePeriod object
+		// ---------------------------------------------
+		else {
+			// consider time periods to be ordered after general objects
+			result = 1;
+		}
 
-    /**
-     * Returns a string representing the year..
-     *
-     * @return A string representing the year.
-     */
-    public String toString() {
-        return Integer.toString(this.year);
-    }
+		return result;
 
-    /**
-     * Parses the string argument as a year.
-     * <P>
-     * The string format is YYYY.
-     *
-     * @param s  a string representing the year.
-     *
-     * @return <code>null</code> if the string is not parseable, the year 
-     *         otherwise.
-     */
-    public static Year parseYear(String s) {
+	}
 
-        // parse the string...
-        int y;
-        try {
-            y = Integer.parseInt(s.trim());
-        }
-        catch (NumberFormatException e) {
-            throw new TimePeriodFormatException("Cannot parse string.");
-        }
+	/**
+	 * Returns a string representing the year..
+	 *
+	 * @return A string representing the year.
+	 */
+	public String toString() {
+		return Integer.toString(this.year);
+	}
 
-        // create the year...
-        try {
-            return new Year(y);
-        }
-        catch (IllegalArgumentException e) {
-            throw new TimePeriodFormatException("Year outside valid range.");
-        }
-    }
+	/**
+	 * Parses the string argument as a year.
+	 * <P>
+	 * The string format is YYYY.
+	 *
+	 * @param s
+	 *            a string representing the year.
+	 *
+	 * @return <code>null</code> if the string is not parseable, the year otherwise.
+	 */
+	public static Year parseYear(String s) {
+
+		// parse the string...
+		int y;
+		try {
+			y = Integer.parseInt(s.trim());
+		} catch (NumberFormatException e) {
+			throw new TimePeriodFormatException("Cannot parse string.");
+		}
+
+		// create the year...
+		try {
+			return new Year(y);
+		} catch (IllegalArgumentException e) {
+			throw new TimePeriodFormatException("Year outside valid range.");
+		}
+	}
 
 }

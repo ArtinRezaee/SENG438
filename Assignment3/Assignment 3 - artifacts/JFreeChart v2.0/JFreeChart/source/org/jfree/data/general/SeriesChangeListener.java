@@ -50,11 +50,12 @@ import java.util.EventListener;
  */
 public interface SeriesChangeListener extends EventListener {
 
-    /**
-     * Called when an observed series changes in some way.
-     *
-     * @param event  information about the change.
-     */
-    public void seriesChanged(SeriesChangeEvent event);
+	/**
+	 * Called when an observed series changes in some way.
+	 *
+	 * @param event
+	 *            information about the change.
+	 */
+	public void seriesChanged(SeriesChangeEvent event);
 
 }

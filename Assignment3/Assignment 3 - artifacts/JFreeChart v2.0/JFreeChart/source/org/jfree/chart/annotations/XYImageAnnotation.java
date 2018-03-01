@@ -64,177 +64,178 @@ import org.jfree.util.ObjectUtilities;
 import org.jfree.util.PublicCloneable;
 
 /**
- * An annotation that allows an image to be placed at some location on 
- * an {@link XYPlot}.
+ * An annotation that allows an image to be placed at some location on an
+ * {@link XYPlot}.
  * 
- * TODO:  implement serialization properly (image is not serializable).
+ * TODO: implement serialization properly (image is not serializable).
  */
-public class XYImageAnnotation extends AbstractXYAnnotation
-                               implements Cloneable, PublicCloneable, 
-                                          Serializable {
+public class XYImageAnnotation extends AbstractXYAnnotation implements Cloneable, PublicCloneable, Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = -4364694501921559958L;
-    
-    /** The x-coordinate (in data space). */
-    private double x;
+	/** For serialization. */
+	private static final long serialVersionUID = -4364694501921559958L;
 
-    /** The y-coordinate (in data space). */
-    private double y;
+	/** The x-coordinate (in data space). */
+	private double x;
 
-    /** The image. */
-    private transient Image image;
+	/** The y-coordinate (in data space). */
+	private double y;
 
-    /**
-     * Creates a new annotation to be displayed at the specified (x, y) 
-     * location.
-     *
-     * @param x  the x-coordinate (in data space).
-     * @param y  the y-coordinate (in data space).
-     * @param image  the image (<code>null</code> not permitted).
-     */
-    public XYImageAnnotation(double x, double y, Image image) {
-        if (image == null) {
-            throw new IllegalArgumentException("Null 'image' argument.");      
-        }
-        this.x = x;
-        this.y = y;
-        this.image = image;
-    }
+	/** The image. */
+	private transient Image image;
 
-    /**
-     * Draws the annotation.  This method is called by the drawing code in the 
-     * {@link XYPlot} class, you don't normally need to call this method 
-     * directly.
-     *
-     * @param g2  the graphics device.
-     * @param plot  the plot.
-     * @param dataArea  the data area.
-     * @param domainAxis  the domain axis.
-     * @param rangeAxis  the range axis.
-     * @param rendererIndex  the renderer index.
-     * @param info  if supplied, this info object will be populated with
-     *              entity information.
-     */
-    public void draw(Graphics2D g2, XYPlot plot, Rectangle2D dataArea,
-                     ValueAxis domainAxis, ValueAxis rangeAxis, 
-                     int rendererIndex,
-                     PlotRenderingInfo info) {
+	/**
+	 * Creates a new annotation to be displayed at the specified (x, y) location.
+	 *
+	 * @param x
+	 *            the x-coordinate (in data space).
+	 * @param y
+	 *            the y-coordinate (in data space).
+	 * @param image
+	 *            the image (<code>null</code> not permitted).
+	 */
+	public XYImageAnnotation(double x, double y, Image image) {
+		if (image == null) {
+			throw new IllegalArgumentException("Null 'image' argument.");
+		}
+		this.x = x;
+		this.y = y;
+		this.image = image;
+	}
 
-        PlotOrientation orientation = plot.getOrientation();
-        AxisLocation domainAxisLocation = plot.getDomainAxisLocation();
-        AxisLocation rangeAxisLocation = plot.getRangeAxisLocation();
-        RectangleEdge domainEdge 
-            = Plot.resolveDomainAxisLocation(domainAxisLocation, orientation);
-        RectangleEdge rangeEdge 
-            = Plot.resolveRangeAxisLocation(rangeAxisLocation, orientation);
-        float j2DX 
-            = (float) domainAxis.valueToJava2D(this.x, dataArea, domainEdge);
-        float j2DY 
-            = (float) rangeAxis.valueToJava2D(this.y, dataArea, rangeEdge);
-        float xx = 0.0f;
-        float yy = 0.0f;
-        if (orientation == PlotOrientation.HORIZONTAL) {
-            xx = j2DY;
-            yy = j2DX;
-        }
-        else if (orientation == PlotOrientation.VERTICAL) {
-            xx = j2DX;
-            yy = j2DY;
-        }
-        int w = this.image.getWidth(null);
-        int h = this.image.getHeight(null);
-        xx = xx - w / 2.0f;
-        yy = yy - h / 2.0f;
-        g2.drawImage(this.image, (int) xx, (int) yy, null);
-        
-        String toolTip = getToolTipText();
-        String url = getURL();
-        if (toolTip != null || url != null) {
-            addEntity(
-                info, new Rectangle2D.Float(xx, yy, w, h), rendererIndex, 
-                toolTip, url
-            );
-        }
-    }
+	/**
+	 * Draws the annotation. This method is called by the drawing code in the
+	 * {@link XYPlot} class, you don't normally need to call this method directly.
+	 *
+	 * @param g2
+	 *            the graphics device.
+	 * @param plot
+	 *            the plot.
+	 * @param dataArea
+	 *            the data area.
+	 * @param domainAxis
+	 *            the domain axis.
+	 * @param rangeAxis
+	 *            the range axis.
+	 * @param rendererIndex
+	 *            the renderer index.
+	 * @param info
+	 *            if supplied, this info object will be populated with entity
+	 *            information.
+	 */
+	public void draw(Graphics2D g2, XYPlot plot, Rectangle2D dataArea, ValueAxis domainAxis, ValueAxis rangeAxis,
+			int rendererIndex, PlotRenderingInfo info) {
 
-    /**
-     * Tests this object for equality with an arbitrary object.
-     * 
-     * @param obj  the object (<code>null</code> permitted).
-     * 
-     * @return A boolean.
-     */
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        // now try to reject equality...
-        if (!super.equals(obj)) {
-            return false;
-        }
-        if (!(obj instanceof XYImageAnnotation)) {
-            return false;
-        }
-        XYImageAnnotation that = (XYImageAnnotation) obj;
-        if (this.x != that.x) {
-            return false;
-        }
-        if (this.y != that.y) {
-            return false;
-        }
-        if (!ObjectUtilities.equal(this.image, that.image)) {
-            return false;
-        }
-        // seems to be the same...
-        return true;
-    }
-    
-    /**
-     * Returns a hash code for this object.
-     * 
-     * @return A hash code.
-     */
-    public int hashCode() {
-        return this.image.hashCode();
-    }
-    
-    /**
-     * Returns a clone of the annotation.
-     * 
-     * @return A clone.
-     * 
-     * @throws CloneNotSupportedException  if the annotation can't be cloned.
-     */
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
-    
-    /**
-     * Provides serialization support.
-     *
-     * @param stream  the output stream.
-     *
-     * @throws IOException  if there is an I/O error.
-     */
-    private void writeObject(ObjectOutputStream stream) throws IOException {
-        stream.defaultWriteObject();
-        //SerialUtilities.writeImage(this.image, stream);
-    }
-    
-    /**
-     * Provides serialization support.
-     *
-     * @param stream  the input stream.
-     *
-     * @throws IOException  if there is an I/O error.
-     * @throws ClassNotFoundException  if there is a classpath problem.
-     */
-    private void readObject(ObjectInputStream stream) 
-        throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        //this.image = SerialUtilities.readImage(stream);
-    }
+		PlotOrientation orientation = plot.getOrientation();
+		AxisLocation domainAxisLocation = plot.getDomainAxisLocation();
+		AxisLocation rangeAxisLocation = plot.getRangeAxisLocation();
+		RectangleEdge domainEdge = Plot.resolveDomainAxisLocation(domainAxisLocation, orientation);
+		RectangleEdge rangeEdge = Plot.resolveRangeAxisLocation(rangeAxisLocation, orientation);
+		float j2DX = (float) domainAxis.valueToJava2D(this.x, dataArea, domainEdge);
+		float j2DY = (float) rangeAxis.valueToJava2D(this.y, dataArea, rangeEdge);
+		float xx = 0.0f;
+		float yy = 0.0f;
+		if (orientation == PlotOrientation.HORIZONTAL) {
+			xx = j2DY;
+			yy = j2DX;
+		} else if (orientation == PlotOrientation.VERTICAL) {
+			xx = j2DX;
+			yy = j2DY;
+		}
+		int w = this.image.getWidth(null);
+		int h = this.image.getHeight(null);
+		xx = xx - w / 2.0f;
+		yy = yy - h / 2.0f;
+		g2.drawImage(this.image, (int) xx, (int) yy, null);
 
+		String toolTip = getToolTipText();
+		String url = getURL();
+		if (toolTip != null || url != null) {
+			addEntity(info, new Rectangle2D.Float(xx, yy, w, h), rendererIndex, toolTip, url);
+		}
+	}
+
+	/**
+	 * Tests this object for equality with an arbitrary object.
+	 * 
+	 * @param obj
+	 *            the object (<code>null</code> permitted).
+	 * 
+	 * @return A boolean.
+	 */
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		// now try to reject equality...
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (!(obj instanceof XYImageAnnotation)) {
+			return false;
+		}
+		XYImageAnnotation that = (XYImageAnnotation) obj;
+		if (this.x != that.x) {
+			return false;
+		}
+		if (this.y != that.y) {
+			return false;
+		}
+		if (!ObjectUtilities.equal(this.image, that.image)) {
+			return false;
+		}
+		// seems to be the same...
+		return true;
+	}
+
+	/**
+	 * Returns a hash code for this object.
+	 * 
+	 * @return A hash code.
+	 */
+	public int hashCode() {
+		return this.image.hashCode();
+	}
+
+	/**
+	 * Returns a clone of the annotation.
+	 * 
+	 * @return A clone.
+	 * 
+	 * @throws CloneNotSupportedException
+	 *             if the annotation can't be cloned.
+	 */
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+
+	/**
+	 * Provides serialization support.
+	 *
+	 * @param stream
+	 *            the output stream.
+	 *
+	 * @throws IOException
+	 *             if there is an I/O error.
+	 */
+	private void writeObject(ObjectOutputStream stream) throws IOException {
+		stream.defaultWriteObject();
+		// SerialUtilities.writeImage(this.image, stream);
+	}
+
+	/**
+	 * Provides serialization support.
+	 *
+	 * @param stream
+	 *            the input stream.
+	 *
+	 * @throws IOException
+	 *             if there is an I/O error.
+	 * @throws ClassNotFoundException
+	 *             if there is a classpath problem.
+	 */
+	private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+		stream.defaultReadObject();
+		// this.image = SerialUtilities.readImage(stream);
+	}
 
 }

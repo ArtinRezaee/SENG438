@@ -49,96 +49,91 @@ import java.io.Serializable;
  */
 public final class AreaRendererEndType implements Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = -1774146392916359839L;
-    
-    /** 
-     * The area tapers from the first or last value down to zero. 
-     */
-    public static final AreaRendererEndType TAPER = new AreaRendererEndType(
-        "AreaRendererEndType.TAPER"
-    );
+	/** For serialization. */
+	private static final long serialVersionUID = -1774146392916359839L;
 
-    /** 
-     * The area is truncated at the first or last value. 
-     */
-    public static final AreaRendererEndType TRUNCATE = new AreaRendererEndType(
-        "AreaRendererEndType.TRUNCATE"
-    );
-    
-    /** 
-     * The area is levelled at the first or last value. 
-     */
-    public static final AreaRendererEndType LEVEL = new AreaRendererEndType(
-        "AreaRendererEndType.LEVEL"
-    );
+	/**
+	 * The area tapers from the first or last value down to zero.
+	 */
+	public static final AreaRendererEndType TAPER = new AreaRendererEndType("AreaRendererEndType.TAPER");
 
-    /** The name. */
-    private String name;
+	/**
+	 * The area is truncated at the first or last value.
+	 */
+	public static final AreaRendererEndType TRUNCATE = new AreaRendererEndType("AreaRendererEndType.TRUNCATE");
 
-    /**
-     * Private constructor.
-     *
-     * @param name  the name.
-     */
-    private AreaRendererEndType(String name) {
-        this.name = name;
-    }
+	/**
+	 * The area is levelled at the first or last value.
+	 */
+	public static final AreaRendererEndType LEVEL = new AreaRendererEndType("AreaRendererEndType.LEVEL");
 
-    /**
-     * Returns a string representing the object.
-     *
-     * @return The string.
-     */
-    public String toString() {
-        return this.name;
-    }
+	/** The name. */
+	private String name;
 
-    /**
-     * Returns <code>true</code> if this object is equal to the specified 
-     * object, and <code>false</code> otherwise.
-     *
-     * @param o  the other object.
-     *
-     * @return A boolean.
-     */
-    public boolean equals(Object o) {
+	/**
+	 * Private constructor.
+	 *
+	 * @param name
+	 *            the name.
+	 */
+	private AreaRendererEndType(String name) {
+		this.name = name;
+	}
 
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof AreaRendererEndType)) {
-            return false;
-        }
+	/**
+	 * Returns a string representing the object.
+	 *
+	 * @return The string.
+	 */
+	public String toString() {
+		return this.name;
+	}
 
-        AreaRendererEndType t = (AreaRendererEndType) o;
-        if (!this.name.equals(t.toString())) {
-            return false;
-        }
+	/**
+	 * Returns <code>true</code> if this object is equal to the specified object,
+	 * and <code>false</code> otherwise.
+	 *
+	 * @param o
+	 *            the other object.
+	 *
+	 * @return A boolean.
+	 */
+	public boolean equals(Object o) {
 
-        return true;
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof AreaRendererEndType)) {
+			return false;
+		}
 
-    }
-    
-    /**
-     * Ensures that serialization returns the unique instances.
-     * 
-     * @return The object.
-     * 
-     * @throws ObjectStreamException if there is a problem.
-     */
-    private Object readResolve() throws ObjectStreamException {
-        Object result = null;
-        if (this.equals(AreaRendererEndType.LEVEL)) {
-            result = AreaRendererEndType.LEVEL;
-        }
-        else if (this.equals(AreaRendererEndType.TAPER)) {
-            result = AreaRendererEndType.TAPER;
-        }
-        else if (this.equals(AreaRendererEndType.TRUNCATE)) {
-            result = AreaRendererEndType.TRUNCATE;
-        }
-        return result;
-    }
+		AreaRendererEndType t = (AreaRendererEndType) o;
+		if (!this.name.equals(t.toString())) {
+			return false;
+		}
+
+		return true;
+
+	}
+
+	/**
+	 * Ensures that serialization returns the unique instances.
+	 * 
+	 * @return The object.
+	 * 
+	 * @throws ObjectStreamException
+	 *             if there is a problem.
+	 */
+	private Object readResolve() throws ObjectStreamException {
+		Object result = null;
+		if (this.equals(AreaRendererEndType.LEVEL)) {
+			result = AreaRendererEndType.LEVEL;
+		} else if (this.equals(AreaRendererEndType.TAPER)) {
+			result = AreaRendererEndType.TAPER;
+		} else if (this.equals(AreaRendererEndType.TRUNCATE)) {
+			result = AreaRendererEndType.TRUNCATE;
+		}
+		return result;
+	}
 
 }

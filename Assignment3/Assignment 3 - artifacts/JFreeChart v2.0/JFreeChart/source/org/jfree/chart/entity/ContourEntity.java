@@ -51,84 +51,91 @@ import java.io.Serializable;
  *
  * @author David M. O'Donnell
  */
-public class ContourEntity extends ChartEntity 
-                           implements Cloneable, Serializable {
+public class ContourEntity extends ChartEntity implements Cloneable, Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = 1249570520505992847L;
-    
-    /** Holds the index into the dataset for this entity. */
-    private int index = -1;
+	/** For serialization. */
+	private static final long serialVersionUID = 1249570520505992847L;
 
-    /**
-     * Constructor for ContourEntity.
-     *
-     * @param area  the area.
-     * @param toolTipText  the tooltip text.
-     */
-    public ContourEntity(Shape area, String toolTipText) {
-        super(area, toolTipText);
-    }
+	/** Holds the index into the dataset for this entity. */
+	private int index = -1;
 
-    /**
-     * Constructor for ContourEntity.
-     *
-     * @param area  the area.
-     * @param toolTipText  the tooltip text.
-     * @param urlText  the URL text.
-     */
-    public ContourEntity(Shape area, String toolTipText, String urlText) {
-        super(area, toolTipText, urlText);
-    }
+	/**
+	 * Constructor for ContourEntity.
+	 *
+	 * @param area
+	 *            the area.
+	 * @param toolTipText
+	 *            the tooltip text.
+	 */
+	public ContourEntity(Shape area, String toolTipText) {
+		super(area, toolTipText);
+	}
 
-    /**
-     * Returns the index.
-     *
-     * @return The index.
-     */
-    public int getIndex() {
-        return this.index;
-    }
+	/**
+	 * Constructor for ContourEntity.
+	 *
+	 * @param area
+	 *            the area.
+	 * @param toolTipText
+	 *            the tooltip text.
+	 * @param urlText
+	 *            the URL text.
+	 */
+	public ContourEntity(Shape area, String toolTipText, String urlText) {
+		super(area, toolTipText, urlText);
+	}
 
-    /**
-     * Sets the index.
-     *
-     * @param index  the index.
-     */
-    public void setIndex(int index) {
-        this.index = index;
-    }
+	/**
+	 * Returns the index.
+	 *
+	 * @return The index.
+	 */
+	public int getIndex() {
+		return this.index;
+	}
 
-    /**
-     * Tests the entity for equality with an arbitrary object.
-     * 
-     * @param obj  the object (<code>null</code> permitted).
-     * 
-     * @return A boolean.
-     */
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;   
-        }
-        if (obj instanceof ContourEntity && super.equals(obj)) {
-            ContourEntity ce = (ContourEntity) obj;
-            if (this.index != ce.index) {
-                return false;   
-            }
-            return true;
-        }
-        return false;
-    }
-    
-    /**
-     * Returns a clone of the entity.
-     * 
-     * @return A clone.
-     * 
-     * @throws CloneNotSupportedException if cloning is not supported.
-     */
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
-    
+	/**
+	 * Sets the index.
+	 *
+	 * @param index
+	 *            the index.
+	 */
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+	/**
+	 * Tests the entity for equality with an arbitrary object.
+	 * 
+	 * @param obj
+	 *            the object (<code>null</code> permitted).
+	 * 
+	 * @return A boolean.
+	 */
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (obj instanceof ContourEntity && super.equals(obj)) {
+			ContourEntity ce = (ContourEntity) obj;
+			if (this.index != ce.index) {
+				return false;
+			}
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Returns a clone of the entity.
+	 * 
+	 * @return A clone.
+	 * 
+	 * @throws CloneNotSupportedException
+	 *             if cloning is not supported.
+	 */
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+
 }

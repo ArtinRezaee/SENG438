@@ -48,14 +48,16 @@ import org.jfree.data.category.CategoryDataset;
  */
 public interface CategorySeriesLabelGenerator {
 
-    /**
-     * Generates a label for the specified series.
-     * 
-     * @param dataset  the dataset.
-     * @param series  the series.
-     * 
-     * @return A series label.
-     */
-    public String generateLabel(CategoryDataset dataset, int series);
+	/**
+	 * Generates a label for the specified series.
+	 * 
+	 * @param dataset
+	 *            the dataset.
+	 * @param series
+	 *            the series.
+	 * 
+	 * @return A series label.
+	 */
+	public String generateLabel(CategoryDataset dataset, int series);
 
 }

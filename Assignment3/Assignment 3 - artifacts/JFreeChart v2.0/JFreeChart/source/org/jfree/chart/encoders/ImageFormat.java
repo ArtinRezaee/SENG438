@@ -48,13 +48,13 @@ package org.jfree.chart.encoders;
  */
 public interface ImageFormat {
 
-    /** Portable Network Graphics - lossless */
-    public static String PNG = "png";
+	/** Portable Network Graphics - lossless */
+	public static String PNG = "png";
 
-    /** Joint Photographic Experts Group format - lossy */
-    public static String JPEG = "jpeg";
+	/** Joint Photographic Experts Group format - lossy */
+	public static String JPEG = "jpeg";
 
-    /** Graphics Interchange Format - lossless, but 256 colour restriction */
-    public static String GIF = "gif";
+	/** Graphics Interchange Format - lossless, but 256 colour restriction */
+	public static String GIF = "gif";
 
 }

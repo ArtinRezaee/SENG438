@@ -58,133 +58,138 @@ import org.jfree.util.ObjectUtilities;
  */
 public class IntervalMarker extends Marker implements Cloneable, Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = -1762344775267627916L;
-    
-    /** The start value. */
-    private double startValue;
+	/** For serialization. */
+	private static final long serialVersionUID = -1762344775267627916L;
 
-    /** The end value. */
-    private double endValue;
+	/** The start value. */
+	private double startValue;
 
-    /** The gradient paint transformer (optional). */
-    private GradientPaintTransformer gradientPaintTransformer;
-    
-    /**
-     * Constructs an interval marker.
-     *
-     * @param start  the start of the interval.
-     * @param end  the end of the interval.
-     */
-    public IntervalMarker(double start, double end) {
-        this(
-            start, end, Color.gray, new BasicStroke(0.5f), Color.blue, 
-            new BasicStroke(0.5f), 0.8f
-        );
-    }
+	/** The end value. */
+	private double endValue;
 
-    /**
-     * Constructs an interval marker.
-     *
-     * @param start  the start of the interval.
-     * @param end  the end of the interval.
-     * @param paint  the paint.
-     * @param stroke  the stroke.
-     * @param outlinePaint  the outline paint.
-     * @param outlineStroke  the outline stroke.
-     * @param alpha  the alpha transparency.
-     */
-    public IntervalMarker(double start, double end, 
-                          Paint paint, Stroke stroke,
-                          Paint outlinePaint, Stroke outlineStroke, 
-                          float alpha) {
+	/** The gradient paint transformer (optional). */
+	private GradientPaintTransformer gradientPaintTransformer;
 
-        super(paint, stroke, outlinePaint, outlineStroke, alpha);
-        this.startValue = start;
-        this.endValue = end;
-        this.gradientPaintTransformer = null;
-        setLabelOffsetType(LengthAdjustmentType.CONTRACT);
-        
-    }
+	/**
+	 * Constructs an interval marker.
+	 *
+	 * @param start
+	 *            the start of the interval.
+	 * @param end
+	 *            the end of the interval.
+	 */
+	public IntervalMarker(double start, double end) {
+		this(start, end, Color.gray, new BasicStroke(0.5f), Color.blue, new BasicStroke(0.5f), 0.8f);
+	}
 
-    /**
-     * Returns the start value for the interval.
-     *
-     * @return The start value.
-     */
-    public double getStartValue() {
-        return this.startValue;
-    }
+	/**
+	 * Constructs an interval marker.
+	 *
+	 * @param start
+	 *            the start of the interval.
+	 * @param end
+	 *            the end of the interval.
+	 * @param paint
+	 *            the paint.
+	 * @param stroke
+	 *            the stroke.
+	 * @param outlinePaint
+	 *            the outline paint.
+	 * @param outlineStroke
+	 *            the outline stroke.
+	 * @param alpha
+	 *            the alpha transparency.
+	 */
+	public IntervalMarker(double start, double end, Paint paint, Stroke stroke, Paint outlinePaint,
+			Stroke outlineStroke, float alpha) {
 
-    /**
-     * Returns the end value for the interval.
-     *
-     * @return The end value.
-     */
-    public double getEndValue() {
-        return this.endValue;
-    }
-    
-    /**
-     * Returns the gradient paint transformer.
-     * 
-     * @return The gradient paint transformer (possibly <code>null</code>).
-     */
-    public GradientPaintTransformer getGradientPaintTransformer() {
-        return this.gradientPaintTransformer;   
-    }
-    
-    /**
-     * Sets the gradient paint transformer.
-     * 
-     * @param transformer  the transformer (<code>null</code> permitted).
-     */
-    public void setGradientPaintTransformer(
-            GradientPaintTransformer transformer) {
-        this.gradientPaintTransformer = transformer;   
-    }
-    
-    /**
-     * Tests the marker for equality with an arbitrary object.
-     * 
-     * @param obj  the object (<code>null</code> permitted).
-     * 
-     * @return A boolean.
-     */
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;   
-        }
-        if (!(obj instanceof IntervalMarker)) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        IntervalMarker that = (IntervalMarker) obj;
-        if (this.startValue != that.startValue) {
-            return false;   
-        }
-        if (this.endValue != that.endValue) {
-            return false;   
-        }
-        if (!ObjectUtilities.equal(this.gradientPaintTransformer, 
-                that.gradientPaintTransformer)) {
-            return false;   
-        }
-        return true;
-    }
-    
-    /**
-     * Returns a clone of the marker.
-     * 
-     * @return A clone.
-     * 
-     * @throws CloneNotSupportedException Not thrown by this class, but the 
-     *         exception is declared for the use of subclasses.
-     */
-    public Object clone() throws CloneNotSupportedException {   
-        return super.clone();   
-    }
+		super(paint, stroke, outlinePaint, outlineStroke, alpha);
+		this.startValue = start;
+		this.endValue = end;
+		this.gradientPaintTransformer = null;
+		setLabelOffsetType(LengthAdjustmentType.CONTRACT);
+
+	}
+
+	/**
+	 * Returns the start value for the interval.
+	 *
+	 * @return The start value.
+	 */
+	public double getStartValue() {
+		return this.startValue;
+	}
+
+	/**
+	 * Returns the end value for the interval.
+	 *
+	 * @return The end value.
+	 */
+	public double getEndValue() {
+		return this.endValue;
+	}
+
+	/**
+	 * Returns the gradient paint transformer.
+	 * 
+	 * @return The gradient paint transformer (possibly <code>null</code>).
+	 */
+	public GradientPaintTransformer getGradientPaintTransformer() {
+		return this.gradientPaintTransformer;
+	}
+
+	/**
+	 * Sets the gradient paint transformer.
+	 * 
+	 * @param transformer
+	 *            the transformer (<code>null</code> permitted).
+	 */
+	public void setGradientPaintTransformer(GradientPaintTransformer transformer) {
+		this.gradientPaintTransformer = transformer;
+	}
+
+	/**
+	 * Tests the marker for equality with an arbitrary object.
+	 * 
+	 * @param obj
+	 *            the object (<code>null</code> permitted).
+	 * 
+	 * @return A boolean.
+	 */
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof IntervalMarker)) {
+			return false;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		IntervalMarker that = (IntervalMarker) obj;
+		if (this.startValue != that.startValue) {
+			return false;
+		}
+		if (this.endValue != that.endValue) {
+			return false;
+		}
+		if (!ObjectUtilities.equal(this.gradientPaintTransformer, that.gradientPaintTransformer)) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Returns a clone of the marker.
+	 * 
+	 * @return A clone.
+	 * 
+	 * @throws CloneNotSupportedException
+	 *             Not thrown by this class, but the exception is declared for the
+	 *             use of subclasses.
+	 */
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
 
 }

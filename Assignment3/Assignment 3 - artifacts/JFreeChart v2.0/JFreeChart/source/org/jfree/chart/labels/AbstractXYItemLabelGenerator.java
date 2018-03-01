@@ -61,273 +61,266 @@ import org.jfree.util.ObjectUtilities;
  * A base class for creating item label generators.
  */
 public class AbstractXYItemLabelGenerator implements Cloneable, Serializable {
-    
-    /** For serialization. */
-    private static final long serialVersionUID = 5869744396278660636L;
-    
-    /** The item label format string. */
-    private String formatString;
-    
-    /** A number formatter for the x value. */
-    private NumberFormat xFormat;
-    
-    /** A date formatter for the x value. */
-    private DateFormat xDateFormat;
 
-    /** A formatter for the y value. */
-    private NumberFormat yFormat;
+	/** For serialization. */
+	private static final long serialVersionUID = 5869744396278660636L;
 
-    /** A date formatter for the y value. */
-    private DateFormat yDateFormat;
+	/** The item label format string. */
+	private String formatString;
 
-    /** The string used to represent 'null' for the x-value. */
-    private String nullXString = "null";
-    
-    /** The string used to represent 'null' for the y-value. */
-    private String nullYString = "null";
-    
-    /**
-     * Creates an item label generator using default number formatters.
-     */
-    protected AbstractXYItemLabelGenerator() {
-        this(
-            "{2}", NumberFormat.getNumberInstance(), 
-            NumberFormat.getNumberInstance()
-        );
-    }
+	/** A number formatter for the x value. */
+	private NumberFormat xFormat;
 
-    /**
-     * Creates an item label generator using the specified number formatters.
-     *
-     * @param formatString  the item label format string (<code>null</code> 
-     *                      not permitted).
-     * @param xFormat  the format object for the x values (<code>null</code> 
-     *                 not permitted).
-     * @param yFormat  the format object for the y values (<code>null</code> 
-     *                 not permitted).
-     */
-    protected AbstractXYItemLabelGenerator(String formatString,
-                                           NumberFormat xFormat, 
-                                           NumberFormat yFormat) {
+	/** A date formatter for the x value. */
+	private DateFormat xDateFormat;
 
-        if (formatString == null) {
-            throw new IllegalArgumentException("Null 'formatString' argument.");
-        }
-        if (xFormat == null) {
-            throw new IllegalArgumentException("Null 'xFormat' argument.");   
-        }
-        if (yFormat == null) {
-            throw new IllegalArgumentException("Null 'yFormat' argument.");   
-        }
-        this.formatString = formatString;
-        this.xFormat = xFormat;
-        this.yFormat = yFormat;
+	/** A formatter for the y value. */
+	private NumberFormat yFormat;
 
-    }
+	/** A date formatter for the y value. */
+	private DateFormat yDateFormat;
 
-    /**
-     * Creates an item label generator using the specified number formatters.
-     *
-     * @param formatString  the item label format string (<code>null</code> 
-     *                      not permitted).
-     * @param xFormat  the format object for the x values (<code>null</code> 
-     *                 permitted).
-     * @param yFormat  the format object for the y values (<code>null</code> 
-     *                 not permitted).
-     */
-    protected AbstractXYItemLabelGenerator(String formatString,
-                                           DateFormat xFormat, 
-                                           NumberFormat yFormat) {
+	/** The string used to represent 'null' for the x-value. */
+	private String nullXString = "null";
 
-        this(formatString, NumberFormat.getInstance(), yFormat);
-        this.xDateFormat = xFormat;
-    
-    }
-    
-    /**
-     * Creates an item label generator using the specified number formatters.
-     *
-     * @param formatString  the item label format string (<code>null</code> 
-     *                      not permitted).
-     * @param xFormat  the format object for the x values (<code>null</code> 
-     *                 permitted).
-     * @param yFormat  the format object for the y values (<code>null</code> 
-     *                 not permitted).
-     */
-    protected AbstractXYItemLabelGenerator(String formatString,
-                                           DateFormat xFormat, 
-                                           DateFormat yFormat) {
+	/** The string used to represent 'null' for the y-value. */
+	private String nullYString = "null";
 
-        this(
-            formatString, NumberFormat.getInstance(), 
-            NumberFormat.getInstance()
-        );
-        this.xDateFormat = xFormat;
-        this.yDateFormat = yFormat;
-    
-    }
-    
-    /**
-     * Returns the format string (this controls the overall structure of the 
-     * label).
-     * 
-     * @return The format string (never <code>null</code>).
-     */
-    public String getFormatString() {
-        return this.formatString;
-    }
-    
-    /**
-     * Returns the number formatter for the x-values.
-     *
-     * @return The number formatter (possibly <code>null</code>).
-     */
-    public NumberFormat getXFormat() {
-        return this.xFormat;
-    }
+	/**
+	 * Creates an item label generator using default number formatters.
+	 */
+	protected AbstractXYItemLabelGenerator() {
+		this("{2}", NumberFormat.getNumberInstance(), NumberFormat.getNumberInstance());
+	}
 
-    /**
-     * Returns the date formatter for the x-values.
-     *
-     * @return The date formatter (possibly <code>null</code>).
-     */
-    public DateFormat getXDateFormat() {
-        return this.xDateFormat;
-    }
+	/**
+	 * Creates an item label generator using the specified number formatters.
+	 *
+	 * @param formatString
+	 *            the item label format string (<code>null</code> not permitted).
+	 * @param xFormat
+	 *            the format object for the x values (<code>null</code> not
+	 *            permitted).
+	 * @param yFormat
+	 *            the format object for the y values (<code>null</code> not
+	 *            permitted).
+	 */
+	protected AbstractXYItemLabelGenerator(String formatString, NumberFormat xFormat, NumberFormat yFormat) {
 
-    /**
-     * Returns the number formatter for the y-values.
-     *
-     * @return The number formatter (possibly <code>null</code>).
-     */
-    public NumberFormat getYFormat() {
-        return this.yFormat;
-    }
+		if (formatString == null) {
+			throw new IllegalArgumentException("Null 'formatString' argument.");
+		}
+		if (xFormat == null) {
+			throw new IllegalArgumentException("Null 'xFormat' argument.");
+		}
+		if (yFormat == null) {
+			throw new IllegalArgumentException("Null 'yFormat' argument.");
+		}
+		this.formatString = formatString;
+		this.xFormat = xFormat;
+		this.yFormat = yFormat;
 
-    /**
-     * Returns the date formatter for the y-values.
-     *
-     * @return The date formatter (possibly <code>null</code>).
-     */
-    public DateFormat getYDateFormat() {
-        return this.yDateFormat;
-    }
+	}
 
-    /**
-     * Generates a label string for an item in the dataset.
-     *
-     * @param dataset  the dataset (<code>null</code> not permitted).
-     * @param series  the series (zero-based index).
-     * @param item  the item (zero-based index).
-     *
-     * @return The label (possibly <code>null</code>).
-     */
-    public String generateLabelString(XYDataset dataset, int series, int item) {
-        String result = null;    
-        Object[] items = createItemArray(dataset, series, item);
-        result = MessageFormat.format(this.formatString, items);
-        return result;
-    }
+	/**
+	 * Creates an item label generator using the specified number formatters.
+	 *
+	 * @param formatString
+	 *            the item label format string (<code>null</code> not permitted).
+	 * @param xFormat
+	 *            the format object for the x values (<code>null</code> permitted).
+	 * @param yFormat
+	 *            the format object for the y values (<code>null</code> not
+	 *            permitted).
+	 */
+	protected AbstractXYItemLabelGenerator(String formatString, DateFormat xFormat, NumberFormat yFormat) {
 
-    /**
-     * Creates the array of items that can be passed to the 
-     * {@link MessageFormat} class for creating labels.
-     *
-     * @param dataset  the dataset (<code>null</code> not permitted).
-     * @param series  the series (zero-based index).
-     * @param item  the item (zero-based index).
-     *
-     * @return The items (never <code>null</code>).
-     */
-    protected Object[] createItemArray(XYDataset dataset, int series, 
-                                       int item) {
-        Object[] result = new Object[3];
-        result[0] = dataset.getSeriesKey(series).toString();
-        
-        double x = dataset.getXValue(series, item);
-        if (Double.isNaN(x) && dataset.getX(series, item) == null) {
-            result[1] = this.nullXString;
-        }
-        else {
-            if (this.xDateFormat != null) {
-                result[1] = this.xDateFormat.format(new Date((long) x));   
-            }
-            else {
-                result[1] = this.xFormat.format(x);
-            }
-        }
-        
-        double y = dataset.getYValue(series, item);
-        if (Double.isNaN(y) && dataset.getY(series, item) == null) {
-            result[2] = this.nullYString;
-        }
-        else {
-            if (this.yDateFormat != null) {
-                result[2] = this.yDateFormat.format(new Date((long) y));   
-            }
-            else {
-                result[2] = this.yFormat.format(y);
-            }
-        }
-        return result;
-    }
+		this(formatString, NumberFormat.getInstance(), yFormat);
+		this.xDateFormat = xFormat;
 
-    /**
-     * Tests this object for equality with an arbitrary object.
-     *
-     * @param obj  the other object (<code>null</code> permitted).
-     *
-     * @return A boolean.
-     */
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof AbstractXYItemLabelGenerator)) {
-            return false;
-        }
-        AbstractXYItemLabelGenerator that = (AbstractXYItemLabelGenerator) obj;
-        if (!this.formatString.equals(that.formatString)) {
-            return false;   
-        }
-        if (!ObjectUtilities.equal(this.xFormat, that.xFormat)) {
-            return false;   
-        }
-        if (!ObjectUtilities.equal(this.xDateFormat, that.xDateFormat)) {
-            return false;   
-        }
-        if (!ObjectUtilities.equal(this.yFormat, that.yFormat)) {
-            return false;   
-        }
-        if (!ObjectUtilities.equal(this.yDateFormat, that.yDateFormat)) {
-            return false;   
-        }
-        return true;
-        
-    }
+	}
 
-    /**
-     * Returns an independent copy of the generator.
-     * 
-     * @return A clone.
-     * 
-     * @throws CloneNotSupportedException if cloning is not supported.
-     */
-    public Object clone() throws CloneNotSupportedException {
-        
-        AbstractXYItemLabelGenerator clone 
-            = (AbstractXYItemLabelGenerator) super.clone();
+	/**
+	 * Creates an item label generator using the specified number formatters.
+	 *
+	 * @param formatString
+	 *            the item label format string (<code>null</code> not permitted).
+	 * @param xFormat
+	 *            the format object for the x values (<code>null</code> permitted).
+	 * @param yFormat
+	 *            the format object for the y values (<code>null</code> not
+	 *            permitted).
+	 */
+	protected AbstractXYItemLabelGenerator(String formatString, DateFormat xFormat, DateFormat yFormat) {
 
-        if (this.xFormat != null) {
-            clone.xFormat = (NumberFormat) this.xFormat.clone();
-        }
-        
-        if (this.yFormat != null) {
-            clone.yFormat = (NumberFormat) this.yFormat.clone();
-        }
-        
-        return clone;
-        
-    }
-    
+		this(formatString, NumberFormat.getInstance(), NumberFormat.getInstance());
+		this.xDateFormat = xFormat;
+		this.yDateFormat = yFormat;
+
+	}
+
+	/**
+	 * Returns the format string (this controls the overall structure of the label).
+	 * 
+	 * @return The format string (never <code>null</code>).
+	 */
+	public String getFormatString() {
+		return this.formatString;
+	}
+
+	/**
+	 * Returns the number formatter for the x-values.
+	 *
+	 * @return The number formatter (possibly <code>null</code>).
+	 */
+	public NumberFormat getXFormat() {
+		return this.xFormat;
+	}
+
+	/**
+	 * Returns the date formatter for the x-values.
+	 *
+	 * @return The date formatter (possibly <code>null</code>).
+	 */
+	public DateFormat getXDateFormat() {
+		return this.xDateFormat;
+	}
+
+	/**
+	 * Returns the number formatter for the y-values.
+	 *
+	 * @return The number formatter (possibly <code>null</code>).
+	 */
+	public NumberFormat getYFormat() {
+		return this.yFormat;
+	}
+
+	/**
+	 * Returns the date formatter for the y-values.
+	 *
+	 * @return The date formatter (possibly <code>null</code>).
+	 */
+	public DateFormat getYDateFormat() {
+		return this.yDateFormat;
+	}
+
+	/**
+	 * Generates a label string for an item in the dataset.
+	 *
+	 * @param dataset
+	 *            the dataset (<code>null</code> not permitted).
+	 * @param series
+	 *            the series (zero-based index).
+	 * @param item
+	 *            the item (zero-based index).
+	 *
+	 * @return The label (possibly <code>null</code>).
+	 */
+	public String generateLabelString(XYDataset dataset, int series, int item) {
+		String result = null;
+		Object[] items = createItemArray(dataset, series, item);
+		result = MessageFormat.format(this.formatString, items);
+		return result;
+	}
+
+	/**
+	 * Creates the array of items that can be passed to the {@link MessageFormat}
+	 * class for creating labels.
+	 *
+	 * @param dataset
+	 *            the dataset (<code>null</code> not permitted).
+	 * @param series
+	 *            the series (zero-based index).
+	 * @param item
+	 *            the item (zero-based index).
+	 *
+	 * @return The items (never <code>null</code>).
+	 */
+	protected Object[] createItemArray(XYDataset dataset, int series, int item) {
+		Object[] result = new Object[3];
+		result[0] = dataset.getSeriesKey(series).toString();
+
+		double x = dataset.getXValue(series, item);
+		if (Double.isNaN(x) && dataset.getX(series, item) == null) {
+			result[1] = this.nullXString;
+		} else {
+			if (this.xDateFormat != null) {
+				result[1] = this.xDateFormat.format(new Date((long) x));
+			} else {
+				result[1] = this.xFormat.format(x);
+			}
+		}
+
+		double y = dataset.getYValue(series, item);
+		if (Double.isNaN(y) && dataset.getY(series, item) == null) {
+			result[2] = this.nullYString;
+		} else {
+			if (this.yDateFormat != null) {
+				result[2] = this.yDateFormat.format(new Date((long) y));
+			} else {
+				result[2] = this.yFormat.format(y);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Tests this object for equality with an arbitrary object.
+	 *
+	 * @param obj
+	 *            the other object (<code>null</code> permitted).
+	 *
+	 * @return A boolean.
+	 */
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof AbstractXYItemLabelGenerator)) {
+			return false;
+		}
+		AbstractXYItemLabelGenerator that = (AbstractXYItemLabelGenerator) obj;
+		if (!this.formatString.equals(that.formatString)) {
+			return false;
+		}
+		if (!ObjectUtilities.equal(this.xFormat, that.xFormat)) {
+			return false;
+		}
+		if (!ObjectUtilities.equal(this.xDateFormat, that.xDateFormat)) {
+			return false;
+		}
+		if (!ObjectUtilities.equal(this.yFormat, that.yFormat)) {
+			return false;
+		}
+		if (!ObjectUtilities.equal(this.yDateFormat, that.yDateFormat)) {
+			return false;
+		}
+		return true;
+
+	}
+
+	/**
+	 * Returns an independent copy of the generator.
+	 * 
+	 * @return A clone.
+	 * 
+	 * @throws CloneNotSupportedException
+	 *             if cloning is not supported.
+	 */
+	public Object clone() throws CloneNotSupportedException {
+
+		AbstractXYItemLabelGenerator clone = (AbstractXYItemLabelGenerator) super.clone();
+
+		if (this.xFormat != null) {
+			clone.xFormat = (NumberFormat) this.xFormat.clone();
+		}
+
+		if (this.yFormat != null) {
+			clone.yFormat = (NumberFormat) this.yFormat.clone();
+		}
+
+		return clone;
+
+	}
+
 }

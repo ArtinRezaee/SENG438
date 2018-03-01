@@ -48,6 +48,6 @@ import org.jfree.data.KeyedValue;
  */
 public interface KeyedValueDataset extends KeyedValue, Dataset {
 
-    // no new methods required
+	// no new methods required
 
 }

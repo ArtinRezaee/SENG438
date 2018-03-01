@@ -57,94 +57,97 @@ import java.io.Serializable;
  *
  * @author Bryan Scott
  */
-public class PointerNeedle extends MeterNeedle 
-                           implements Cloneable, Serializable {
+public class PointerNeedle extends MeterNeedle implements Cloneable, Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = -4744677345334729606L;
-    
-    /**
-     * Draws the needle.
-     *
-     * @param g2  the graphics device.
-     * @param plotArea  the plot area.
-     * @param rotate  the rotation point.
-     * @param angle  the angle.
-     */
-    protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea, 
-                              Point2D rotate, double angle) {
+	/** For serialization. */
+	private static final long serialVersionUID = -4744677345334729606L;
 
-        GeneralPath shape1 = new GeneralPath();
-        GeneralPath shape2 = new GeneralPath();
-        float minX = (float) plotArea.getMinX();
-        float minY = (float) plotArea.getMinY();
-        float maxX = (float) plotArea.getMaxX();
-        float maxY = (float) plotArea.getMaxY();
-        float midX = (float) (minX + (plotArea.getWidth() / 2));
-        float midY = (float) (minY + (plotArea.getHeight() / 2));
+	/**
+	 * Draws the needle.
+	 *
+	 * @param g2
+	 *            the graphics device.
+	 * @param plotArea
+	 *            the plot area.
+	 * @param rotate
+	 *            the rotation point.
+	 * @param angle
+	 *            the angle.
+	 */
+	protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea, Point2D rotate, double angle) {
 
-        shape1.moveTo(minX, midY);
-        shape1.lineTo(midX, minY);
-        shape1.lineTo(maxX, midY);
-        shape1.closePath();
+		GeneralPath shape1 = new GeneralPath();
+		GeneralPath shape2 = new GeneralPath();
+		float minX = (float) plotArea.getMinX();
+		float minY = (float) plotArea.getMinY();
+		float maxX = (float) plotArea.getMaxX();
+		float maxY = (float) plotArea.getMaxY();
+		float midX = (float) (minX + (plotArea.getWidth() / 2));
+		float midY = (float) (minY + (plotArea.getHeight() / 2));
 
-        shape2.moveTo(minX, midY);
-        shape2.lineTo(midX, maxY);
-        shape2.lineTo(maxX, midY);
-        shape2.closePath();
+		shape1.moveTo(minX, midY);
+		shape1.lineTo(midX, minY);
+		shape1.lineTo(maxX, midY);
+		shape1.closePath();
 
-        if ((rotate != null) && (angle != 0)) {
-            /// we have rotation huston, please spin me
-            getTransform().setToRotation(angle, rotate.getX(), rotate.getY());
-            shape1.transform(getTransform());
-            shape2.transform(getTransform());
-        }
+		shape2.moveTo(minX, midY);
+		shape2.lineTo(midX, maxY);
+		shape2.lineTo(maxX, midY);
+		shape2.closePath();
 
-        if (getFillPaint() != null) {
-            g2.setPaint(getFillPaint());
-            g2.fill(shape1);
-        }
+		if ((rotate != null) && (angle != 0)) {
+			/// we have rotation huston, please spin me
+			getTransform().setToRotation(angle, rotate.getX(), rotate.getY());
+			shape1.transform(getTransform());
+			shape2.transform(getTransform());
+		}
 
-        if (getHighlightPaint() != null) {
-            g2.setPaint(getHighlightPaint());
-            g2.fill(shape2);
-        }
+		if (getFillPaint() != null) {
+			g2.setPaint(getFillPaint());
+			g2.fill(shape1);
+		}
 
-        if (getOutlinePaint() != null) {
-            g2.setStroke(getOutlineStroke());
-            g2.setPaint(getOutlinePaint());
-            g2.draw(shape1);
-            g2.draw(shape2);
-        }
-    }
+		if (getHighlightPaint() != null) {
+			g2.setPaint(getHighlightPaint());
+			g2.fill(shape2);
+		}
 
-    /**
-     * Tests another object for equality with this object.
-     * 
-     * @param obj  the object to test (<code>null</code> permitted).
-     * 
-     * @return A boolean.
-     */
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof PointerNeedle)) {
-            return false;   
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        return true;
-    }
+		if (getOutlinePaint() != null) {
+			g2.setStroke(getOutlineStroke());
+			g2.setPaint(getOutlinePaint());
+			g2.draw(shape1);
+			g2.draw(shape2);
+		}
+	}
 
-    /**
-     * Returns a clone of this needle.
-     * 
-     * @return A clone.
-     */
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();   
-    }
+	/**
+	 * Tests another object for equality with this object.
+	 * 
+	 * @param obj
+	 *            the object to test (<code>null</code> permitted).
+	 * 
+	 * @return A boolean.
+	 */
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof PointerNeedle)) {
+			return false;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Returns a clone of this needle.
+	 * 
+	 * @return A clone.
+	 */
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
 
 }

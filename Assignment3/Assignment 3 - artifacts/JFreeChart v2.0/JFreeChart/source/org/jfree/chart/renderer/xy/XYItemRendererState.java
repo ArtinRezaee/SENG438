@@ -52,20 +52,21 @@ import org.jfree.chart.renderer.RendererState;
  */
 public class XYItemRendererState extends RendererState {
 
-    /** 
-     * A line object that the renderer can reuse to save instantiating a lot 
-     * of objects. 
-     */
-    public Line2D workingLine;
-    
-    /**
-     * Creates a new state.
-     * 
-     * @param info  the plot rendering info.
-     */
-    public XYItemRendererState(PlotRenderingInfo info) {
-        super(info);
-        this.workingLine = new Line2D.Double();
-    }
-    
+	/**
+	 * A line object that the renderer can reuse to save instantiating a lot of
+	 * objects.
+	 */
+	public Line2D workingLine;
+
+	/**
+	 * Creates a new state.
+	 * 
+	 * @param info
+	 *            the plot rendering info.
+	 */
+	public XYItemRendererState(PlotRenderingInfo info) {
+		super(info);
+		this.workingLine = new Line2D.Double();
+	}
+
 }

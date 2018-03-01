@@ -64,94 +64,91 @@ import org.jfree.ui.Size2D;
  */
 public class BlockPanel extends JPanel implements Serializable {
 
-    /** The block that is displayed in the panel. */
-    private Block block;
+	/** The block that is displayed in the panel. */
+	private Block block;
 
-    private ArrangeParams arrangeParams;
-    
-    /**
-     * Constructs a new panel.
-     *
-     * @param block  the block.
-     * @param arrangeParams  the layout parameters (<code>null</code> not 
-     *                       permitted).
-     */
-    public BlockPanel(Block block, ArrangeParams arrangeParams) {
-        
-        if (arrangeParams == null) {
-            throw new IllegalArgumentException(
-                    "Null 'arrangeParams' argument.");
-        }
-        this.block = block;
-        this.arrangeParams = arrangeParams;
+	private ArrangeParams arrangeParams;
 
-        BufferedImage image = new BufferedImage(10, 10, 
-                BufferedImage.TYPE_INT_RGB);
-        Graphics2D g2 = image.createGraphics();
-        ArrangeResult ar = getBlock().arrange(g2, RectangleConstraint.NONE, 
-            this.arrangeParams);
-        List messages = ar.getMessages();
-        if (messages != null) {
-            Iterator iterator = messages.iterator();
-            while (iterator.hasNext()) {
-                Message m = (Message) iterator.next();
-                System.out.println(m.toString());
-            }
-        }
-        Size2D size = ar.getSize();
-        setPreferredSize(new Dimension((int) size.width, (int) size.height));
-    }
+	/**
+	 * Constructs a new panel.
+	 *
+	 * @param block
+	 *            the block.
+	 * @param arrangeParams
+	 *            the layout parameters (<code>null</code> not permitted).
+	 */
+	public BlockPanel(Block block, ArrangeParams arrangeParams) {
 
-    /**
-     * Returns the block contained in the panel.
-     *
-     * @return The block (possibly <code>null</code>).
-     */
-    public Block getBlock() {
-        return this.block;
-    }
+		if (arrangeParams == null) {
+			throw new IllegalArgumentException("Null 'arrangeParams' argument.");
+		}
+		this.block = block;
+		this.arrangeParams = arrangeParams;
 
-    /**
-     * Sets the block that is displayed in the panel.
-     *
-     * @param block  the block (<code>null</code> permitted).
-     */
-    public void setBlock(Block block) {
-        this.block = block;
-        repaint();
-    }
+		BufferedImage image = new BufferedImage(10, 10, BufferedImage.TYPE_INT_RGB);
+		Graphics2D g2 = image.createGraphics();
+		ArrangeResult ar = getBlock().arrange(g2, RectangleConstraint.NONE, this.arrangeParams);
+		List messages = ar.getMessages();
+		if (messages != null) {
+			Iterator iterator = messages.iterator();
+			while (iterator.hasNext()) {
+				Message m = (Message) iterator.next();
+				System.out.println(m.toString());
+			}
+		}
+		Size2D size = ar.getSize();
+		setPreferredSize(new Dimension((int) size.width, (int) size.height));
+	}
 
-    /**
-     * Paints the component by drawing the chart to fill the entire component,
-     * but allowing for the insets (which will be non-zero if a border has been
-     * set for this component).  To increase performance (at the expense of
-     * memory), an off-screen buffer image can be used.
-     *
-     * @param g  the graphics device for drawing on.
-     */
-    public void paintComponent(Graphics g) {
+	/**
+	 * Returns the block contained in the panel.
+	 *
+	 * @return The block (possibly <code>null</code>).
+	 */
+	public Block getBlock() {
+		return this.block;
+	}
 
-        super.paintComponent(g);
-        if (getBlock() == null) {
-            return;
-        }
-        Graphics2D g2 = (Graphics2D) g.create();
-        Map hints = new HashMap();
-        hints.put(RenderingHints.KEY_ANTIALIASING, 
-                RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.addRenderingHints(hints);
-        Insets insets = getInsets();
+	/**
+	 * Sets the block that is displayed in the panel.
+	 *
+	 * @param block
+	 *            the block (<code>null</code> permitted).
+	 */
+	public void setBlock(Block block) {
+		this.block = block;
+		repaint();
+	}
 
-        AffineTransform saved = g2.getTransform();
-        g2.translate(insets.left, insets.top);
-        
-        ArrangeResult ar = getBlock().arrange(g2, RectangleConstraint.NONE, 
-                this.arrangeParams);
-        Size2D s = ar.getSize();
-        getBlock().draw(g2, new Rectangle2D.Double(0.0, 0.0, s.getWidth(), 
-                s.getHeight()));
-        g2.setTransform(saved);
+	/**
+	 * Paints the component by drawing the chart to fill the entire component, but
+	 * allowing for the insets (which will be non-zero if a border has been set for
+	 * this component). To increase performance (at the expense of memory), an
+	 * off-screen buffer image can be used.
+	 *
+	 * @param g
+	 *            the graphics device for drawing on.
+	 */
+	public void paintComponent(Graphics g) {
 
-    }
+		super.paintComponent(g);
+		if (getBlock() == null) {
+			return;
+		}
+		Graphics2D g2 = (Graphics2D) g.create();
+		Map hints = new HashMap();
+		hints.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g2.addRenderingHints(hints);
+		Insets insets = getInsets();
+
+		AffineTransform saved = g2.getTransform();
+		g2.translate(insets.left, insets.top);
+
+		ArrangeResult ar = getBlock().arrange(g2, RectangleConstraint.NONE, this.arrangeParams);
+		Size2D s = ar.getSize();
+		getBlock().draw(g2, new Rectangle2D.Double(0.0, 0.0, s.getWidth(), s.getHeight()));
+		g2.setTransform(saved);
+
+	}
 
 }

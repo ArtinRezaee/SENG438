@@ -57,73 +57,74 @@ import java.io.Serializable;
  *
  * @author Bryan Scott
  */
-public class PlumNeedle extends MeterNeedle 
-                        implements Cloneable, Serializable {
+public class PlumNeedle extends MeterNeedle implements Cloneable, Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = -3082660488660600718L;
-    
-    /**
-     * Draws the needle.
-     *
-     * @param g2  the graphics device.
-     * @param plotArea  the plot area.
-     * @param rotate  the rotation point.
-     * @param angle  the angle.
-     */
-    protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea, 
-                              Point2D rotate, double angle) {
+	/** For serialization. */
+	private static final long serialVersionUID = -3082660488660600718L;
 
-        Arc2D shape = new Arc2D.Double(Arc2D.PIE);
-        double radius = plotArea.getHeight();
-        double halfX = plotArea.getWidth() / 2;
-        double diameter = 2 * radius;
+	/**
+	 * Draws the needle.
+	 *
+	 * @param g2
+	 *            the graphics device.
+	 * @param plotArea
+	 *            the plot area.
+	 * @param rotate
+	 *            the rotation point.
+	 * @param angle
+	 *            the angle.
+	 */
+	protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea, Point2D rotate, double angle) {
 
-        shape.setFrame(plotArea.getMinX() + halfX - radius ,
-                       plotArea.getMinY() - radius,
-                       diameter, diameter);
-        radius = Math.toDegrees(Math.asin(halfX / radius));
-        shape.setAngleStart(270 - radius);
-        shape.setAngleExtent(2 * radius);
+		Arc2D shape = new Arc2D.Double(Arc2D.PIE);
+		double radius = plotArea.getHeight();
+		double halfX = plotArea.getWidth() / 2;
+		double diameter = 2 * radius;
 
-        Area s = new Area(shape);
+		shape.setFrame(plotArea.getMinX() + halfX - radius, plotArea.getMinY() - radius, diameter, diameter);
+		radius = Math.toDegrees(Math.asin(halfX / radius));
+		shape.setAngleStart(270 - radius);
+		shape.setAngleExtent(2 * radius);
 
-        if ((rotate != null) && (angle != 0)) {
-            /// we have rotation houston, please spin me
-            getTransform().setToRotation(angle, rotate.getX(), rotate.getY());
-            s.transform(getTransform());
-        }
+		Area s = new Area(shape);
 
-        defaultDisplay(g2, s);
-    }
-    
-    /**
-     * Tests another object for equality with this object.
-     * 
-     * @param obj  the object to test (<code>null</code> permitted).
-     * 
-     * @return A boolean.
-     */
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof PlumNeedle)) {
-            return false;   
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        return true;
-    }
+		if ((rotate != null) && (angle != 0)) {
+			/// we have rotation houston, please spin me
+			getTransform().setToRotation(angle, rotate.getX(), rotate.getY());
+			s.transform(getTransform());
+		}
 
-    /**
-     * Returns a clone of this needle.
-     * 
-     * @return A clone.
-     */
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();   
-    }
+		defaultDisplay(g2, s);
+	}
+
+	/**
+	 * Tests another object for equality with this object.
+	 * 
+	 * @param obj
+	 *            the object to test (<code>null</code> permitted).
+	 * 
+	 * @return A boolean.
+	 */
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof PlumNeedle)) {
+			return false;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Returns a clone of this needle.
+	 * 
+	 * @return A clone.
+	 */
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
 
 }

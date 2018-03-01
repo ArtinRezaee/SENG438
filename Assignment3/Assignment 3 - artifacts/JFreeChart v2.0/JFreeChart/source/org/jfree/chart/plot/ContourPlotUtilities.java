@@ -54,19 +54,22 @@ import org.jfree.data.contour.DefaultContourDataset;
  */
 public abstract class ContourPlotUtilities {
 
-    /**
-     * Returns the visible z-range.
-     *
-     * @param data  the dataset.
-     * @param x  the x range.
-     * @param y  the y range.
-     *
-     * @return The range.
-     */
-    public static Range visibleRange(ContourDataset data, Range x, Range y) {
-        Range range = null;
-        range = ((DefaultContourDataset) data).getZValueRange(x, y);
-        return range;
-    }
+	/**
+	 * Returns the visible z-range.
+	 *
+	 * @param data
+	 *            the dataset.
+	 * @param x
+	 *            the x range.
+	 * @param y
+	 *            the y range.
+	 *
+	 * @return The range.
+	 */
+	public static Range visibleRange(ContourDataset data, Range x, Range y) {
+		Range range = null;
+		range = ((DefaultContourDataset) data).getZValueRange(x, y);
+		return range;
+	}
 
 }

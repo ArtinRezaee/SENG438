@@ -62,299 +62,306 @@ import java.util.Date;
 import java.util.TimeZone;
 
 /**
- * Represents a second in a particular day.  This class is immutable, which is 
- * a requirement for all {@link RegularTimePeriod} subclasses.
+ * Represents a second in a particular day. This class is immutable, which is a
+ * requirement for all {@link RegularTimePeriod} subclasses.
  */
 public class Second extends RegularTimePeriod implements Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = -6536564190712383466L;
-    
-    /** Useful constant for the first second in a minute. */
-    public static final int FIRST_SECOND_IN_MINUTE = 0;
+	/** For serialization. */
+	private static final long serialVersionUID = -6536564190712383466L;
 
-    /** Useful constant for the last second in a minute. */
-    public static final int LAST_SECOND_IN_MINUTE = 59;
+	/** Useful constant for the first second in a minute. */
+	public static final int FIRST_SECOND_IN_MINUTE = 0;
 
-    /** The minute. */
-    private Minute minute;
+	/** Useful constant for the last second in a minute. */
+	public static final int LAST_SECOND_IN_MINUTE = 59;
 
-    /** The second. */
-    private int second;
+	/** The minute. */
+	private Minute minute;
 
-    /**
-     * Constructs a new Second, based on the system date/time.
-     */
-    public Second() {
-        this(new Date());
-    }
+	/** The second. */
+	private int second;
 
-    /**
-     * Constructs a new Second.
-     *
-     * @param second  the second (0 to 24*60*60-1).
-     * @param minute  the minute (<code>null</code> not permitted).
-     */
-    public Second(int second, Minute minute) {
-        if (minute == null) {
-            throw new IllegalArgumentException("Null 'minute' argument.");   
-        }
-        this.minute = minute;
-        this.second = second;
-    }
+	/**
+	 * Constructs a new Second, based on the system date/time.
+	 */
+	public Second() {
+		this(new Date());
+	}
 
-    /**
-     * Creates a new second.
-     * 
-     * @param second  the second (0-59).
-     * @param minute  the minute (0-59).
-     * @param hour  the hour (0-23).
-     * @param day  the day (1-31).
-     * @param month  the month (1-12).
-     * @param year  the year (1900-9999).
-     */
-    public Second(int second, int minute, int hour, 
-                  int day, int month, int year) {
-        this(second, new Minute(minute, hour, day, month, year));    
-    }
-    
-    /**
-     * Constructs a second.
-     *
-     * @param time  the time.
-     */
-    public Second(Date time) {
-        this(time, RegularTimePeriod.DEFAULT_TIME_ZONE);
-    }
+	/**
+	 * Constructs a new Second.
+	 *
+	 * @param second
+	 *            the second (0 to 24*60*60-1).
+	 * @param minute
+	 *            the minute (<code>null</code> not permitted).
+	 */
+	public Second(int second, Minute minute) {
+		if (minute == null) {
+			throw new IllegalArgumentException("Null 'minute' argument.");
+		}
+		this.minute = minute;
+		this.second = second;
+	}
 
-    /**
-     * Creates a new second based on the supplied time and time zone.
-     *
-     * @param time  the instant in time.
-     * @param zone  the time zone.
-     */
-    public Second(Date time, final TimeZone zone) {
-        this.minute = new Minute(time, zone);
-        Calendar calendar = Calendar.getInstance(zone);
-        calendar.setTime(time);
-        this.second = calendar.get(Calendar.SECOND);
-    }
+	/**
+	 * Creates a new second.
+	 * 
+	 * @param second
+	 *            the second (0-59).
+	 * @param minute
+	 *            the minute (0-59).
+	 * @param hour
+	 *            the hour (0-23).
+	 * @param day
+	 *            the day (1-31).
+	 * @param month
+	 *            the month (1-12).
+	 * @param year
+	 *            the year (1900-9999).
+	 */
+	public Second(int second, int minute, int hour, int day, int month, int year) {
+		this(second, new Minute(minute, hour, day, month, year));
+	}
 
-    /**
-     * Returns the second within the minute.
-     *
-     * @return The second (0 - 59).
-     */
-    public int getSecond() {
-        return this.second;
-    }
+	/**
+	 * Constructs a second.
+	 *
+	 * @param time
+	 *            the time.
+	 */
+	public Second(Date time) {
+		this(time, RegularTimePeriod.DEFAULT_TIME_ZONE);
+	}
 
-    /**
-     * Returns the minute.
-     *
-     * @return The minute (never <code>null</code>).
-     */
-    public Minute getMinute() {
-        return this.minute;
-    }
+	/**
+	 * Creates a new second based on the supplied time and time zone.
+	 *
+	 * @param time
+	 *            the instant in time.
+	 * @param zone
+	 *            the time zone.
+	 */
+	public Second(Date time, final TimeZone zone) {
+		this.minute = new Minute(time, zone);
+		Calendar calendar = Calendar.getInstance(zone);
+		calendar.setTime(time);
+		this.second = calendar.get(Calendar.SECOND);
+	}
 
-    /**
-     * Returns the second preceding this one.
-     *
-     * @return The second preceding this one.
-     */
-    public RegularTimePeriod previous() {
-        
-        Second result = null;
-        if (this.second != FIRST_SECOND_IN_MINUTE) {
-            result = new Second(this.second - 1, this.minute);
-        }
-        else {
-            Minute previous = (Minute) this.minute.previous();
-            if (previous != null) {
-                result = new Second(LAST_SECOND_IN_MINUTE, previous);
-            }
-        }
-        return result;
-        
-    }
+	/**
+	 * Returns the second within the minute.
+	 *
+	 * @return The second (0 - 59).
+	 */
+	public int getSecond() {
+		return this.second;
+	}
 
-    /**
-     * Returns the second following this one.
-     *
-     * @return The second following this one.
-     */
-    public RegularTimePeriod next() {
-        
-        Second result = null;
-        if (this.second != LAST_SECOND_IN_MINUTE) {
-            result = new Second(this.second + 1, this.minute);
-        }
-        else {
-            Minute next = (Minute) this.minute.next();
-            if (next != null) {
-                result = new Second(FIRST_SECOND_IN_MINUTE, next);
-            }
-        }
-        return result;
+	/**
+	 * Returns the minute.
+	 *
+	 * @return The minute (never <code>null</code>).
+	 */
+	public Minute getMinute() {
+		return this.minute;
+	}
 
-    }
+	/**
+	 * Returns the second preceding this one.
+	 *
+	 * @return The second preceding this one.
+	 */
+	public RegularTimePeriod previous() {
 
-    /**
-     * Returns a serial index number for the minute.
-     *
-     * @return The serial index number.
-     */
-    public long getSerialIndex() {
-        return this.minute.getSerialIndex() * 60L + this.second;
-    }
+		Second result = null;
+		if (this.second != FIRST_SECOND_IN_MINUTE) {
+			result = new Second(this.second - 1, this.minute);
+		} else {
+			Minute previous = (Minute) this.minute.previous();
+			if (previous != null) {
+				result = new Second(LAST_SECOND_IN_MINUTE, previous);
+			}
+		}
+		return result;
 
-    /**
-     * Returns the first millisecond of the minute.
-     *
-     * @param calendar  the calendar/timezone.
-     *
-     * @return The first millisecond.
-     */
-    public long getFirstMillisecond(Calendar calendar) {
-        return this.minute.getFirstMillisecond(calendar) + this.second * 1000L;
-    }
+	}
 
-    /**
-     * Returns the last millisecond of the second.
-     *
-     * @param calendar  the calendar/timezone.
-     *
-     * @return The last millisecond.
-     */
-    public long getLastMillisecond(Calendar calendar) {
-        return this.minute.getFirstMillisecond(calendar) 
-            + this.second * 1000L + 999L;
-    }
+	/**
+	 * Returns the second following this one.
+	 *
+	 * @return The second following this one.
+	 */
+	public RegularTimePeriod next() {
 
-    /**
-     * Tests the equality of this object against an arbitrary Object.
-     * <P>
-     * This method will return true ONLY if the object is a Second object
-     * representing the same second as this instance.
-     *
-     * @param obj  the object to compare.
-     *
-     * @return <code>true</code> if second and minute of this and the object 
-     *         are the same.
-     */
-    public boolean equals(Object obj) {
-        if (obj instanceof Second) {
-            Second s = (Second) obj;
-            return ((this.second == s.getSecond()) 
-                    && (this.minute.equals(s.getMinute())));
-        }
-        else {
-            return false;
-        }
-    }
+		Second result = null;
+		if (this.second != LAST_SECOND_IN_MINUTE) {
+			result = new Second(this.second + 1, this.minute);
+		} else {
+			Minute next = (Minute) this.minute.next();
+			if (next != null) {
+				result = new Second(FIRST_SECOND_IN_MINUTE, next);
+			}
+		}
+		return result;
 
-    /**
-     * Returns a hash code for this object instance.  The approach described by
-     * Joshua Bloch in "Effective Java" has been used here:
-     * <p>
-     * <code>http://developer.java.sun.com/developer/Books/effectivejava
-     * /Chapter3.pdf</code>
-     * 
-     * @return A hash code.
-     */
-    public int hashCode() {
-        int result = 17;
-        result = 37 * result + this.second;
-        result = 37 * result + this.minute.hashCode();
-        return result;
-    }
+	}
 
-    /**
-     * Returns an integer indicating the order of this Second object relative
-     * to the specified
-     * object: negative == before, zero == same, positive == after.
-     *
-     * @param o1  the object to compare.
-     *
-     * @return negative == before, zero == same, positive == after.
-     */
-    public int compareTo(Object o1) {
+	/**
+	 * Returns a serial index number for the minute.
+	 *
+	 * @return The serial index number.
+	 */
+	public long getSerialIndex() {
+		return this.minute.getSerialIndex() * 60L + this.second;
+	}
 
-        int result;
+	/**
+	 * Returns the first millisecond of the minute.
+	 *
+	 * @param calendar
+	 *            the calendar/timezone.
+	 *
+	 * @return The first millisecond.
+	 */
+	public long getFirstMillisecond(Calendar calendar) {
+		return this.minute.getFirstMillisecond(calendar) + this.second * 1000L;
+	}
 
-        // CASE 1 : Comparing to another Second object
-        // -------------------------------------------
-        if (o1 instanceof Second) {
-            Second s = (Second) o1;
-            result = this.minute.compareTo(s.minute);
-            if (result == 0) {
-                result = this.second - s.second;
-            }
-        }
+	/**
+	 * Returns the last millisecond of the second.
+	 *
+	 * @param calendar
+	 *            the calendar/timezone.
+	 *
+	 * @return The last millisecond.
+	 */
+	public long getLastMillisecond(Calendar calendar) {
+		return this.minute.getFirstMillisecond(calendar) + this.second * 1000L + 999L;
+	}
 
-        // CASE 2 : Comparing to another TimePeriod object
-        // -----------------------------------------------
-        else if (o1 instanceof RegularTimePeriod) {
-            // more difficult case - evaluate later...
-            result = 0;
-        }
+	/**
+	 * Tests the equality of this object against an arbitrary Object.
+	 * <P>
+	 * This method will return true ONLY if the object is a Second object
+	 * representing the same second as this instance.
+	 *
+	 * @param obj
+	 *            the object to compare.
+	 *
+	 * @return <code>true</code> if second and minute of this and the object are the
+	 *         same.
+	 */
+	public boolean equals(Object obj) {
+		if (obj instanceof Second) {
+			Second s = (Second) obj;
+			return ((this.second == s.getSecond()) && (this.minute.equals(s.getMinute())));
+		} else {
+			return false;
+		}
+	}
 
-        // CASE 3 : Comparing to a non-TimePeriod object
-        // ---------------------------------------------
-        else {
-            // consider time periods to be ordered after general objects
-            result = 1;
-        }
+	/**
+	 * Returns a hash code for this object instance. The approach described by
+	 * Joshua Bloch in "Effective Java" has been used here:
+	 * <p>
+	 * <code>http://developer.java.sun.com/developer/Books/effectivejava
+	 * /Chapter3.pdf</code>
+	 * 
+	 * @return A hash code.
+	 */
+	public int hashCode() {
+		int result = 17;
+		result = 37 * result + this.second;
+		result = 37 * result + this.minute.hashCode();
+		return result;
+	}
 
-        return result;
+	/**
+	 * Returns an integer indicating the order of this Second object relative to the
+	 * specified object: negative == before, zero == same, positive == after.
+	 *
+	 * @param o1
+	 *            the object to compare.
+	 *
+	 * @return negative == before, zero == same, positive == after.
+	 */
+	public int compareTo(Object o1) {
 
-    }
+		int result;
 
-    /**
-     * Creates a new instance by parsing a string.  The string is assumed to
-     * be in the format "YYYY-MM-DD HH:MM:SS", perhaps with leading or trailing
-     * whitespace.
-     *
-     * @param s  the string to parse.
-     *
-     * @return The second, or <code>null</code> if the string is not parseable.
-     */
-    public static Second parseSecond(String s) {
+		// CASE 1 : Comparing to another Second object
+		// -------------------------------------------
+		if (o1 instanceof Second) {
+			Second s = (Second) o1;
+			result = this.minute.compareTo(s.minute);
+			if (result == 0) {
+				result = this.second - s.second;
+			}
+		}
 
-        Second result = null;
-        s = s.trim();
+		// CASE 2 : Comparing to another TimePeriod object
+		// -----------------------------------------------
+		else if (o1 instanceof RegularTimePeriod) {
+			// more difficult case - evaluate later...
+			result = 0;
+		}
 
-        String daystr = s.substring(0, Math.min(10, s.length()));
-        Day day = Day.parseDay(daystr);
-        if (day != null) {
-            String hmsstr = s.substring(
-                Math.min(daystr.length() + 1, s.length()), s.length()
-            );
-            hmsstr = hmsstr.trim();
+		// CASE 3 : Comparing to a non-TimePeriod object
+		// ---------------------------------------------
+		else {
+			// consider time periods to be ordered after general objects
+			result = 1;
+		}
 
-            int l = hmsstr.length();
-            String hourstr = hmsstr.substring(0, Math.min(2, l));
-            String minstr = hmsstr.substring(Math.min(3, l), Math.min(5, l));
-            String secstr = hmsstr.substring(Math.min(6, l), Math.min(8, l));
-            int hour = Integer.parseInt(hourstr);
+		return result;
 
-            if ((hour >= 0) && (hour <= 23)) {
+	}
 
-                int minute = Integer.parseInt(minstr);
-                if ((minute >= 0) && (minute <= 59)) {
+	/**
+	 * Creates a new instance by parsing a string. The string is assumed to be in
+	 * the format "YYYY-MM-DD HH:MM:SS", perhaps with leading or trailing
+	 * whitespace.
+	 *
+	 * @param s
+	 *            the string to parse.
+	 *
+	 * @return The second, or <code>null</code> if the string is not parseable.
+	 */
+	public static Second parseSecond(String s) {
 
-                    Minute m = new Minute(minute, new Hour(hour, day));
-                    int second = Integer.parseInt(secstr);
-                    if ((second >= 0) && (second <= 59)) {
-                        result = new Second(second, m);
-                    }
-                }
-            }
-        }
+		Second result = null;
+		s = s.trim();
 
-        return result;
+		String daystr = s.substring(0, Math.min(10, s.length()));
+		Day day = Day.parseDay(daystr);
+		if (day != null) {
+			String hmsstr = s.substring(Math.min(daystr.length() + 1, s.length()), s.length());
+			hmsstr = hmsstr.trim();
 
-    }
+			int l = hmsstr.length();
+			String hourstr = hmsstr.substring(0, Math.min(2, l));
+			String minstr = hmsstr.substring(Math.min(3, l), Math.min(5, l));
+			String secstr = hmsstr.substring(Math.min(6, l), Math.min(8, l));
+			int hour = Integer.parseInt(hourstr);
+
+			if ((hour >= 0) && (hour <= 23)) {
+
+				int minute = Integer.parseInt(minstr);
+				if ((minute >= 0) && (minute <= 59)) {
+
+					Minute m = new Minute(minute, new Hour(hour, day));
+					int second = Integer.parseInt(secstr);
+					if ((second >= 0) && (second <= 59)) {
+						result = new Second(second, m);
+					}
+				}
+			}
+		}
+
+		return result;
+
+	}
 
 }

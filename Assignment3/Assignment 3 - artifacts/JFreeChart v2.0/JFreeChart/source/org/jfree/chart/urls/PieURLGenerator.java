@@ -47,24 +47,27 @@ package org.jfree.chart.urls;
 import org.jfree.data.general.PieDataset;
 
 /**
- * Interface for a URL generator for plots that use data from a 
+ * Interface for a URL generator for plots that use data from a
  * {@link PieDataset}.
  *
  * @author Richard Atkinson
  */
 public interface PieURLGenerator {
 
-    /**
-     * Generates a URL for one item in a {@link PieDataset}. As a guideline, 
-     * the URL should be valid within the context of an XHTML 1.0 document.
-     *
-     * @param dataset  the dataset (<code>null</code> not permitted).
-     * @param key  the item key.
-     * @param pieIndex  the pie index (differentiates between pies in a 
-     *                  'multi' pie chart).
-     *
-     * @return A string containing the URL.
-     */
-    public String generateURL(PieDataset dataset, Comparable key, int pieIndex);
+	/**
+	 * Generates a URL for one item in a {@link PieDataset}. As a guideline, the URL
+	 * should be valid within the context of an XHTML 1.0 document.
+	 *
+	 * @param dataset
+	 *            the dataset (<code>null</code> not permitted).
+	 * @param key
+	 *            the item key.
+	 * @param pieIndex
+	 *            the pie index (differentiates between pies in a 'multi' pie
+	 *            chart).
+	 *
+	 * @return A string containing the URL.
+	 */
+	public String generateURL(PieDataset dataset, Comparable key, int pieIndex);
 
 }

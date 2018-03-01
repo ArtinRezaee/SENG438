@@ -45,12 +45,11 @@ package org.jfree.data.general;
 /**
  * A default implementation of the {@link KeyedValuesDataset} interface.
  */
-public class DefaultKeyedValuesDataset extends DefaultPieDataset 
-                                       implements KeyedValuesDataset {
+public class DefaultKeyedValuesDataset extends DefaultPieDataset implements KeyedValuesDataset {
 
-    /** For serialization. */
-    private static final long serialVersionUID = 306264413152815781L;
-    
-    // no new methods
-    
+	/** For serialization. */
+	private static final long serialVersionUID = 306264413152815781L;
+
+	// no new methods
+
 }

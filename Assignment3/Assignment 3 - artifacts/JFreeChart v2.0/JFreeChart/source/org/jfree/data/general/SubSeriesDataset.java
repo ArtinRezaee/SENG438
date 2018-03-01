@@ -58,427 +58,444 @@ import org.jfree.data.xy.XYDataset;
 
 /**
  * This class will create a dataset with one or more series from another
- * {@link SeriesDataset}. 
+ * {@link SeriesDataset}.
  *
  * @author Bill Kelemen (bill@kelemen-usa.com)
  */
 public class SubSeriesDataset extends AbstractIntervalXYDataset
-                              implements OHLCDataset, SignalsDataset, 
-                                         IntervalXYDataset,
-                                         CombinationDataset {
+		implements OHLCDataset, SignalsDataset, IntervalXYDataset, CombinationDataset {
 
-    /** The parent dataset. */
-    private SeriesDataset parent = null;
+	/** The parent dataset. */
+	private SeriesDataset parent = null;
 
-    /** Storage for map. */
-    private int[] map;  // maps our series into our parent's
+	/** Storage for map. */
+	private int[] map; // maps our series into our parent's
 
-    /**
-     * Creates a SubSeriesDataset using one or more series from 
-     * <code>parent</code>.  The series to use are passed as an array of int.
-     *
-     * @param parent  underlying dataset
-     * @param map  int[] of series from parent to include in this Dataset
-     */
-    public SubSeriesDataset(SeriesDataset parent, int[] map) {
-        this.parent = parent;
-        this.map = map;
-    }
+	/**
+	 * Creates a SubSeriesDataset using one or more series from <code>parent</code>.
+	 * The series to use are passed as an array of int.
+	 *
+	 * @param parent
+	 *            underlying dataset
+	 * @param map
+	 *            int[] of series from parent to include in this Dataset
+	 */
+	public SubSeriesDataset(SeriesDataset parent, int[] map) {
+		this.parent = parent;
+		this.map = map;
+	}
 
-    /**
-     * Creates a SubSeriesDataset using one series from <code>parent</code>.
-     * The series to is passed as an int.
-     *
-     * @param parent  underlying dataset
-     * @param series  series from parent to include in this Dataset
-     */
-    public SubSeriesDataset(SeriesDataset parent, int series) {
-        this(parent, new int[] {series});
-    }
+	/**
+	 * Creates a SubSeriesDataset using one series from <code>parent</code>. The
+	 * series to is passed as an int.
+	 *
+	 * @param parent
+	 *            underlying dataset
+	 * @param series
+	 *            series from parent to include in this Dataset
+	 */
+	public SubSeriesDataset(SeriesDataset parent, int series) {
+		this(parent, new int[] { series });
+	}
 
-    ///////////////////////////////////////////////////////////////////////////
-    // From HighLowDataset
-    ///////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////
+	// From HighLowDataset
+	///////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Returns the high-value for the specified series and item.
-     * <p>
-     * Note: throws <code>ClassCastException</code> if the series if not from a 
-     * {@link OHLCDataset}.
-     *
-     * @param series  the index of the series of interest (zero-based).
-     * @param item  the index of the item of interest (zero-based).
-     *
-     * @return The high-value for the specified series and item.
-     */
-    public Number getHigh(int series, int item) {
-        return ((OHLCDataset) this.parent).getHigh(this.map[series], item);
-    }
+	/**
+	 * Returns the high-value for the specified series and item.
+	 * <p>
+	 * Note: throws <code>ClassCastException</code> if the series if not from a
+	 * {@link OHLCDataset}.
+	 *
+	 * @param series
+	 *            the index of the series of interest (zero-based).
+	 * @param item
+	 *            the index of the item of interest (zero-based).
+	 *
+	 * @return The high-value for the specified series and item.
+	 */
+	public Number getHigh(int series, int item) {
+		return ((OHLCDataset) this.parent).getHigh(this.map[series], item);
+	}
 
-    /**
-     * Returns the high-value (as a double primitive) for an item within a 
-     * series.
-     * 
-     * @param series  the series (zero-based index).
-     * @param item  the item (zero-based index).
-     * 
-     * @return The high-value.
-     */
-    public double getHighValue(int series, int item) {
-        double result = Double.NaN;
-        Number high = getHigh(series, item);
-        if (high != null) {
-            result = high.doubleValue();   
-        }
-        return result;   
-    }
+	/**
+	 * Returns the high-value (as a double primitive) for an item within a series.
+	 * 
+	 * @param series
+	 *            the series (zero-based index).
+	 * @param item
+	 *            the item (zero-based index).
+	 * 
+	 * @return The high-value.
+	 */
+	public double getHighValue(int series, int item) {
+		double result = Double.NaN;
+		Number high = getHigh(series, item);
+		if (high != null) {
+			result = high.doubleValue();
+		}
+		return result;
+	}
 
-    /**
-     * Returns the low-value for the specified series and item.
-     * <p>
-     * Note: throws <code>ClassCastException</code> if the series if not from a 
-     * {@link OHLCDataset}.
-     *
-     * @param series  the index of the series of interest (zero-based).
-     * @param item  the index of the item of interest (zero-based).
-     *
-     * @return The low-value for the specified series and item.
-     */
-    public Number getLow(int series, int item) {
-        return ((OHLCDataset) this.parent).getLow(this.map[series], item);
-    }
+	/**
+	 * Returns the low-value for the specified series and item.
+	 * <p>
+	 * Note: throws <code>ClassCastException</code> if the series if not from a
+	 * {@link OHLCDataset}.
+	 *
+	 * @param series
+	 *            the index of the series of interest (zero-based).
+	 * @param item
+	 *            the index of the item of interest (zero-based).
+	 *
+	 * @return The low-value for the specified series and item.
+	 */
+	public Number getLow(int series, int item) {
+		return ((OHLCDataset) this.parent).getLow(this.map[series], item);
+	}
 
-    /**
-     * Returns the low-value (as a double primitive) for an item within a 
-     * series.
-     * 
-     * @param series  the series (zero-based index).
-     * @param item  the item (zero-based index).
-     * 
-     * @return The low-value.
-     */
-    public double getLowValue(int series, int item) {
-        double result = Double.NaN;
-        Number low = getLow(series, item);
-        if (low != null) {
-            result = low.doubleValue();   
-        }
-        return result;   
-    }
+	/**
+	 * Returns the low-value (as a double primitive) for an item within a series.
+	 * 
+	 * @param series
+	 *            the series (zero-based index).
+	 * @param item
+	 *            the item (zero-based index).
+	 * 
+	 * @return The low-value.
+	 */
+	public double getLowValue(int series, int item) {
+		double result = Double.NaN;
+		Number low = getLow(series, item);
+		if (low != null) {
+			result = low.doubleValue();
+		}
+		return result;
+	}
 
-    /**
-     * Returns the open-value for the specified series and item.
-     * <p>
-     * Note: throws <code>ClassCastException</code> if the series if not from a 
-     * {@link OHLCDataset}.
-     *
-     * @param series  the index of the series of interest (zero-based).
-     * @param item  the index of the item of interest (zero-based).
-     *
-     * @return The open-value for the specified series and item.
-     */
-    public Number getOpen(int series, int item) {
-        return ((OHLCDataset) this.parent).getOpen(this.map[series], item);
-    }
+	/**
+	 * Returns the open-value for the specified series and item.
+	 * <p>
+	 * Note: throws <code>ClassCastException</code> if the series if not from a
+	 * {@link OHLCDataset}.
+	 *
+	 * @param series
+	 *            the index of the series of interest (zero-based).
+	 * @param item
+	 *            the index of the item of interest (zero-based).
+	 *
+	 * @return The open-value for the specified series and item.
+	 */
+	public Number getOpen(int series, int item) {
+		return ((OHLCDataset) this.parent).getOpen(this.map[series], item);
+	}
 
-    /**
-     * Returns the open-value (as a double primitive) for an item within a 
-     * series.
-     * 
-     * @param series  the series (zero-based index).
-     * @param item  the item (zero-based index).
-     * 
-     * @return The open-value.
-     */
-    public double getOpenValue(int series, int item) {
-        double result = Double.NaN;
-        Number open = getOpen(series, item);
-        if (open != null) {
-            result = open.doubleValue();   
-        }
-        return result;   
-    }
+	/**
+	 * Returns the open-value (as a double primitive) for an item within a series.
+	 * 
+	 * @param series
+	 *            the series (zero-based index).
+	 * @param item
+	 *            the item (zero-based index).
+	 * 
+	 * @return The open-value.
+	 */
+	public double getOpenValue(int series, int item) {
+		double result = Double.NaN;
+		Number open = getOpen(series, item);
+		if (open != null) {
+			result = open.doubleValue();
+		}
+		return result;
+	}
 
-    /**
-     * Returns the close-value for the specified series and item.
-     * <p>
-     * Note: throws <code>ClassCastException</code> if the series if not from a 
-     * {@link OHLCDataset}.
-     *
-     * @param series  the index of the series of interest (zero-based).
-     * @param item  the index of the item of interest (zero-based).
-     *
-     * @return The close-value for the specified series and item.
-     */
-    public Number getClose(int series, int item) {
-        return ((OHLCDataset) this.parent).getClose(this.map[series], item);
-    }
+	/**
+	 * Returns the close-value for the specified series and item.
+	 * <p>
+	 * Note: throws <code>ClassCastException</code> if the series if not from a
+	 * {@link OHLCDataset}.
+	 *
+	 * @param series
+	 *            the index of the series of interest (zero-based).
+	 * @param item
+	 *            the index of the item of interest (zero-based).
+	 *
+	 * @return The close-value for the specified series and item.
+	 */
+	public Number getClose(int series, int item) {
+		return ((OHLCDataset) this.parent).getClose(this.map[series], item);
+	}
 
-    /**
-     * Returns the close-value (as a double primitive) for an item within a 
-     * series.
-     * 
-     * @param series  the series (zero-based index).
-     * @param item  the item (zero-based index).
-     * 
-     * @return The close-value.
-     */
-    public double getCloseValue(int series, int item) {
-        double result = Double.NaN;
-        Number close = getClose(series, item);
-        if (close != null) {
-            result = close.doubleValue();   
-        }
-        return result;   
-    }
+	/**
+	 * Returns the close-value (as a double primitive) for an item within a series.
+	 * 
+	 * @param series
+	 *            the series (zero-based index).
+	 * @param item
+	 *            the item (zero-based index).
+	 * 
+	 * @return The close-value.
+	 */
+	public double getCloseValue(int series, int item) {
+		double result = Double.NaN;
+		Number close = getClose(series, item);
+		if (close != null) {
+			result = close.doubleValue();
+		}
+		return result;
+	}
 
-    /**
-     * Returns the volume.
-     * <p>
-     * Note: throws <code>ClassCastException</code> if the series if not from a 
-     * {@link OHLCDataset}.
-     *
-     * @param series  the series (zero based index).
-     * @param item  the item (zero based index).
-     *
-     * @return The volume.
-     */
-    public Number getVolume(int series, int item) {
-        return ((OHLCDataset) this.parent).getVolume(this.map[series], item);
-    }
+	/**
+	 * Returns the volume.
+	 * <p>
+	 * Note: throws <code>ClassCastException</code> if the series if not from a
+	 * {@link OHLCDataset}.
+	 *
+	 * @param series
+	 *            the series (zero based index).
+	 * @param item
+	 *            the item (zero based index).
+	 *
+	 * @return The volume.
+	 */
+	public Number getVolume(int series, int item) {
+		return ((OHLCDataset) this.parent).getVolume(this.map[series], item);
+	}
 
-    /**
-     * Returns the volume-value (as a double primitive) for an item within a 
-     * series.
-     * 
-     * @param series  the series (zero-based index).
-     * @param item  the item (zero-based index).
-     * 
-     * @return The volume-value.
-     */
-    public double getVolumeValue(int series, int item) {
-        double result = Double.NaN;
-        Number volume = getVolume(series, item);
-        if (volume != null) {
-            result = volume.doubleValue();   
-        }
-        return result;   
-    }
+	/**
+	 * Returns the volume-value (as a double primitive) for an item within a series.
+	 * 
+	 * @param series
+	 *            the series (zero-based index).
+	 * @param item
+	 *            the item (zero-based index).
+	 * 
+	 * @return The volume-value.
+	 */
+	public double getVolumeValue(int series, int item) {
+		double result = Double.NaN;
+		Number volume = getVolume(series, item);
+		if (volume != null) {
+			result = volume.doubleValue();
+		}
+		return result;
+	}
 
-    ///////////////////////////////////////////////////////////////////////////
-    // From XYDataset
-    ///////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////
+	// From XYDataset
+	///////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Returns the X-value for the specified series and item.
-     * <p>
-     * Note: throws <code>ClassCastException</code> if the series if not from a 
-     * {@link XYDataset}.
-     *
-     * @param series  the index of the series of interest (zero-based);
-     * @param item  the index of the item of interest (zero-based).
-     *
-     * @return The X-value for the specified series and item.
-     */
-    public Number getX(int series, int item) {
-        return ((XYDataset) this.parent).getX(this.map[series], item);
-    }
+	/**
+	 * Returns the X-value for the specified series and item.
+	 * <p>
+	 * Note: throws <code>ClassCastException</code> if the series if not from a
+	 * {@link XYDataset}.
+	 *
+	 * @param series
+	 *            the index of the series of interest (zero-based);
+	 * @param item
+	 *            the index of the item of interest (zero-based).
+	 *
+	 * @return The X-value for the specified series and item.
+	 */
+	public Number getX(int series, int item) {
+		return ((XYDataset) this.parent).getX(this.map[series], item);
+	}
 
-    /**
-     * Returns the Y-value for the specified series and item.
-     * <p>
-     * Note: throws <code>ClassCastException</code> if the series if not from a 
-     * {@link XYDataset}.
-     *
-     * @param series  the index of the series of interest (zero-based).
-     * @param item  the index of the item of interest (zero-based).
-     *
-     * @return The Y-value for the specified series and item.
-     */
-    public Number getY(int series, int item) {
-        return ((XYDataset) this.parent).getY(this.map[series], item);
-    }
+	/**
+	 * Returns the Y-value for the specified series and item.
+	 * <p>
+	 * Note: throws <code>ClassCastException</code> if the series if not from a
+	 * {@link XYDataset}.
+	 *
+	 * @param series
+	 *            the index of the series of interest (zero-based).
+	 * @param item
+	 *            the index of the item of interest (zero-based).
+	 *
+	 * @return The Y-value for the specified series and item.
+	 */
+	public Number getY(int series, int item) {
+		return ((XYDataset) this.parent).getY(this.map[series], item);
+	}
 
-    /**
-     * Returns the number of items in a series.
-     * <p>
-     * Note: throws <code>ClassCastException</code> if the series if not from a 
-     * {@link XYDataset}.
-     *
-     * @param series  the index of the series of interest (zero-based).
-     *
-     * @return The number of items in a series.
-     */
-    public int getItemCount(int series) {
-        return ((XYDataset) this.parent).getItemCount(this.map[series]);
-    }
+	/**
+	 * Returns the number of items in a series.
+	 * <p>
+	 * Note: throws <code>ClassCastException</code> if the series if not from a
+	 * {@link XYDataset}.
+	 *
+	 * @param series
+	 *            the index of the series of interest (zero-based).
+	 *
+	 * @return The number of items in a series.
+	 */
+	public int getItemCount(int series) {
+		return ((XYDataset) this.parent).getItemCount(this.map[series]);
+	}
 
-    ///////////////////////////////////////////////////////////////////////////
-    // From SeriesDataset
-    ///////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////
+	// From SeriesDataset
+	///////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Returns the number of series in the dataset.
-     *
-     * @return The number of series in the dataset.
-     */
-    public int getSeriesCount() {
-        return this.map.length;
-    }
+	/**
+	 * Returns the number of series in the dataset.
+	 *
+	 * @return The number of series in the dataset.
+	 */
+	public int getSeriesCount() {
+		return this.map.length;
+	}
 
-    /**
-     * Returns the key for a series.
-     *
-     * @param series  the series (zero-based index).
-     *
-     * @return The name of a series.
-     */
-    public Comparable getSeriesKey(int series) {
-        return this.parent.getSeriesKey(this.map[series]);
-    }
+	/**
+	 * Returns the key for a series.
+	 *
+	 * @param series
+	 *            the series (zero-based index).
+	 *
+	 * @return The name of a series.
+	 */
+	public Comparable getSeriesKey(int series) {
+		return this.parent.getSeriesKey(this.map[series]);
+	}
 
-    ///////////////////////////////////////////////////////////////////////////
-    // From IntervalXYDataset
-    ///////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////
+	// From IntervalXYDataset
+	///////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Returns the starting X value for the specified series and item.
-     *
-     * @param series  the index of the series of interest (zero-based).
-     * @param item  the index of the item of interest (zero-based).
-     *
-     * @return The starting X value for the specified series and item.
-     */
-    public Number getStartX(int series, int item) {
-        if (this.parent instanceof IntervalXYDataset) {
-            return ((IntervalXYDataset) this.parent).getStartX(
-                this.map[series], item
-            );
-        }
-        else {
-            return getX(series, item);
-        }
-    }
+	/**
+	 * Returns the starting X value for the specified series and item.
+	 *
+	 * @param series
+	 *            the index of the series of interest (zero-based).
+	 * @param item
+	 *            the index of the item of interest (zero-based).
+	 *
+	 * @return The starting X value for the specified series and item.
+	 */
+	public Number getStartX(int series, int item) {
+		if (this.parent instanceof IntervalXYDataset) {
+			return ((IntervalXYDataset) this.parent).getStartX(this.map[series], item);
+		} else {
+			return getX(series, item);
+		}
+	}
 
-    /**
-     * Returns the ending X value for the specified series and item.
-     *
-     * @param series  the index of the series of interest (zero-based).
-     * @param item  the index of the item of interest (zero-based).
-     *
-     * @return The ending X value for the specified series and item.
-     */
-    public Number getEndX(int series, int item) {
-        if (this.parent instanceof IntervalXYDataset) {
-            return ((IntervalXYDataset) this.parent).getEndX(
-                this.map[series], item
-            );
-        }
-        else {
-            return getX(series, item);
-        }
-    }
+	/**
+	 * Returns the ending X value for the specified series and item.
+	 *
+	 * @param series
+	 *            the index of the series of interest (zero-based).
+	 * @param item
+	 *            the index of the item of interest (zero-based).
+	 *
+	 * @return The ending X value for the specified series and item.
+	 */
+	public Number getEndX(int series, int item) {
+		if (this.parent instanceof IntervalXYDataset) {
+			return ((IntervalXYDataset) this.parent).getEndX(this.map[series], item);
+		} else {
+			return getX(series, item);
+		}
+	}
 
-    /**
-     * Returns the starting Y value for the specified series and item.
-     *
-     * @param series  the index of the series of interest (zero-based).
-     * @param item  the index of the item of interest (zero-based).
-     *
-     * @return The starting Y value for the specified series and item.
-     */
-    public Number getStartY(int series, int item) {
-        if (this.parent instanceof IntervalXYDataset) {
-            return ((IntervalXYDataset) this.parent).getStartY(
-                this.map[series], item
-            );
-        }
-        else {
-            return getY(series, item);
-        }
-    }
+	/**
+	 * Returns the starting Y value for the specified series and item.
+	 *
+	 * @param series
+	 *            the index of the series of interest (zero-based).
+	 * @param item
+	 *            the index of the item of interest (zero-based).
+	 *
+	 * @return The starting Y value for the specified series and item.
+	 */
+	public Number getStartY(int series, int item) {
+		if (this.parent instanceof IntervalXYDataset) {
+			return ((IntervalXYDataset) this.parent).getStartY(this.map[series], item);
+		} else {
+			return getY(series, item);
+		}
+	}
 
-    /**
-     * Returns the ending Y value for the specified series and item.
-     *
-     * @param series  the index of the series of interest (zero-based).
-     * @param item  the index of the item of interest (zero-based).
-     *
-     * @return The ending Y value for the specified series and item.
-     */
-    public Number getEndY(int series,  int item) {
-        if (this.parent instanceof IntervalXYDataset) {
-            return ((IntervalXYDataset) this.parent).getEndY(
-                this.map[series], item
-            );
-        }
-        else {
-            return getY(series, item);
-        }
-    }
+	/**
+	 * Returns the ending Y value for the specified series and item.
+	 *
+	 * @param series
+	 *            the index of the series of interest (zero-based).
+	 * @param item
+	 *            the index of the item of interest (zero-based).
+	 *
+	 * @return The ending Y value for the specified series and item.
+	 */
+	public Number getEndY(int series, int item) {
+		if (this.parent instanceof IntervalXYDataset) {
+			return ((IntervalXYDataset) this.parent).getEndY(this.map[series], item);
+		} else {
+			return getY(series, item);
+		}
+	}
 
-    ///////////////////////////////////////////////////////////////////////////
-    // From SignalsDataset
-    ///////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////
+	// From SignalsDataset
+	///////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Returns the type.
-     *
-     * @param series  the series (zero based index).
-     * @param item  the item (zero based index).
-     *
-     * @return The type.
-     */
-    public int getType(int series, int item) {
-        if (this.parent instanceof SignalsDataset) {
-            return ((SignalsDataset) this.parent).getType(
-                this.map[series], item
-            );
-        }
-        else {
-            return getY(series, item).intValue();
-        }
-    }
+	/**
+	 * Returns the type.
+	 *
+	 * @param series
+	 *            the series (zero based index).
+	 * @param item
+	 *            the item (zero based index).
+	 *
+	 * @return The type.
+	 */
+	public int getType(int series, int item) {
+		if (this.parent instanceof SignalsDataset) {
+			return ((SignalsDataset) this.parent).getType(this.map[series], item);
+		} else {
+			return getY(series, item).intValue();
+		}
+	}
 
-    /**
-     * Returns the level.
-     *
-     * @param series  the series (zero based index).
-     * @param item  the item (zero based index).
-     *
-     * @return The level.
-     */
-    public double getLevel(int series, int item) {
-        if (this.parent instanceof SignalsDataset) {
-            return ((SignalsDataset) this.parent).getLevel(
-                this.map[series], item
-            );
-        }
-        else {
-            return getYValue(series, item);
-        }
-    }
+	/**
+	 * Returns the level.
+	 *
+	 * @param series
+	 *            the series (zero based index).
+	 * @param item
+	 *            the item (zero based index).
+	 *
+	 * @return The level.
+	 */
+	public double getLevel(int series, int item) {
+		if (this.parent instanceof SignalsDataset) {
+			return ((SignalsDataset) this.parent).getLevel(this.map[series], item);
+		} else {
+			return getYValue(series, item);
+		}
+	}
 
-    ///////////////////////////////////////////////////////////////////////////
-    // New methods from CombinationDataset
-    ///////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////
+	// New methods from CombinationDataset
+	///////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Returns the parent Dataset of this combination.
-     *
-     * @return The parent Dataset of this combination.
-     */
-    public SeriesDataset getParent() {
-        return this.parent;
-    }
+	/**
+	 * Returns the parent Dataset of this combination.
+	 *
+	 * @return The parent Dataset of this combination.
+	 */
+	public SeriesDataset getParent() {
+		return this.parent;
+	}
 
-    /**
-     * Returns a map or indirect indexing form our series into parent's series.
-     *
-     * @return A map or indirect indexing form our series into parent's series.
-     */
-    public int[] getMap() {
-        return (int[]) this.map.clone();
-    }
+	/**
+	 * Returns a map or indirect indexing form our series into parent's series.
+	 *
+	 * @return A map or indirect indexing form our series into parent's series.
+	 */
+	public int[] getMap() {
+		return (int[]) this.map.clone();
+	}
 
 }

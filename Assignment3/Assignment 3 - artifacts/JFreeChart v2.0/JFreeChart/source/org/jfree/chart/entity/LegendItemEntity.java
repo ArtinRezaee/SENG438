@@ -49,73 +49,75 @@ import java.io.Serializable;
 /**
  * An entity that represents an item within a legend.
  */
-public class LegendItemEntity extends ChartEntity 
-                              implements Cloneable, Serializable {
+public class LegendItemEntity extends ChartEntity implements Cloneable, Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = -7435683933545666702L;
-    
-    /** The series index. */
-    private int seriesIndex;
+	/** For serialization. */
+	private static final long serialVersionUID = -7435683933545666702L;
 
-    /**
-     * Creates a legend item entity.
-     *
-     * @param area  the area.
-     */
-    public LegendItemEntity(Shape area) {
-        super(area);
-    }
+	/** The series index. */
+	private int seriesIndex;
 
-    /**
-     * Returns the series index.
-     *
-     * @return The series index.
-     */
-    public int getSeriesIndex() {
-        return this.seriesIndex;
-    }
+	/**
+	 * Creates a legend item entity.
+	 *
+	 * @param area
+	 *            the area.
+	 */
+	public LegendItemEntity(Shape area) {
+		super(area);
+	}
 
-    /**
-     * Sets the series index.
-     *
-     * @param index  the series index.
-     */
-    public void setSeriesIndex(int index) {
-        this.seriesIndex = index;
-    }
-    
-    /**
-     * Tests this object for equality with an arbitrary object.
-     * 
-     * @param obj  the object (<code>null</code> permitted).
-     * 
-     * @return A boolean.
-     */
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;   
-        }
-        if (obj instanceof LegendItemEntity && super.equals(obj)) {
-            LegendItemEntity e = (LegendItemEntity) obj;
-            if (this.seriesIndex != e.seriesIndex) {
-                return false;   
-            }
-            return true;   
-        }
-        return false;
-    }
-    
-    /**
-     * Returns a clone of the entity.
-     * 
-     * @return A clone.
-     * 
-     * @throws CloneNotSupportedException if there is a problem cloning the 
-     *         object.
-     */
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();   
-    }
+	/**
+	 * Returns the series index.
+	 *
+	 * @return The series index.
+	 */
+	public int getSeriesIndex() {
+		return this.seriesIndex;
+	}
+
+	/**
+	 * Sets the series index.
+	 *
+	 * @param index
+	 *            the series index.
+	 */
+	public void setSeriesIndex(int index) {
+		this.seriesIndex = index;
+	}
+
+	/**
+	 * Tests this object for equality with an arbitrary object.
+	 * 
+	 * @param obj
+	 *            the object (<code>null</code> permitted).
+	 * 
+	 * @return A boolean.
+	 */
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (obj instanceof LegendItemEntity && super.equals(obj)) {
+			LegendItemEntity e = (LegendItemEntity) obj;
+			if (this.seriesIndex != e.seriesIndex) {
+				return false;
+			}
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Returns a clone of the entity.
+	 * 
+	 * @return A clone.
+	 * 
+	 * @throws CloneNotSupportedException
+	 *             if there is a problem cloning the object.
+	 */
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
 
 }

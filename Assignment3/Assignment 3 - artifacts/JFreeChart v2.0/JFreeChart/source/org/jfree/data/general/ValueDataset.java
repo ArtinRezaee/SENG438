@@ -48,6 +48,6 @@ import org.jfree.data.Value;
  */
 public interface ValueDataset extends Value, Dataset {
 
-    // no additional methods required
+	// no additional methods required
 
 }

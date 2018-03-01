@@ -114,298 +114,273 @@ import org.jfree.ui.TextAnchor;
 import org.jfree.util.PublicCloneable;
 
 /**
- * A stacked bar renderer for use with the 
+ * A stacked bar renderer for use with the
  * {@link org.jfree.chart.plot.CategoryPlot} class.
  */
-public class StackedBarRenderer extends BarRenderer 
-                                implements Cloneable, PublicCloneable, 
-                                           Serializable {
+public class StackedBarRenderer extends BarRenderer implements Cloneable, PublicCloneable, Serializable {
 
-    /** For serialization. */
-    static final long serialVersionUID = 6402943811500067531L;
-    
-    /** A flag that controls whether the bars display values or percentages. */
-    private boolean renderAsPercentages;
-    
-    /**
-     * Creates a new renderer.  By default, the renderer has no tool tip 
-     * generator and no URL generator.  These defaults have been chosen to 
-     * minimise the processing required to generate a default chart.  If you 
-     * require tool tips or URLs, then you can easily add the required 
-     * generators.
-     */
-    public StackedBarRenderer() {
-        this(false);
-    }
-    
-    /**
-     * Creates a new renderer.
-     * 
-     * @param renderAsPercentages  a flag that controls whether the data values
-     *                             are rendered as percentages.
-     */
-    public StackedBarRenderer(boolean renderAsPercentages) {
-        super();
-        this.renderAsPercentages = renderAsPercentages;
-        
-        // set the default item label positions, which will only be used if 
-        // the user requests visible item labels...
-        ItemLabelPosition p = new ItemLabelPosition(
-            ItemLabelAnchor.CENTER, TextAnchor.CENTER
-        );
-        setBasePositiveItemLabelPosition(p);
-        setBaseNegativeItemLabelPosition(p);
-        setPositiveItemLabelPositionFallback(null);
-        setNegativeItemLabelPositionFallback(null);
-    }
+	/** For serialization. */
+	static final long serialVersionUID = 6402943811500067531L;
 
-    /**
-     * Returns <code>true</code> if the renderer displays each item value as
-     * a percentage (so that the stacked bars add to 100%), and 
-     * <code>false</code> otherwise.
-     * 
-     * @return A boolean.
-     */
-    public boolean getRenderAsPercentages() {
-        return this.renderAsPercentages;   
-    }
-    
-    /**
-     * Sets the flag that controls whether the renderer displays each item
-     * value as a percentage (so that the stacked bars add to 100%), and sends
-     * a {@link RendererChangeEvent} to all registered listeners.
-     * 
-     * @param asPercentages  the flag.
-     */
-    public void setRenderAsPercentages(boolean asPercentages) {
-        this.renderAsPercentages = asPercentages; 
-        notifyListeners(new RendererChangeEvent(this));
-    }
-    
-    /**
-     * Returns the number of passes (<code>2</code>) required by this renderer. 
-     * The first pass is used to draw the bars, the second pass is used to
-     * draw the item labels (if visible).
-     * 
-     * @return The number of passes required by the renderer.
-     */
-    public int getPassCount() {
-        return 2;
-    }
-    
-    /**
-     * Returns the range of values the renderer requires to display all the
-     * items from the specified dataset.
-     * 
-     * @param dataset  the dataset (<code>null</code> permitted).
-     * 
-     * @return The range (or <code>null</code> if the dataset is empty).
-     */
-    public Range findRangeBounds(CategoryDataset dataset) {
-        if (this.renderAsPercentages) {
-            return new Range(0.0, 1.0);   
-        }
-        else {
-            return DatasetUtilities.findStackedRangeBounds(dataset, getBase());
-        }
-    }
+	/** A flag that controls whether the bars display values or percentages. */
+	private boolean renderAsPercentages;
 
-    /**
-     * Calculates the bar width and stores it in the renderer state.
-     * 
-     * @param plot  the plot.
-     * @param dataArea  the data area.
-     * @param rendererIndex  the renderer index.
-     * @param state  the renderer state.
-     */
-    protected void calculateBarWidth(CategoryPlot plot, 
-                                     Rectangle2D dataArea, 
-                                     int rendererIndex,
-                                     CategoryItemRendererState state) {
+	/**
+	 * Creates a new renderer. By default, the renderer has no tool tip generator
+	 * and no URL generator. These defaults have been chosen to minimise the
+	 * processing required to generate a default chart. If you require tool tips or
+	 * URLs, then you can easily add the required generators.
+	 */
+	public StackedBarRenderer() {
+		this(false);
+	}
 
-        // calculate the bar width
-        CategoryAxis xAxis = plot.getDomainAxisForDataset(rendererIndex);
-        CategoryDataset data = plot.getDataset(rendererIndex);
-        if (data != null) {
-            PlotOrientation orientation = plot.getOrientation();
-            double space = 0.0;
-            if (orientation == PlotOrientation.HORIZONTAL) {
-                space = dataArea.getHeight();
-            }
-            else if (orientation == PlotOrientation.VERTICAL) {
-                space = dataArea.getWidth();
-            }
-            double maxWidth = space * getMaximumBarWidth();
-            int columns = data.getColumnCount();
-            double categoryMargin = 0.0;
-            if (columns > 1) {
-                categoryMargin = xAxis.getCategoryMargin();
-            }
+	/**
+	 * Creates a new renderer.
+	 * 
+	 * @param renderAsPercentages
+	 *            a flag that controls whether the data values are rendered as
+	 *            percentages.
+	 */
+	public StackedBarRenderer(boolean renderAsPercentages) {
+		super();
+		this.renderAsPercentages = renderAsPercentages;
 
-            double used = space * (1 - xAxis.getLowerMargin() 
-                                     - xAxis.getUpperMargin()
-                                     - categoryMargin);
-            if (columns > 0) {
-                state.setBarWidth(Math.min(used / columns, maxWidth));
-            }
-            else {
-                state.setBarWidth(Math.min(used, maxWidth));
-            }
-        }
+		// set the default item label positions, which will only be used if
+		// the user requests visible item labels...
+		ItemLabelPosition p = new ItemLabelPosition(ItemLabelAnchor.CENTER, TextAnchor.CENTER);
+		setBasePositiveItemLabelPosition(p);
+		setBaseNegativeItemLabelPosition(p);
+		setPositiveItemLabelPositionFallback(null);
+		setNegativeItemLabelPositionFallback(null);
+	}
 
-    }
+	/**
+	 * Returns <code>true</code> if the renderer displays each item value as a
+	 * percentage (so that the stacked bars add to 100%), and <code>false</code>
+	 * otherwise.
+	 * 
+	 * @return A boolean.
+	 */
+	public boolean getRenderAsPercentages() {
+		return this.renderAsPercentages;
+	}
 
-    /**
-     * Draws a stacked bar for a specific item.
-     *
-     * @param g2  the graphics device.
-     * @param state  the renderer state.
-     * @param dataArea  the plot area.
-     * @param plot  the plot.
-     * @param domainAxis  the domain (category) axis.
-     * @param rangeAxis  the range (value) axis.
-     * @param dataset  the data.
-     * @param row  the row index (zero-based).
-     * @param column  the column index (zero-based).
-     * @param pass  the pass index.
-     */
-    public void drawItem(Graphics2D g2,
-                         CategoryItemRendererState state,
-                         Rectangle2D dataArea,
-                         CategoryPlot plot,
-                         CategoryAxis domainAxis,
-                         ValueAxis rangeAxis,
-                         CategoryDataset dataset,
-                         int row,
-                         int column,
-                         int pass) {
-     
-        // nothing is drawn for null values...
-        Number dataValue = dataset.getValue(row, column);
-        if (dataValue == null) {
-            return;
-        }
-        
-        double value = dataValue.doubleValue();
-        double total = 0.0;  // only needed if calculating percentages
-        if (this.renderAsPercentages) {
-            total = DataUtilities.calculateColumnTotal(dataset, column);
-            value = value / total;
-        }
-        
-        PlotOrientation orientation = plot.getOrientation();
-        double barW0 = domainAxis.getCategoryMiddle(
-            column, getColumnCount(), dataArea, plot.getDomainAxisEdge()
-        ) - state.getBarWidth() / 2.0;
+	/**
+	 * Sets the flag that controls whether the renderer displays each item value as
+	 * a percentage (so that the stacked bars add to 100%), and sends a
+	 * {@link RendererChangeEvent} to all registered listeners.
+	 * 
+	 * @param asPercentages
+	 *            the flag.
+	 */
+	public void setRenderAsPercentages(boolean asPercentages) {
+		this.renderAsPercentages = asPercentages;
+		notifyListeners(new RendererChangeEvent(this));
+	}
 
-        double positiveBase = getBase();
-        double negativeBase = positiveBase;
+	/**
+	 * Returns the number of passes (<code>2</code>) required by this renderer. The
+	 * first pass is used to draw the bars, the second pass is used to draw the item
+	 * labels (if visible).
+	 * 
+	 * @return The number of passes required by the renderer.
+	 */
+	public int getPassCount() {
+		return 2;
+	}
 
-        for (int i = 0; i < row; i++) {
-            Number v = dataset.getValue(i, column);
-            if (v != null) {
-                double d = v.doubleValue();
-                if (this.renderAsPercentages) {
-                    d = d / total;
-                }
-                if (d > 0) {
-                    positiveBase = positiveBase + d;
-                }
-                else {
-                    negativeBase = negativeBase + d;
-                }
-            }
-        }
+	/**
+	 * Returns the range of values the renderer requires to display all the items
+	 * from the specified dataset.
+	 * 
+	 * @param dataset
+	 *            the dataset (<code>null</code> permitted).
+	 * 
+	 * @return The range (or <code>null</code> if the dataset is empty).
+	 */
+	public Range findRangeBounds(CategoryDataset dataset) {
+		if (this.renderAsPercentages) {
+			return new Range(0.0, 1.0);
+		} else {
+			return DatasetUtilities.findStackedRangeBounds(dataset, getBase());
+		}
+	}
 
-        double translatedBase;
-        double translatedValue;
-        RectangleEdge location = plot.getRangeAxisEdge();
-        if (value >= 0.0) {
-            translatedBase = rangeAxis.valueToJava2D(
-                positiveBase, dataArea, location
-            );
-            translatedValue = rangeAxis.valueToJava2D(
-                positiveBase + value, dataArea, location
-            );
-        }
-        else {
-            translatedBase = rangeAxis.valueToJava2D(
-                negativeBase, dataArea, location
-            );
-            translatedValue = rangeAxis.valueToJava2D(
-                negativeBase + value, dataArea, location
-            );
-        }
-        double barL0 = Math.min(translatedBase, translatedValue);
-        double barLength = Math.max(
-            Math.abs(translatedValue - translatedBase), getMinimumBarLength()
-        );
+	/**
+	 * Calculates the bar width and stores it in the renderer state.
+	 * 
+	 * @param plot
+	 *            the plot.
+	 * @param dataArea
+	 *            the data area.
+	 * @param rendererIndex
+	 *            the renderer index.
+	 * @param state
+	 *            the renderer state.
+	 */
+	protected void calculateBarWidth(CategoryPlot plot, Rectangle2D dataArea, int rendererIndex,
+			CategoryItemRendererState state) {
 
-        Rectangle2D bar = null;
-        if (orientation == PlotOrientation.HORIZONTAL) {
-            bar = new Rectangle2D.Double(
-                barL0, barW0, barLength, state.getBarWidth());
-        }
-        else {
-            bar = new Rectangle2D.Double(
-                barW0, barL0, state.getBarWidth(), barLength
-            );
-        }
-        if (pass == 0) {
-            Paint itemPaint = getItemPaint(row, column);
-            GradientPaintTransformer t = getGradientPaintTransformer();
-            if (t != null && itemPaint instanceof GradientPaint) {
-                itemPaint = t.transform((GradientPaint) itemPaint, bar);
-            }
-            g2.setPaint(itemPaint);
-            g2.fill(bar);
-            if (isDrawBarOutline() 
-                    && state.getBarWidth() > BAR_OUTLINE_WIDTH_THRESHOLD) {
-                g2.setStroke(getItemOutlineStroke(row, column));
-                g2.setPaint(getItemOutlinePaint(row, column));
-                g2.draw(bar);
-            }
+		// calculate the bar width
+		CategoryAxis xAxis = plot.getDomainAxisForDataset(rendererIndex);
+		CategoryDataset data = plot.getDataset(rendererIndex);
+		if (data != null) {
+			PlotOrientation orientation = plot.getOrientation();
+			double space = 0.0;
+			if (orientation == PlotOrientation.HORIZONTAL) {
+				space = dataArea.getHeight();
+			} else if (orientation == PlotOrientation.VERTICAL) {
+				space = dataArea.getWidth();
+			}
+			double maxWidth = space * getMaximumBarWidth();
+			int columns = data.getColumnCount();
+			double categoryMargin = 0.0;
+			if (columns > 1) {
+				categoryMargin = xAxis.getCategoryMargin();
+			}
 
-            // add an item entity, if this information is being collected
-            EntityCollection entities = state.getEntityCollection();
-            if (entities != null) {
-                addItemEntity(entities, dataset, row, column, bar);
-            }
-        }
-        else if (pass == 1) {
-            CategoryItemLabelGenerator generator 
-                = getItemLabelGenerator(row, column);
-            if (generator != null && isItemLabelVisible(row, column)) {
-                drawItemLabel(
-                    g2, dataset, row, column, plot, generator, bar, 
-                    (value < 0.0)
-                );
-            }
-        }        
-    }
+			double used = space * (1 - xAxis.getLowerMargin() - xAxis.getUpperMargin() - categoryMargin);
+			if (columns > 0) {
+				state.setBarWidth(Math.min(used / columns, maxWidth));
+			} else {
+				state.setBarWidth(Math.min(used, maxWidth));
+			}
+		}
 
-    /**
-     * Tests this renderer for equality with an arbitrary object.
-     * 
-     * @param obj  the object (<code>null</code> permitted).
-     * 
-     * @return A boolean.
-     */
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;   
-        }
-        if (!(obj instanceof StackedBarRenderer)) {
-            return false;   
-        }
-        if (!super.equals(obj)) {
-            return false;   
-        }
-        StackedBarRenderer that = (StackedBarRenderer) obj;
-        if (this.renderAsPercentages != that.renderAsPercentages) {
-            return false;   
-        }
-        return true;
-    }
+	}
+
+	/**
+	 * Draws a stacked bar for a specific item.
+	 *
+	 * @param g2
+	 *            the graphics device.
+	 * @param state
+	 *            the renderer state.
+	 * @param dataArea
+	 *            the plot area.
+	 * @param plot
+	 *            the plot.
+	 * @param domainAxis
+	 *            the domain (category) axis.
+	 * @param rangeAxis
+	 *            the range (value) axis.
+	 * @param dataset
+	 *            the data.
+	 * @param row
+	 *            the row index (zero-based).
+	 * @param column
+	 *            the column index (zero-based).
+	 * @param pass
+	 *            the pass index.
+	 */
+	public void drawItem(Graphics2D g2, CategoryItemRendererState state, Rectangle2D dataArea, CategoryPlot plot,
+			CategoryAxis domainAxis, ValueAxis rangeAxis, CategoryDataset dataset, int row, int column, int pass) {
+
+		// nothing is drawn for null values...
+		Number dataValue = dataset.getValue(row, column);
+		if (dataValue == null) {
+			return;
+		}
+
+		double value = dataValue.doubleValue();
+		double total = 0.0; // only needed if calculating percentages
+		if (this.renderAsPercentages) {
+			total = DataUtilities.calculateColumnTotal(dataset, column);
+			value = value / total;
+		}
+
+		PlotOrientation orientation = plot.getOrientation();
+		double barW0 = domainAxis.getCategoryMiddle(column, getColumnCount(), dataArea, plot.getDomainAxisEdge())
+				- state.getBarWidth() / 2.0;
+
+		double positiveBase = getBase();
+		double negativeBase = positiveBase;
+
+		for (int i = 0; i < row; i++) {
+			Number v = dataset.getValue(i, column);
+			if (v != null) {
+				double d = v.doubleValue();
+				if (this.renderAsPercentages) {
+					d = d / total;
+				}
+				if (d > 0) {
+					positiveBase = positiveBase + d;
+				} else {
+					negativeBase = negativeBase + d;
+				}
+			}
+		}
+
+		double translatedBase;
+		double translatedValue;
+		RectangleEdge location = plot.getRangeAxisEdge();
+		if (value >= 0.0) {
+			translatedBase = rangeAxis.valueToJava2D(positiveBase, dataArea, location);
+			translatedValue = rangeAxis.valueToJava2D(positiveBase + value, dataArea, location);
+		} else {
+			translatedBase = rangeAxis.valueToJava2D(negativeBase, dataArea, location);
+			translatedValue = rangeAxis.valueToJava2D(negativeBase + value, dataArea, location);
+		}
+		double barL0 = Math.min(translatedBase, translatedValue);
+		double barLength = Math.max(Math.abs(translatedValue - translatedBase), getMinimumBarLength());
+
+		Rectangle2D bar = null;
+		if (orientation == PlotOrientation.HORIZONTAL) {
+			bar = new Rectangle2D.Double(barL0, barW0, barLength, state.getBarWidth());
+		} else {
+			bar = new Rectangle2D.Double(barW0, barL0, state.getBarWidth(), barLength);
+		}
+		if (pass == 0) {
+			Paint itemPaint = getItemPaint(row, column);
+			GradientPaintTransformer t = getGradientPaintTransformer();
+			if (t != null && itemPaint instanceof GradientPaint) {
+				itemPaint = t.transform((GradientPaint) itemPaint, bar);
+			}
+			g2.setPaint(itemPaint);
+			g2.fill(bar);
+			if (isDrawBarOutline() && state.getBarWidth() > BAR_OUTLINE_WIDTH_THRESHOLD) {
+				g2.setStroke(getItemOutlineStroke(row, column));
+				g2.setPaint(getItemOutlinePaint(row, column));
+				g2.draw(bar);
+			}
+
+			// add an item entity, if this information is being collected
+			EntityCollection entities = state.getEntityCollection();
+			if (entities != null) {
+				addItemEntity(entities, dataset, row, column, bar);
+			}
+		} else if (pass == 1) {
+			CategoryItemLabelGenerator generator = getItemLabelGenerator(row, column);
+			if (generator != null && isItemLabelVisible(row, column)) {
+				drawItemLabel(g2, dataset, row, column, plot, generator, bar, (value < 0.0));
+			}
+		}
+	}
+
+	/**
+	 * Tests this renderer for equality with an arbitrary object.
+	 * 
+	 * @param obj
+	 *            the object (<code>null</code> permitted).
+	 * 
+	 * @return A boolean.
+	 */
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof StackedBarRenderer)) {
+			return false;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		StackedBarRenderer that = (StackedBarRenderer) obj;
+		if (this.renderAsPercentages != that.renderAsPercentages) {
+			return false;
+		}
+		return true;
+	}
 
 }

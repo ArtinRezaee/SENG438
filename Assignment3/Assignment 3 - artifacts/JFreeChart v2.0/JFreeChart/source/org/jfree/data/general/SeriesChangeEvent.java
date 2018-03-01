@@ -50,16 +50,17 @@ import java.util.EventObject;
  */
 public class SeriesChangeEvent extends EventObject implements Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = 1593866085210089052L;
-    
-    /**
-     * Constructs a new event.
-     *
-     * @param source  the source of the change event.
-     */
-    public SeriesChangeEvent(Object source) {
-        super(source);
-    }
+	/** For serialization. */
+	private static final long serialVersionUID = 1593866085210089052L;
+
+	/**
+	 * Constructs a new event.
+	 *
+	 * @param source
+	 *            the source of the change event.
+	 */
+	public SeriesChangeEvent(Object source) {
+		super(source);
+	}
 
 }

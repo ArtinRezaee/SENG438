@@ -48,52 +48,54 @@ package org.jfree.data.function;
  */
 public class NormalDistributionFunction2D implements Function2D {
 
-    /** The mean. */
-    private double mean;
+	/** The mean. */
+	private double mean;
 
-    /** The standard deviation. */
-    private double std;
+	/** The standard deviation. */
+	private double std;
 
-    /**
-     * Constructs a new normal distribution function.
-     *
-     * @param mean  the mean.
-     * @param std  the standard deviation.
-     */
-    public NormalDistributionFunction2D(double mean, double std) {
-        this.mean = mean;
-        this.std = std;
-    }
-    
-    /**
-     * Returns the mean for the function.
-     * 
-     * @return The mean.
-     */
-    public double getMean() {
-        return this.mean;
-    }
-    
-    /**
-     * Returns the standard deviation for the function.
-     * 
-     * @return The standard deviation.
-     */
-    public double getStandardDeviation() {
-        return this.std;
-    }
+	/**
+	 * Constructs a new normal distribution function.
+	 *
+	 * @param mean
+	 *            the mean.
+	 * @param std
+	 *            the standard deviation.
+	 */
+	public NormalDistributionFunction2D(double mean, double std) {
+		this.mean = mean;
+		this.std = std;
+	}
 
-    /**
-     * Returns the function value.
-     *
-     * @param x  the x-value.
-     *
-     * @return The value.
-     */
-    public double getValue(double x) {
-        return Math.exp(-1.0 * (x - this.mean) * (x - this.mean) 
-                / (2 * this.std * this.std)) / Math.sqrt(2 * Math.PI 
-                * this.std * this.std);
-    }
+	/**
+	 * Returns the mean for the function.
+	 * 
+	 * @return The mean.
+	 */
+	public double getMean() {
+		return this.mean;
+	}
+
+	/**
+	 * Returns the standard deviation for the function.
+	 * 
+	 * @return The standard deviation.
+	 */
+	public double getStandardDeviation() {
+		return this.std;
+	}
+
+	/**
+	 * Returns the function value.
+	 *
+	 * @param x
+	 *            the x-value.
+	 *
+	 * @return The value.
+	 */
+	public double getValue(double x) {
+		return Math.exp(-1.0 * (x - this.mean) * (x - this.mean) / (2 * this.std * this.std))
+				/ Math.sqrt(2 * Math.PI * this.std * this.std);
+	}
 
 }

@@ -37,7 +37,7 @@
  * 12-Aug-2003 : Version 1 (RA);
  * 
  */
- 
+
 package org.jfree.chart.imagemap;
 
 /**
@@ -45,18 +45,18 @@ package org.jfree.chart.imagemap;
  *
  * @author Richard Atkinson
  */
-public class StandardURLTagFragmentGenerator 
-    implements URLTagFragmentGenerator {
+public class StandardURLTagFragmentGenerator implements URLTagFragmentGenerator {
 
-    /**
-     * Generates a URL string to go in an HTML image map.
-     *
-     * @param urlText  the URL.
-     * 
-     * @return The formatted text
-     */
-    public String generateURLFragment(String urlText) {
-        return " href=\"" + urlText + "\"";
-    }
+	/**
+	 * Generates a URL string to go in an HTML image map.
+	 *
+	 * @param urlText
+	 *            the URL.
+	 * 
+	 * @return The formatted text
+	 */
+	public String generateURLFragment(String urlText) {
+		return " href=\"" + urlText + "\"";
+	}
 
 }

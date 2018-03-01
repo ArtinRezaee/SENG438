@@ -51,230 +51,240 @@ import org.jfree.util.PublicCloneable;
 /**
  * A collection of (key, object) pairs.
  */
-public class KeyedObjects  implements Cloneable, PublicCloneable, Serializable {
+public class KeyedObjects implements Cloneable, PublicCloneable, Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = 1321582394193530984L;
-    
-    /** Storage for the data. */
-    private List data;
+	/** For serialization. */
+	private static final long serialVersionUID = 1321582394193530984L;
 
-    /**
-     * Creates a new collection (initially empty).
-     */
-    public KeyedObjects() {
-        this.data = new java.util.ArrayList();
-    }
+	/** Storage for the data. */
+	private List data;
 
-    /**
-     * Returns the number of items (values) in the collection.
-     *
-     * @return The item count.
-     */
-    public int getItemCount() {
-        return this.data.size();
-    }
+	/**
+	 * Creates a new collection (initially empty).
+	 */
+	public KeyedObjects() {
+		this.data = new java.util.ArrayList();
+	}
 
-    /**
-     * Returns an object.
-     *
-     * @param item  the item index (zero-based).
-     *
-     * @return The object (<code>null</code> if the index is out of range).
-     */
-    public Object getObject(int item) {
-        Object result = null;
-        if (item >= 0 && item < this.data.size()) {
-            KeyedObject kobj = (KeyedObject) this.data.get(item);
-            if (kobj != null) {
-                result = kobj.getObject();
-            }
-        }
-        return result;
-    }
+	/**
+	 * Returns the number of items (values) in the collection.
+	 *
+	 * @return The item count.
+	 */
+	public int getItemCount() {
+		return this.data.size();
+	}
 
-    /**
-     * Returns a key.
-     *
-     * @param index  the item index (zero-based).
-     *
-     * @return The row key.
-     * 
-     * @throws IndexOutOfBoundsException if <code>index</code> is out of bounds.
-     */
-    public Comparable getKey(int index) {
-        Comparable result = null;
-        if (index >= 0 && index < this.data.size()) {
-            KeyedObject item = (KeyedObject) this.data.get(index);
-            if (item != null) {
-                result = item.getKey();
-            }
-        }
-        return result;
-    }
+	/**
+	 * Returns an object.
+	 *
+	 * @param item
+	 *            the item index (zero-based).
+	 *
+	 * @return The object (<code>null</code> if the index is out of range).
+	 */
+	public Object getObject(int item) {
+		Object result = null;
+		if (item >= 0 && item < this.data.size()) {
+			KeyedObject kobj = (KeyedObject) this.data.get(item);
+			if (kobj != null) {
+				result = kobj.getObject();
+			}
+		}
+		return result;
+	}
 
-    /**
-     * Returns the index for a given key.
-     *
-     * @param key  the key.
-     *
-     * @return The index, or <code>-1</code> if the key is unrecognised.
-     */
-    public int getIndex(Comparable key) {
-        int result = -1;
-        int i = 0;
-        Iterator iterator = this.data.iterator();
-        while (iterator.hasNext()) {
-            KeyedObject ko = (KeyedObject) iterator.next();
-            if (ko.getKey().equals(key)) {
-                result = i;
-            }
-            i++;
-        }
-        return result;
-    }
+	/**
+	 * Returns a key.
+	 *
+	 * @param index
+	 *            the item index (zero-based).
+	 *
+	 * @return The row key.
+	 * 
+	 * @throws IndexOutOfBoundsException
+	 *             if <code>index</code> is out of bounds.
+	 */
+	public Comparable getKey(int index) {
+		Comparable result = null;
+		if (index >= 0 && index < this.data.size()) {
+			KeyedObject item = (KeyedObject) this.data.get(index);
+			if (item != null) {
+				result = item.getKey();
+			}
+		}
+		return result;
+	}
 
-    /**
-     * Returns the keys.
-     *
-     * @return The keys (never <code>null</code>).
-     */
-    public List getKeys() {
-        List result = new java.util.ArrayList();
-        Iterator iterator = this.data.iterator();
-        while (iterator.hasNext()) {
-            KeyedObject ko = (KeyedObject) iterator.next();
-            result.add(ko.getKey());
-        }
-        return result;
-    }
+	/**
+	 * Returns the index for a given key.
+	 *
+	 * @param key
+	 *            the key.
+	 *
+	 * @return The index, or <code>-1</code> if the key is unrecognised.
+	 */
+	public int getIndex(Comparable key) {
+		int result = -1;
+		int i = 0;
+		Iterator iterator = this.data.iterator();
+		while (iterator.hasNext()) {
+			KeyedObject ko = (KeyedObject) iterator.next();
+			if (ko.getKey().equals(key)) {
+				result = i;
+			}
+			i++;
+		}
+		return result;
+	}
 
-    /**
-     * Returns the object for a given key. If the key is not recognised, the 
-     * method should return <code>null</code>.
-     *
-     * @param key  the key.
-     *
-     * @return The object (possibly <code>null</code>).
-     */
-    public Object getObject(Comparable key) {
-        return getObject(getIndex(key));
-    }
+	/**
+	 * Returns the keys.
+	 *
+	 * @return The keys (never <code>null</code>).
+	 */
+	public List getKeys() {
+		List result = new java.util.ArrayList();
+		Iterator iterator = this.data.iterator();
+		while (iterator.hasNext()) {
+			KeyedObject ko = (KeyedObject) iterator.next();
+			result.add(ko.getKey());
+		}
+		return result;
+	}
 
-    /**
-     * Adds a new object to the collection, or overwrites an existing object.  
-     * This is the same as the {@link #setObject(Comparable, Object)} method.
-     *
-     * @param key  the key.
-     * @param object  the object.
-     */
-    public void addObject(Comparable key, Object object) {
-        setObject(key, object);
-    }
+	/**
+	 * Returns the object for a given key. If the key is not recognised, the method
+	 * should return <code>null</code>.
+	 *
+	 * @param key
+	 *            the key.
+	 *
+	 * @return The object (possibly <code>null</code>).
+	 */
+	public Object getObject(Comparable key) {
+		return getObject(getIndex(key));
+	}
 
-    /**
-     * Replaces an existing object, or adds a new object to the collection.
-     * This is the same as the {@link #addObject(Comparable, Object)} 
-     * method.
-     *
-     * @param key  the key.
-     * @param object  the object.
-     */
-    public void setObject(Comparable key, Object object) {
-        int keyIndex = getIndex(key);
-        if (keyIndex >= 0) {
-            KeyedObject ko = (KeyedObject) this.data.get(keyIndex);
-            ko.setObject(object);
-        }
-        else {
-            KeyedObject ko = new KeyedObject(key, object);
-            this.data.add(ko);
-        }
-    }
+	/**
+	 * Adds a new object to the collection, or overwrites an existing object. This
+	 * is the same as the {@link #setObject(Comparable, Object)} method.
+	 *
+	 * @param key
+	 *            the key.
+	 * @param object
+	 *            the object.
+	 */
+	public void addObject(Comparable key, Object object) {
+		setObject(key, object);
+	}
 
-    /**
-     * Removes a value from the collection.
-     *
-     * @param index  the index of the item to remove.
-     */
-    public void removeValue(int index) {
-        this.data.remove(index);
-    }
+	/**
+	 * Replaces an existing object, or adds a new object to the collection. This is
+	 * the same as the {@link #addObject(Comparable, Object)} method.
+	 *
+	 * @param key
+	 *            the key.
+	 * @param object
+	 *            the object.
+	 */
+	public void setObject(Comparable key, Object object) {
+		int keyIndex = getIndex(key);
+		if (keyIndex >= 0) {
+			KeyedObject ko = (KeyedObject) this.data.get(keyIndex);
+			ko.setObject(object);
+		} else {
+			KeyedObject ko = new KeyedObject(key, object);
+			this.data.add(ko);
+		}
+	}
 
-    /**
-     * Removes a value from the collection.
-     *
-     * @param key  the key of the item to remove.
-     */
-    public void removeValue(Comparable key) {
-        removeValue(getIndex(key));
-    }
-    
-    /**
-     * Returns a clone of this object.
-     * 
-     * @return A clone.
-     * 
-     * @throws CloneNotSupportedException if there is a problem cloning.
-     */
-    public Object clone() throws CloneNotSupportedException {
-        KeyedObjects clone = (KeyedObjects) super.clone();
-        clone.data = new java.util.ArrayList();
-        Iterator iterator = this.data.iterator();
-        while (iterator.hasNext()) {
-            KeyedObject ko = (KeyedObject) iterator.next();
-            clone.data.add(ko.clone());
-        }
-        return clone;      
-    }
-    
-    /**
-     * Tests if this object is equal to another.
-     *
-     * @param o  the other object.
-     *
-     * @return A boolean.
-     */
-    public boolean equals(Object o) {
+	/**
+	 * Removes a value from the collection.
+	 *
+	 * @param index
+	 *            the index of the item to remove.
+	 */
+	public void removeValue(int index) {
+		this.data.remove(index);
+	}
 
-        if (o == null) {
-            return false;
-        }
-        if (o == this) {
-            return true;
-        }
+	/**
+	 * Removes a value from the collection.
+	 *
+	 * @param key
+	 *            the key of the item to remove.
+	 */
+	public void removeValue(Comparable key) {
+		removeValue(getIndex(key));
+	}
 
-        if (!(o instanceof KeyedObjects)) {
-            return false;
-        }
+	/**
+	 * Returns a clone of this object.
+	 * 
+	 * @return A clone.
+	 * 
+	 * @throws CloneNotSupportedException
+	 *             if there is a problem cloning.
+	 */
+	public Object clone() throws CloneNotSupportedException {
+		KeyedObjects clone = (KeyedObjects) super.clone();
+		clone.data = new java.util.ArrayList();
+		Iterator iterator = this.data.iterator();
+		while (iterator.hasNext()) {
+			KeyedObject ko = (KeyedObject) iterator.next();
+			clone.data.add(ko.clone());
+		}
+		return clone;
+	}
 
-        KeyedObjects kos = (KeyedObjects) o;
-        int count = getItemCount();
-        if (count != kos.getItemCount()) {
-            return false;
-        }
+	/**
+	 * Tests if this object is equal to another.
+	 *
+	 * @param o
+	 *            the other object.
+	 *
+	 * @return A boolean.
+	 */
+	public boolean equals(Object o) {
 
-        for (int i = 0; i < count; i++) {
-            Comparable k1 = getKey(i);
-            Comparable k2 = kos.getKey(i);
-            if (!k1.equals(k2)) {
-                return false;
-            }
-            Object o1 = getObject(i);
-            Object o2 = kos.getObject(i);
-            if (o1 == null) {
-                if (o2 != null) {
-                    return false;
-                }
-            }
-            else {
-                if (!o1.equals(o2)) {
-                    return false;
-                }
-            }
-        }
-        return true;
+		if (o == null) {
+			return false;
+		}
+		if (o == this) {
+			return true;
+		}
 
-    }
-    
+		if (!(o instanceof KeyedObjects)) {
+			return false;
+		}
+
+		KeyedObjects kos = (KeyedObjects) o;
+		int count = getItemCount();
+		if (count != kos.getItemCount()) {
+			return false;
+		}
+
+		for (int i = 0; i < count; i++) {
+			Comparable k1 = getKey(i);
+			Comparable k2 = kos.getKey(i);
+			if (!k1.equals(k2)) {
+				return false;
+			}
+			Object o1 = getObject(i);
+			Object o2 = kos.getObject(i);
+			if (o1 == null) {
+				if (o2 != null) {
+					return false;
+				}
+			} else {
+				if (!o1.equals(o2)) {
+					return false;
+				}
+			}
+		}
+		return true;
+
+	}
+
 }

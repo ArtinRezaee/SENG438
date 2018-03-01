@@ -53,44 +53,47 @@ import org.jfree.data.xy.XYDataset;
  */
 public interface XYSeriesLabelGenerator {
 
-    /**
-     * Generates a label for the specified series.  This label will be
-     * used for the chart legend.
-     * 
-     * @param dataset  the dataset.
-     * @param series  the series index.
-     * 
-     * @return A series label.
-     */
-    public String generateLabel(XYDataset dataset, int series);
-    
-    /**
-     * Generates an attributed label for the specified series, or 
-     * <code>null</code> if no attributed label is available (in which case,
-     * the string returned by {@link #generateLabel(XYDataset, int)} will 
-     * provide the fallback).  Only certain attributes are recognised by the 
-     * code that ultimately displays the labels: 
-     * <ul>
-     * <li>{@link TextAttribute#FONT}: will set the font;</li>
-     * <li>{@link TextAttribute#POSTURE}: a value of 
-     *     {@link TextAttribute#POSTURE_OBLIQUE} will add {@link Font#ITALIC} to
-     *     the current font;</li>
-     * <li>{@link TextAttribute#WEIGHT}: a value of 
-     *     {@link TextAttribute#WEIGHT_BOLD} will add {@link Font#BOLD} to the 
-     *     current font;</li>
-     * <li>{@link TextAttribute#FOREGROUND}: this will set the {@link Paint} 
-     *     for the current</li>
-     * <li>{@link TextAttribute#SUPERSCRIPT}: the values 
-     *     {@link TextAttribute#SUPERSCRIPT_SUB} and 
-     *     {@link TextAttribute#SUPERSCRIPT_SUPER} are recognised.</li> 
-     * </ul>
-     * 
-     * @param dataset  the dataset.
-     * @param series  the series index.
-     * 
-     * @return An attributed label (possibly <code>null</code>).
-     */
-    public AttributedString generateAttributedLabel(XYDataset dataset, 
-                                                    int series);
+	/**
+	 * Generates a label for the specified series. This label will be used for the
+	 * chart legend.
+	 * 
+	 * @param dataset
+	 *            the dataset.
+	 * @param series
+	 *            the series index.
+	 * 
+	 * @return A series label.
+	 */
+	public String generateLabel(XYDataset dataset, int series);
+
+	/**
+	 * Generates an attributed label for the specified series, or <code>null</code>
+	 * if no attributed label is available (in which case, the string returned by
+	 * {@link #generateLabel(XYDataset, int)} will provide the fallback). Only
+	 * certain attributes are recognised by the code that ultimately displays the
+	 * labels:
+	 * <ul>
+	 * <li>{@link TextAttribute#FONT}: will set the font;</li>
+	 * <li>{@link TextAttribute#POSTURE}: a value of
+	 * {@link TextAttribute#POSTURE_OBLIQUE} will add {@link Font#ITALIC} to the
+	 * current font;</li>
+	 * <li>{@link TextAttribute#WEIGHT}: a value of
+	 * {@link TextAttribute#WEIGHT_BOLD} will add {@link Font#BOLD} to the current
+	 * font;</li>
+	 * <li>{@link TextAttribute#FOREGROUND}: this will set the {@link Paint} for the
+	 * current</li>
+	 * <li>{@link TextAttribute#SUPERSCRIPT}: the values
+	 * {@link TextAttribute#SUPERSCRIPT_SUB} and
+	 * {@link TextAttribute#SUPERSCRIPT_SUPER} are recognised.</li>
+	 * </ul>
+	 * 
+	 * @param dataset
+	 *            the dataset.
+	 * @param series
+	 *            the series index.
+	 * 
+	 * @return An attributed label (possibly <code>null</code>).
+	 */
+	public AttributedString generateAttributedLabel(XYDataset dataset, int series);
 
 }

@@ -67,354 +67,379 @@ import org.jfree.util.ObjectUtilities;
 import org.jfree.util.PaintUtilities;
 
 /**
- * The base class used to represent the needle on a 
+ * The base class used to represent the needle on a
  * {@link org.jfree.chart.plot.CompassPlot}.
  *
  * @author Bryan Scott
  */
 public abstract class MeterNeedle implements Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = 5203064851510951052L;
-    
-    /** The outline paint. */
-    private transient Paint outlinePaint = Color.black;
+	/** For serialization. */
+	private static final long serialVersionUID = 5203064851510951052L;
 
-    /** The outline stroke. */
-    private transient Stroke outlineStroke = new BasicStroke(2);
+	/** The outline paint. */
+	private transient Paint outlinePaint = Color.black;
 
-    /** The fill paint. */
-    private transient Paint fillPaint = null;
+	/** The outline stroke. */
+	private transient Stroke outlineStroke = new BasicStroke(2);
 
-    /** The highlight paint. */
-    private transient Paint highlightPaint = null;
+	/** The fill paint. */
+	private transient Paint fillPaint = null;
 
-    /** The size. */
-    private int size = 5;
+	/** The highlight paint. */
+	private transient Paint highlightPaint = null;
 
-    /** Scalar to aply to locate the rotation x point. */
-    private double rotateX = 0.5;
+	/** The size. */
+	private int size = 5;
 
-    /** Scalar to aply to locate the rotation y point. */
-    private double rotateY = 0.5;
+	/** Scalar to aply to locate the rotation x point. */
+	private double rotateX = 0.5;
 
-    /** A transform. */
-    protected static AffineTransform transform = new AffineTransform();
+	/** Scalar to aply to locate the rotation y point. */
+	private double rotateY = 0.5;
 
-    /**
-     * Creates a new needle.
-     */
-    public MeterNeedle() {
-        this(null, null, null);
-    }
+	/** A transform. */
+	protected static AffineTransform transform = new AffineTransform();
 
-    /**
-     * Creates a new needle.
-     *
-     * @param outline  the outline paint (<code>null</code> permitted).
-     * @param fill  the fill paint (<code>null</code> permitted).
-     * @param highlight  the highlight paint (<code>null</code> permitted).
-     */
-    public MeterNeedle(Paint outline, Paint fill, Paint highlight) {
-        this.fillPaint = fill;
-        this.highlightPaint = highlight;
-        this.outlinePaint = outline;
-    }
+	/**
+	 * Creates a new needle.
+	 */
+	public MeterNeedle() {
+		this(null, null, null);
+	}
 
-    /**
-     * Returns the outline paint.
-     *
-     * @return The outline paint.
-     */
-    public Paint getOutlinePaint() {
-        return this.outlinePaint;
-    }
+	/**
+	 * Creates a new needle.
+	 *
+	 * @param outline
+	 *            the outline paint (<code>null</code> permitted).
+	 * @param fill
+	 *            the fill paint (<code>null</code> permitted).
+	 * @param highlight
+	 *            the highlight paint (<code>null</code> permitted).
+	 */
+	public MeterNeedle(Paint outline, Paint fill, Paint highlight) {
+		this.fillPaint = fill;
+		this.highlightPaint = highlight;
+		this.outlinePaint = outline;
+	}
 
-    /**
-     * Sets the outline paint.
-     *
-     * @param p  the new paint.
-     */
-    public void setOutlinePaint(Paint p) {
-        if (p != null) {
-            this.outlinePaint = p;
-        }
-    }
+	/**
+	 * Returns the outline paint.
+	 *
+	 * @return The outline paint.
+	 */
+	public Paint getOutlinePaint() {
+		return this.outlinePaint;
+	}
 
-    /**
-     * Returns the outline stroke.
-     *
-     * @return The outline stroke.
-     */
-    public Stroke getOutlineStroke() {
-        return this.outlineStroke;
-    }
+	/**
+	 * Sets the outline paint.
+	 *
+	 * @param p
+	 *            the new paint.
+	 */
+	public void setOutlinePaint(Paint p) {
+		if (p != null) {
+			this.outlinePaint = p;
+		}
+	}
 
-    /**
-     * Sets the outline stroke.
-     *
-     * @param s  the new stroke.
-     */
-    public void setOutlineStroke(Stroke s) {
-        if (s != null) {
-            this.outlineStroke = s;
-        }
-    }
+	/**
+	 * Returns the outline stroke.
+	 *
+	 * @return The outline stroke.
+	 */
+	public Stroke getOutlineStroke() {
+		return this.outlineStroke;
+	}
 
-    /**
-     * Returns the fill paint.
-     *
-     * @return The fill paint.
-     */
-    public Paint getFillPaint() {
-        return this.fillPaint;
-    }
+	/**
+	 * Sets the outline stroke.
+	 *
+	 * @param s
+	 *            the new stroke.
+	 */
+	public void setOutlineStroke(Stroke s) {
+		if (s != null) {
+			this.outlineStroke = s;
+		}
+	}
 
-    /**
-     * Sets the fill paint.
-     *
-     * @param p  the fill paint.
-     */
-    public void setFillPaint(Paint p) {
-        if (p != null) {
-            this.fillPaint = p;
-        }
-    }
+	/**
+	 * Returns the fill paint.
+	 *
+	 * @return The fill paint.
+	 */
+	public Paint getFillPaint() {
+		return this.fillPaint;
+	}
 
-    /**
-     * Returns the highlight paint.
-     *
-     * @return The highlight paint.
-     */
-    public Paint getHighlightPaint() {
-        return this.highlightPaint;
-    }
+	/**
+	 * Sets the fill paint.
+	 *
+	 * @param p
+	 *            the fill paint.
+	 */
+	public void setFillPaint(Paint p) {
+		if (p != null) {
+			this.fillPaint = p;
+		}
+	}
 
-    /**
-     * Sets the highlight paint.
-     *
-     * @param p  the highlight paint.
-     */
-    public void setHighlightPaint(Paint p) {
-        if (p != null) {
-            this.highlightPaint = p;
-        }
-    }
+	/**
+	 * Returns the highlight paint.
+	 *
+	 * @return The highlight paint.
+	 */
+	public Paint getHighlightPaint() {
+		return this.highlightPaint;
+	}
 
-    /**
-     * Returns the scalar used for determining the rotation x value.
-     *
-     * @return The x rotate scalar.
-     */
-    public double getRotateX() {
-        return this.rotateX;
-    }
+	/**
+	 * Sets the highlight paint.
+	 *
+	 * @param p
+	 *            the highlight paint.
+	 */
+	public void setHighlightPaint(Paint p) {
+		if (p != null) {
+			this.highlightPaint = p;
+		}
+	}
 
-    /**
-     * Sets the rotateX value.
-     *
-     * @param x  the new value.
-     */
-    public void setRotateX(double x) {
-        this.rotateX = x;
-    }
+	/**
+	 * Returns the scalar used for determining the rotation x value.
+	 *
+	 * @return The x rotate scalar.
+	 */
+	public double getRotateX() {
+		return this.rotateX;
+	}
 
-    /**
-     * Sets the rotateY value.
-     *
-     * @param y  the new value.
-     */
-    public void setRotateY(double y) {
-        this.rotateY = y;
-    }
+	/**
+	 * Sets the rotateX value.
+	 *
+	 * @param x
+	 *            the new value.
+	 */
+	public void setRotateX(double x) {
+		this.rotateX = x;
+	}
 
-    /**
-     * Returns the scalar used for determining the rotation y value.
-     *
-     * @return The y rotate scalar.
-     */
-    public double getRotateY() {
-        return this.rotateY;
-    }
+	/**
+	 * Sets the rotateY value.
+	 *
+	 * @param y
+	 *            the new value.
+	 */
+	public void setRotateY(double y) {
+		this.rotateY = y;
+	}
 
-    /**
-     * Draws the needle.
-     *
-     * @param g2  the graphics device.
-     * @param plotArea  the plot area.
-     */
-    public void draw(Graphics2D g2, Rectangle2D plotArea) {
-        draw(g2, plotArea, 0);
-    }
+	/**
+	 * Returns the scalar used for determining the rotation y value.
+	 *
+	 * @return The y rotate scalar.
+	 */
+	public double getRotateY() {
+		return this.rotateY;
+	}
 
-    /**
-     * Draws the needle.
-     *
-     * @param g2  the graphics device.
-     * @param plotArea  the plot area.
-     * @param angle  the angle.
-     */
-    public void draw(Graphics2D g2, Rectangle2D plotArea, double angle) {
+	/**
+	 * Draws the needle.
+	 *
+	 * @param g2
+	 *            the graphics device.
+	 * @param plotArea
+	 *            the plot area.
+	 */
+	public void draw(Graphics2D g2, Rectangle2D plotArea) {
+		draw(g2, plotArea, 0);
+	}
 
-        Point2D.Double pt = new Point2D.Double();
-        pt.setLocation(
-            plotArea.getMinX() + this.rotateX * plotArea.getWidth(),
-            plotArea.getMinY() + this.rotateY * plotArea.getHeight()
-        );
-        draw(g2, plotArea, pt, angle);
+	/**
+	 * Draws the needle.
+	 *
+	 * @param g2
+	 *            the graphics device.
+	 * @param plotArea
+	 *            the plot area.
+	 * @param angle
+	 *            the angle.
+	 */
+	public void draw(Graphics2D g2, Rectangle2D plotArea, double angle) {
 
-    }
+		Point2D.Double pt = new Point2D.Double();
+		pt.setLocation(plotArea.getMinX() + this.rotateX * plotArea.getWidth(),
+				plotArea.getMinY() + this.rotateY * plotArea.getHeight());
+		draw(g2, plotArea, pt, angle);
 
-    /**
-     * Draws the needle.
-     *
-     * @param g2  the graphics device.
-     * @param plotArea  the plot area.
-     * @param rotate  the rotation point.
-     * @param angle  the angle.
-     */
-    public void draw(Graphics2D g2, Rectangle2D plotArea, Point2D rotate, 
-                     double angle) {
+	}
 
-        Paint savePaint = g2.getColor();
-        Stroke saveStroke = g2.getStroke();
+	/**
+	 * Draws the needle.
+	 *
+	 * @param g2
+	 *            the graphics device.
+	 * @param plotArea
+	 *            the plot area.
+	 * @param rotate
+	 *            the rotation point.
+	 * @param angle
+	 *            the angle.
+	 */
+	public void draw(Graphics2D g2, Rectangle2D plotArea, Point2D rotate, double angle) {
 
-        drawNeedle(g2, plotArea, rotate, Math.toRadians(angle));
+		Paint savePaint = g2.getColor();
+		Stroke saveStroke = g2.getStroke();
 
-        g2.setStroke(saveStroke);
-        g2.setPaint(savePaint);
+		drawNeedle(g2, plotArea, rotate, Math.toRadians(angle));
 
-    }
+		g2.setStroke(saveStroke);
+		g2.setPaint(savePaint);
 
-    /**
-     * Draws the needle.
-     *
-     * @param g2  the graphics device.
-     * @param plotArea  the plot area.
-     * @param rotate  the rotation point.
-     * @param angle  the angle.
-     */
-    protected abstract void drawNeedle(Graphics2D g2,
-                                       Rectangle2D plotArea, Point2D rotate, 
-                                       double angle);
+	}
 
-    /**
-     * Displays a shape.
-     *
-     * @param g2  the graphics device.
-     * @param shape  the shape.
-     */
-    protected void defaultDisplay(Graphics2D g2, Shape shape) {
+	/**
+	 * Draws the needle.
+	 *
+	 * @param g2
+	 *            the graphics device.
+	 * @param plotArea
+	 *            the plot area.
+	 * @param rotate
+	 *            the rotation point.
+	 * @param angle
+	 *            the angle.
+	 */
+	protected abstract void drawNeedle(Graphics2D g2, Rectangle2D plotArea, Point2D rotate, double angle);
 
-        if (this.fillPaint != null) {
-            g2.setPaint(this.fillPaint);
-            g2.fill(shape);
-        }
+	/**
+	 * Displays a shape.
+	 *
+	 * @param g2
+	 *            the graphics device.
+	 * @param shape
+	 *            the shape.
+	 */
+	protected void defaultDisplay(Graphics2D g2, Shape shape) {
 
-        if (this.outlinePaint != null) {
-            g2.setStroke(this.outlineStroke);
-            g2.setPaint(this.outlinePaint);
-            g2.draw(shape);
-        }
+		if (this.fillPaint != null) {
+			g2.setPaint(this.fillPaint);
+			g2.fill(shape);
+		}
 
-    }
+		if (this.outlinePaint != null) {
+			g2.setStroke(this.outlineStroke);
+			g2.setPaint(this.outlinePaint);
+			g2.draw(shape);
+		}
 
-    /**
-     * Returns the size.
-     *
-     * @return The size.
-     */
-    public int getSize() {
-        return this.size;
-    }
+	}
 
-    /**
-     * Sets the size.
-     *
-     * @param pixels  the new size.
-     */
-    public void setSize(int pixels) {
-        this.size = pixels;
-    }
+	/**
+	 * Returns the size.
+	 *
+	 * @return The size.
+	 */
+	public int getSize() {
+		return this.size;
+	}
 
-    /**
-     * Returns the transform.
-     *
-     * @return The transform.
-     */
-    public AffineTransform getTransform() {
-        return MeterNeedle.transform;
-    }
+	/**
+	 * Sets the size.
+	 *
+	 * @param pixels
+	 *            the new size.
+	 */
+	public void setSize(int pixels) {
+		this.size = pixels;
+	}
 
-    /**
-     * Tests another object for equality with this object.
-     *
-     * @param obj the object to test (<code>null</code> permitted).
-     *
-     * @return A boolean.
-     */
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof MeterNeedle)) {
-            return false;
-        }
-        MeterNeedle that = (MeterNeedle) obj;
-        if (!PaintUtilities.equal(this.outlinePaint, that.outlinePaint)) {
-            return false;
-        }
-        if (!ObjectUtilities.equal(this.outlineStroke, that.outlineStroke)) {
-            return false;
-        }
-        if (!PaintUtilities.equal(this.fillPaint, that.fillPaint)) {
-            return false;
-        }
-        if (!PaintUtilities.equal(this.highlightPaint, that.highlightPaint)) {
-            return false;
-        }
-        if (this.size != that.size) {
-            return false;
-        }
-        if (this.rotateX != that.rotateX) {
-            return false;
-        }
-        if (this.rotateY != that.rotateY) {
-            return false;
-        }
-        return true;
-    }
+	/**
+	 * Returns the transform.
+	 *
+	 * @return The transform.
+	 */
+	public AffineTransform getTransform() {
+		return MeterNeedle.transform;
+	}
 
-    /**
-     * Provides serialization support.
-     *
-     * @param stream  the output stream.
-     *
-     * @throws IOException  if there is an I/O error.
-     */
-    private void writeObject(ObjectOutputStream stream) throws IOException {
-        stream.defaultWriteObject();
-        SerialUtilities.writeStroke(this.outlineStroke, stream);
-        SerialUtilities.writePaint(this.outlinePaint, stream);
-        SerialUtilities.writePaint(this.fillPaint, stream);
-        SerialUtilities.writePaint(this.highlightPaint, stream);
-    }
+	/**
+	 * Tests another object for equality with this object.
+	 *
+	 * @param obj
+	 *            the object to test (<code>null</code> permitted).
+	 *
+	 * @return A boolean.
+	 */
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof MeterNeedle)) {
+			return false;
+		}
+		MeterNeedle that = (MeterNeedle) obj;
+		if (!PaintUtilities.equal(this.outlinePaint, that.outlinePaint)) {
+			return false;
+		}
+		if (!ObjectUtilities.equal(this.outlineStroke, that.outlineStroke)) {
+			return false;
+		}
+		if (!PaintUtilities.equal(this.fillPaint, that.fillPaint)) {
+			return false;
+		}
+		if (!PaintUtilities.equal(this.highlightPaint, that.highlightPaint)) {
+			return false;
+		}
+		if (this.size != that.size) {
+			return false;
+		}
+		if (this.rotateX != that.rotateX) {
+			return false;
+		}
+		if (this.rotateY != that.rotateY) {
+			return false;
+		}
+		return true;
+	}
 
-    /**
-     * Provides serialization support.
-     *
-     * @param stream  the input stream.
-     *
-     * @throws IOException  if there is an I/O error.
-     * @throws ClassNotFoundException  if there is a classpath problem.
-     */
-    private void readObject(ObjectInputStream stream) 
-        throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        this.outlineStroke = SerialUtilities.readStroke(stream);
-        this.outlinePaint = SerialUtilities.readPaint(stream);
-        this.fillPaint = SerialUtilities.readPaint(stream);
-        this.highlightPaint = SerialUtilities.readPaint(stream);
-    }
+	/**
+	 * Provides serialization support.
+	 *
+	 * @param stream
+	 *            the output stream.
+	 *
+	 * @throws IOException
+	 *             if there is an I/O error.
+	 */
+	private void writeObject(ObjectOutputStream stream) throws IOException {
+		stream.defaultWriteObject();
+		SerialUtilities.writeStroke(this.outlineStroke, stream);
+		SerialUtilities.writePaint(this.outlinePaint, stream);
+		SerialUtilities.writePaint(this.fillPaint, stream);
+		SerialUtilities.writePaint(this.highlightPaint, stream);
+	}
+
+	/**
+	 * Provides serialization support.
+	 *
+	 * @param stream
+	 *            the input stream.
+	 *
+	 * @throws IOException
+	 *             if there is an I/O error.
+	 * @throws ClassNotFoundException
+	 *             if there is a classpath problem.
+	 */
+	private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+		stream.defaultReadObject();
+		this.outlineStroke = SerialUtilities.readStroke(stream);
+		this.outlinePaint = SerialUtilities.readPaint(stream);
+		this.fillPaint = SerialUtilities.readPaint(stream);
+		this.highlightPaint = SerialUtilities.readPaint(stream);
+	}
 
 }

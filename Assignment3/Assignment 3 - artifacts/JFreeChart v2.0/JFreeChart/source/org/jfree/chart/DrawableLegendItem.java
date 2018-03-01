@@ -53,200 +53,208 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 
 /**
- * This class contains a single legend item along with position details for 
+ * This class contains a single legend item along with position details for
  * drawing the item on a particular chart.
  */
 public class DrawableLegendItem {
 
-    /** 
-     * The legend item (encapsulates information about the label, color and 
-     * shape). 
-     */
-    private LegendItem item;
+	/**
+	 * The legend item (encapsulates information about the label, color and shape).
+	 */
+	private LegendItem item;
 
-    /** The x-coordinate for the item's location. */
-    private double x;
+	/** The x-coordinate for the item's location. */
+	private double x;
 
-    /** The y-coordinate for the item's location. */
-    private double y;
+	/** The y-coordinate for the item's location. */
+	private double y;
 
-    /** The width of the item. */
-    private double width;
+	/** The width of the item. */
+	private double width;
 
-    /** The height of the item. */
-    private double height;
+	/** The height of the item. */
+	private double height;
 
-    /** A shape used to indicate color on the legend. */
-    private Shape marker;
-    
-    /** A line used to indicate the series stroke on the legend */
-    private Line2D line;
+	/** A shape used to indicate color on the legend. */
+	private Shape marker;
 
-    /** The label position within the item. */
-    private Point2D labelPosition;
+	/** A line used to indicate the series stroke on the legend */
+	private Line2D line;
 
-    /**
-     * Create a legend item.
-     *
-     * @param item  the legend item for display.
-     */
-    public DrawableLegendItem(LegendItem item) {
-        this.item = item;
-    }
+	/** The label position within the item. */
+	private Point2D labelPosition;
 
-    /**
-     * Returns the legend item.
-     *
-     * @return The legend item.
-     */
-    public LegendItem getItem() {
-        return this.item;
-    }
+	/**
+	 * Create a legend item.
+	 *
+	 * @param item
+	 *            the legend item for display.
+	 */
+	public DrawableLegendItem(LegendItem item) {
+		this.item = item;
+	}
 
-    /**
-     * Get the x-coordinate for the item's location.
-     *
-     * @return The x-coordinate for the item's location.
-     */
-    public double getX() {
-        return this.x;
-    }
+	/**
+	 * Returns the legend item.
+	 *
+	 * @return The legend item.
+	 */
+	public LegendItem getItem() {
+		return this.item;
+	}
 
-    /**
-     * Set the x-coordinate for the item's location.
-     *
-     * @param x  the x-coordinate.
-     */
-    public void setX(double x) {
-        this.x = x;
-    }
+	/**
+	 * Get the x-coordinate for the item's location.
+	 *
+	 * @return The x-coordinate for the item's location.
+	 */
+	public double getX() {
+		return this.x;
+	}
 
-    /**
-     * Get the y-coordinate for the item's location.
-     *
-     * @return The y-coordinate for the item's location.
-     */
-    public double getY() {
-        return this.y;
-    }
+	/**
+	 * Set the x-coordinate for the item's location.
+	 *
+	 * @param x
+	 *            the x-coordinate.
+	 */
+	public void setX(double x) {
+		this.x = x;
+	}
 
-    /**
-     * Set the y-coordinate for the item's location.
-     *
-     * @param y  the y-coordinate.
-     */
-    public void setY(double y) {
-        this.y = y;
-    }
+	/**
+	 * Get the y-coordinate for the item's location.
+	 *
+	 * @return The y-coordinate for the item's location.
+	 */
+	public double getY() {
+		return this.y;
+	}
 
-    /**
-     * Get the width of this item.
-     *
-     * @return The width.
-     */
-    public double getWidth() {
-        return this.width;
-    }
+	/**
+	 * Set the y-coordinate for the item's location.
+	 *
+	 * @param y
+	 *            the y-coordinate.
+	 */
+	public void setY(double y) {
+		this.y = y;
+	}
 
-    /**
-     * Get the height of this item.
-     *
-     * @return The height.
-     */
-    public double getHeight() {
-        return this.height;
-    }
+	/**
+	 * Get the width of this item.
+	 *
+	 * @return The width.
+	 */
+	public double getWidth() {
+		return this.width;
+	}
 
-    /**
-     * Returns the largest X coordinate of the framing rectangle of this legend 
-     * item.
-     * 
-     * @return The largest x coordinate of the framing rectangle of this legend 
-     *         item.
-     */
-    public double getMaxX() {
-        return getX() + getWidth();
-    }
+	/**
+	 * Get the height of this item.
+	 *
+	 * @return The height.
+	 */
+	public double getHeight() {
+		return this.height;
+	}
 
-    /**
-     * Returns the largest Y coordinate of the framing rectangle of this legend 
-     * item.
-     * 
-     * @return The largest Y coordinate of the framing rectangle of this legend 
-     *         item.
-     */
-    public double getMaxY() {
-        return getY() + getHeight();
-    }
-    
-    /**
-     * Get the marker.
-     *
-     * @return The shape used to indicate color on the legend for this item.
-     */
-    public Shape getMarker() {
-        return this.marker;
-    }
+	/**
+	 * Returns the largest X coordinate of the framing rectangle of this legend
+	 * item.
+	 * 
+	 * @return The largest x coordinate of the framing rectangle of this legend
+	 *         item.
+	 */
+	public double getMaxX() {
+		return getX() + getWidth();
+	}
 
-    /**
-     * Set the marker.
-     *
-     * @param marker  a shape used to indicate color on the legend for this 
-     *                item.
-     */
-    public void setMarker(Shape marker) {
-        this.marker = marker;
-    }
-    
-    /**
-     * Sets the line used to label this series.
-     *
-     * @param l the new line to use.
-     */
-    public void setLine(Line2D l) {
-        this.line = l;
-    }
+	/**
+	 * Returns the largest Y coordinate of the framing rectangle of this legend
+	 * item.
+	 * 
+	 * @return The largest Y coordinate of the framing rectangle of this legend
+	 *         item.
+	 */
+	public double getMaxY() {
+		return getY() + getHeight();
+	}
 
-    /**
-     * Returns the list.
-     * 
-     * @return The line.
-     */
-    public Line2D getLine() {
-        return this.line;
-    }
+	/**
+	 * Get the marker.
+	 *
+	 * @return The shape used to indicate color on the legend for this item.
+	 */
+	public Shape getMarker() {
+		return this.marker;
+	}
 
-    /**
-     * Returns the label position.
-     *
-     * @return The label position.
-     */
-    public Point2D getLabelPosition() {
-        return this.labelPosition;
-    }
+	/**
+	 * Set the marker.
+	 *
+	 * @param marker
+	 *            a shape used to indicate color on the legend for this item.
+	 */
+	public void setMarker(Shape marker) {
+		this.marker = marker;
+	}
 
-    /**
-     * Sets the label position.
-     *
-     * @param position  the label position.
-     */
-    public void setLabelPosition(Point2D position) {
-        this.labelPosition = position;
-    }
+	/**
+	 * Sets the line used to label this series.
+	 *
+	 * @param l
+	 *            the new line to use.
+	 */
+	public void setLine(Line2D l) {
+		this.line = l;
+	}
 
-    /**
-     * Set the bounds of this item.
-     *
-     * @param x  x-coordinate for the item's location.
-     * @param y  y-coordinate for the item's location.
-     * @param width  the width of this item.
-     * @param height  the height of this item.
-     */
-    public void setBounds(double x, double y, double width, double height) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-    }
+	/**
+	 * Returns the list.
+	 * 
+	 * @return The line.
+	 */
+	public Line2D getLine() {
+		return this.line;
+	}
+
+	/**
+	 * Returns the label position.
+	 *
+	 * @return The label position.
+	 */
+	public Point2D getLabelPosition() {
+		return this.labelPosition;
+	}
+
+	/**
+	 * Sets the label position.
+	 *
+	 * @param position
+	 *            the label position.
+	 */
+	public void setLabelPosition(Point2D position) {
+		this.labelPosition = position;
+	}
+
+	/**
+	 * Set the bounds of this item.
+	 *
+	 * @param x
+	 *            x-coordinate for the item's location.
+	 * @param y
+	 *            y-coordinate for the item's location.
+	 * @param width
+	 *            the width of this item.
+	 * @param height
+	 *            the height of this item.
+	 */
+	public void setBounds(double x, double y, double width, double height) {
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+	}
 
 }

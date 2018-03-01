@@ -59,175 +59,167 @@ import org.jfree.data.category.CategoryDataset;
 import org.jfree.util.ObjectUtilities;
 
 /**
- * A URL generator that can be assigned to a 
+ * A URL generator that can be assigned to a
  * {@link org.jfree.chart.renderer.category.CategoryItemRenderer}.
  *
  * @author Richard Atkinson
  */
-public class StandardCategoryURLGenerator implements CategoryURLGenerator, 
-                                                     Cloneable, Serializable {
+public class StandardCategoryURLGenerator implements CategoryURLGenerator, Cloneable, Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = 2276668053074881909L;
-    
-    /** Prefix to the URL */
-    private String prefix = "index.html";
+	/** For serialization. */
+	private static final long serialVersionUID = 2276668053074881909L;
 
-    /** Series parameter name to go in each URL */
-    private String seriesParameterName = "series";
+	/** Prefix to the URL */
+	private String prefix = "index.html";
 
-    /** Category parameter name to go in each URL */
-    private String categoryParameterName = "category";
+	/** Series parameter name to go in each URL */
+	private String seriesParameterName = "series";
 
-    /**
-     * Creates a new generator with default settings.
-     */
-    public StandardCategoryURLGenerator() {
-        super();
-    }
+	/** Category parameter name to go in each URL */
+	private String categoryParameterName = "category";
 
-    /**
-     * Constructor that overrides default prefix to the URL.
-     *
-     * @param prefix  the prefix to the URL (<code>null</code> not permitted).
-     */
-    public StandardCategoryURLGenerator(String prefix) {
-        if (prefix == null) {
-            throw new IllegalArgumentException("Null 'prefix' argument.");   
-        }
-        this.prefix = prefix;
-    }
+	/**
+	 * Creates a new generator with default settings.
+	 */
+	public StandardCategoryURLGenerator() {
+		super();
+	}
 
-    /**
-     * Constructor that overrides all the defaults.
-     *
-     * @param prefix  the prefix to the URL (<code>null</code> not permitted).
-     * @param seriesParameterName  the name of the series parameter to go in 
-     *                             each URL (<code>null</code> not permitted).
-     * @param categoryParameterName  the name of the category parameter to go in
-     *                               each URL (<code>null</code> not permitted).
-     */
-    public StandardCategoryURLGenerator(String prefix,
-                                        String seriesParameterName,
-                                        String categoryParameterName) {
+	/**
+	 * Constructor that overrides default prefix to the URL.
+	 *
+	 * @param prefix
+	 *            the prefix to the URL (<code>null</code> not permitted).
+	 */
+	public StandardCategoryURLGenerator(String prefix) {
+		if (prefix == null) {
+			throw new IllegalArgumentException("Null 'prefix' argument.");
+		}
+		this.prefix = prefix;
+	}
 
-        if (prefix == null) {
-            throw new IllegalArgumentException("Null 'prefix' argument.");   
-        }
-        if (seriesParameterName == null) {
-            throw new IllegalArgumentException(
-                "Null 'seriesParameterName' argument."
-            );   
-        }
-        if (categoryParameterName == null) {
-            throw new IllegalArgumentException(
-                "Null 'categoryParameterName' argument."
-            );   
-        }
-        this.prefix = prefix;
-        this.seriesParameterName = seriesParameterName;
-        this.categoryParameterName = categoryParameterName;
+	/**
+	 * Constructor that overrides all the defaults.
+	 *
+	 * @param prefix
+	 *            the prefix to the URL (<code>null</code> not permitted).
+	 * @param seriesParameterName
+	 *            the name of the series parameter to go in each URL
+	 *            (<code>null</code> not permitted).
+	 * @param categoryParameterName
+	 *            the name of the category parameter to go in each URL
+	 *            (<code>null</code> not permitted).
+	 */
+	public StandardCategoryURLGenerator(String prefix, String seriesParameterName, String categoryParameterName) {
 
-    }
+		if (prefix == null) {
+			throw new IllegalArgumentException("Null 'prefix' argument.");
+		}
+		if (seriesParameterName == null) {
+			throw new IllegalArgumentException("Null 'seriesParameterName' argument.");
+		}
+		if (categoryParameterName == null) {
+			throw new IllegalArgumentException("Null 'categoryParameterName' argument.");
+		}
+		this.prefix = prefix;
+		this.seriesParameterName = seriesParameterName;
+		this.categoryParameterName = categoryParameterName;
 
-    /**
-     * Generates a URL for a particular item within a series.
-     *
-     * @param dataset  the dataset.
-     * @param series  the series index (zero-based).
-     * @param category  the category index (zero-based).
-     *
-     * @return The generated URL.
-     */
-    public String generateURL(CategoryDataset dataset, int series, 
-                              int category) {
-        String url = this.prefix;
-        Comparable seriesKey = dataset.getRowKey(series);
-        Comparable categoryKey = dataset.getColumnKey(category);
-        boolean firstParameter = url.indexOf("?") == -1;
-        url += firstParameter ? "?" : "&amp;";
-//        try {
-            url += this.seriesParameterName + "=" 
-                + URLEncoder.encode(seriesKey.toString());
-                // + URLEncoder.encode(seriesKey.toString(), "UTF-8");  
-                // Not supported in JDK 1.2.2
-//        }
-//        catch (UnsupportedEncodingException uee) {
-//            url += this.seriesParameterName + "=" + seriesKey.toString();
-//        }
-//        try {
-            url += "&amp;" + this.categoryParameterName + "=" 
-                + URLEncoder.encode(categoryKey.toString());
-                //+ URLEncoder.encode(categoryKey.toString(), "UTF-8");  
-                // not supported in JDK 1.2.2
-//        }
-//        catch (UnsupportedEncodingException uee) {
-//            url += "&" + this.categoryParameterName + "=" 
-            // + categoryKey.toString();
-//        }
-        return url;
-    }
+	}
 
-    /**
-     * Returns an independent copy of the URL generator.
-     * 
-     * @return A clone.
-     * 
-     * @throws CloneNotSupportedException not thrown by this class, but 
-     *         subclasses (if any) might.
-     */
-    public Object clone() throws CloneNotSupportedException {
-    
-        // all attributes are immutable, so we can just return the super.clone()
-        return super.clone();
-        
-    }
-    
-    /**
-     * Tests the generator for equality with an arbitrary object.
-     *
-     * @param obj  the object (<code>null</code> permitted).
-     *
-     * @return A boolean.
-     */
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof StandardCategoryURLGenerator)) {
-            return false;
-        }
-        StandardCategoryURLGenerator that = (StandardCategoryURLGenerator) obj;
-        if (!ObjectUtilities.equal(this.prefix, that.prefix)) {
-            return false;
-        }
+	/**
+	 * Generates a URL for a particular item within a series.
+	 *
+	 * @param dataset
+	 *            the dataset.
+	 * @param series
+	 *            the series index (zero-based).
+	 * @param category
+	 *            the category index (zero-based).
+	 *
+	 * @return The generated URL.
+	 */
+	public String generateURL(CategoryDataset dataset, int series, int category) {
+		String url = this.prefix;
+		Comparable seriesKey = dataset.getRowKey(series);
+		Comparable categoryKey = dataset.getColumnKey(category);
+		boolean firstParameter = url.indexOf("?") == -1;
+		url += firstParameter ? "?" : "&amp;";
+		// try {
+		url += this.seriesParameterName + "=" + URLEncoder.encode(seriesKey.toString());
+		// + URLEncoder.encode(seriesKey.toString(), "UTF-8");
+		// Not supported in JDK 1.2.2
+		// }
+		// catch (UnsupportedEncodingException uee) {
+		// url += this.seriesParameterName + "=" + seriesKey.toString();
+		// }
+		// try {
+		url += "&amp;" + this.categoryParameterName + "=" + URLEncoder.encode(categoryKey.toString());
+		// + URLEncoder.encode(categoryKey.toString(), "UTF-8");
+		// not supported in JDK 1.2.2
+		// }
+		// catch (UnsupportedEncodingException uee) {
+		// url += "&" + this.categoryParameterName + "="
+		// + categoryKey.toString();
+		// }
+		return url;
+	}
 
-        if (!ObjectUtilities.equal(this.seriesParameterName, 
-                that.seriesParameterName)) {
-            return false;
-        }
-        if (!ObjectUtilities.equal(this.categoryParameterName, 
-                that.categoryParameterName)) {
-            return false;
-        }
-        return true;
-    }
+	/**
+	 * Returns an independent copy of the URL generator.
+	 * 
+	 * @return A clone.
+	 * 
+	 * @throws CloneNotSupportedException
+	 *             not thrown by this class, but subclasses (if any) might.
+	 */
+	public Object clone() throws CloneNotSupportedException {
 
-    /**
-     * Returns a hash code.
-     * 
-     * @return A hash code.
-     */
-    public int hashCode() {
-        int result;
-        result = (this.prefix != null ? this.prefix.hashCode() : 0);
-        result = 29 * result 
-            + (this.seriesParameterName != null 
-                    ? this.seriesParameterName.hashCode() : 0);
-        result = 29 * result 
-            + (this.categoryParameterName != null 
-                    ? this.categoryParameterName.hashCode() : 0);
-        return result;
-    }
-    
+		// all attributes are immutable, so we can just return the super.clone()
+		return super.clone();
+
+	}
+
+	/**
+	 * Tests the generator for equality with an arbitrary object.
+	 *
+	 * @param obj
+	 *            the object (<code>null</code> permitted).
+	 *
+	 * @return A boolean.
+	 */
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof StandardCategoryURLGenerator)) {
+			return false;
+		}
+		StandardCategoryURLGenerator that = (StandardCategoryURLGenerator) obj;
+		if (!ObjectUtilities.equal(this.prefix, that.prefix)) {
+			return false;
+		}
+
+		if (!ObjectUtilities.equal(this.seriesParameterName, that.seriesParameterName)) {
+			return false;
+		}
+		if (!ObjectUtilities.equal(this.categoryParameterName, that.categoryParameterName)) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Returns a hash code.
+	 * 
+	 * @return A hash code.
+	 */
+	public int hashCode() {
+		int result;
+		result = (this.prefix != null ? this.prefix.hashCode() : 0);
+		result = 29 * result + (this.seriesParameterName != null ? this.seriesParameterName.hashCode() : 0);
+		result = 29 * result + (this.categoryParameterName != null ? this.categoryParameterName.hashCode() : 0);
+		return result;
+	}
+
 }

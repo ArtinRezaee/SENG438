@@ -60,188 +60,206 @@ import org.jfree.ui.Size2D;
  * A title that contains multiple titles within a {@link BlockContainer}.
  */
 public class CompositeTitle extends Title implements Cloneable, Serializable {
-    
-    /** For serialization. */
-    private static final long serialVersionUID = -6770854036232562290L;
-    
-    /** A container for the individual titles. */
-    private BlockContainer container;
-    
-    /**
-     * Creates a new composite title with a default border arrangement.
-     */
-    public CompositeTitle() {
-        this(new BlockContainer(new BorderArrangement()));   
-    }
-    
-    /**
-     * Creates a new title using the specified container. 
-     * 
-     * @param container  the container (<code>null</code> not permitted).
-     */
-    public CompositeTitle(BlockContainer container) {
-        if (container == null) {
-            throw new IllegalArgumentException("Null 'container' argument.");
-        }
-        this.container = container;
-    }
-    
-    /**
-     * Returns the container holding the titles.
-     * 
-     * @return The title container (never <code>null</code>).
-     */
-    public BlockContainer getContainer() {
-        return this.container;
-    }
-    
-    /**
-     * Sets the title container.
-     * 
-     * @param container  the container (<code>null</code> not permitted).
-     */
-    public void setTitleContainer(BlockContainer container) {
-        if (container == null) {
-            throw new IllegalArgumentException("Null 'container' argument.");
-        }
-        this.container = container;    
-    }
-    
-    /**
-     * Arranges the contents of the block, within the given constraints, and 
-     * returns the block size.
-     * 
-     * @param g2  the graphics device.
-     * @param constraint  the constraint (<code>null</code> not permitted).
-     * @param params  layout parameters (<code>null</code> not permitted).
-     * 
-     * @return The layout result.
-     */
-    public ArrangeResult arrange(Graphics2D g2, RectangleConstraint constraint, 
-                                 ArrangeParams params) {
-        RectangleConstraint contentConstraint = toContentConstraint(constraint);
-        ArrangeResult r = this.container.arrange(g2, contentConstraint, params);
-        Size2D contentSize = r.getSize();
-        r.setSize(calculateTotalWidth(contentSize.getWidth()), 
-                calculateTotalHeight(contentSize.getHeight()));
-        return r;
-    }
-    
-    /**
-     * Arranges the title with a fixed width and height.
-     * 
-     * @param g2  the graphics device.
-     * @param fixedWidth  the fixed (content) width.
-     * @param fixedHeight  the fixed (content) height.
-     * @param params  the layout parameters (<code>null</code> not permitted).
-     * 
-     * @return The layout result.
-     */
-    protected ArrangeResult arrangeFF(Graphics2D g2, double fixedWidth, 
-                               double fixedHeight, ArrangeParams params) {
-        // the overridden arrange() method ensures that this is never called.
-        throw new RuntimeException("Not required.");    
-    }
-    
-    /**
-     * Arranges the block with a fixed width and no height constraint, 
-     * returning the size of the content.
-     * 
-     * @param g2  the graphics device.
-     * @param fixedWidth  the fixed width.
-     * @param params  the layout parameters (<code>null</code> not permitted).
-     * 
-     * @return The layout result.
-     */
-    protected ArrangeResult arrangeFN(Graphics2D g2, double fixedWidth, 
-            ArrangeParams params) {
-        // the overridden arrange() method ensures that this is never called.
-        throw new RuntimeException("Not required.");    
-    }
 
-    /**
-     * Arranges the block with no width constraint and a fixed height, 
-     * returning the size of the content.
-     * 
-     * @param g2  the graphics device.
-     * @param fixedHeight  the fixed height.
-     * @param params  the layout parameters (<code>null</code> not permitted).
-     * 
-     * @return The layout result.
-     */
-    protected ArrangeResult arrangeNF(Graphics2D g2, double fixedHeight, 
-            ArrangeParams params) {
-        // the overridden arrange() method ensures that this is never called.
-        throw new RuntimeException("Not required.");    
-    }
+	/** For serialization. */
+	private static final long serialVersionUID = -6770854036232562290L;
 
-    /**
-     * Calculates the size of the title content (excludes margin, border and 
-     * padding) if there is no constraint.  This is either the natural size
-     * of the text, or the block size if this has been specified manually.
-     * 
-     * @param g2  the graphics device.
-     * @param params  the layout parameters (<code>null</code> not permitted).
-     * 
-     * @return The layout result.
-     */
-    protected ArrangeResult arrangeNN(Graphics2D g2, ArrangeParams params) {
-        // the overridden arrange() method ensures that this is never called.
-        throw new RuntimeException("Not required.");    
-    }
+	/** A container for the individual titles. */
+	private BlockContainer container;
 
-    /**
-     * Draws the title on a Java 2D graphics device (such as the screen or a 
-     * printer).
-     *
-     * @param g2  the graphics device.
-     * @param area  the area allocated for the title.
-     */
-    public void draw(Graphics2D g2, Rectangle2D area) {
-        area = (Rectangle2D) area.clone();
-        area = trimMargin(area);
-        drawBorder(g2, area);
-        area = trimBorder(area);
-        area = trimPadding(area);
-        this.container.draw(g2, area);
-    }
-    
-    /**
-     * Draws the block within the specified area.
-     * 
-     * @param g2  the graphics device.
-     * @param area  the area.
-     * @param params  ignored (<code>null</code> permitted).
-     * 
-     * @return Always <code>null</code>.
-     */
-    public Object draw(Graphics2D g2, Rectangle2D area, Object params) {
-        draw(g2, area);
-        return null;
-    }
-    
-    /**
-     * Tests this title for equality with an arbitrary object.
-     * 
-     * @param obj  the object (<code>null</code> permitted).
-     * 
-     * @return A boolean.
-     */
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;   
-        }
-        if (!(obj instanceof CompositeTitle)) {
-            return false;   
-        }
-        if (!super.equals(obj)) {
-            return false;   
-        }
-        CompositeTitle that = (CompositeTitle) obj;
-        if (!this.container.equals(that.container)) {
-            return false;   
-        }
-        return true;
-    }
+	/**
+	 * Creates a new composite title with a default border arrangement.
+	 */
+	public CompositeTitle() {
+		this(new BlockContainer(new BorderArrangement()));
+	}
+
+	/**
+	 * Creates a new title using the specified container.
+	 * 
+	 * @param container
+	 *            the container (<code>null</code> not permitted).
+	 */
+	public CompositeTitle(BlockContainer container) {
+		if (container == null) {
+			throw new IllegalArgumentException("Null 'container' argument.");
+		}
+		this.container = container;
+	}
+
+	/**
+	 * Returns the container holding the titles.
+	 * 
+	 * @return The title container (never <code>null</code>).
+	 */
+	public BlockContainer getContainer() {
+		return this.container;
+	}
+
+	/**
+	 * Sets the title container.
+	 * 
+	 * @param container
+	 *            the container (<code>null</code> not permitted).
+	 */
+	public void setTitleContainer(BlockContainer container) {
+		if (container == null) {
+			throw new IllegalArgumentException("Null 'container' argument.");
+		}
+		this.container = container;
+	}
+
+	/**
+	 * Arranges the contents of the block, within the given constraints, and returns
+	 * the block size.
+	 * 
+	 * @param g2
+	 *            the graphics device.
+	 * @param constraint
+	 *            the constraint (<code>null</code> not permitted).
+	 * @param params
+	 *            layout parameters (<code>null</code> not permitted).
+	 * 
+	 * @return The layout result.
+	 */
+	public ArrangeResult arrange(Graphics2D g2, RectangleConstraint constraint, ArrangeParams params) {
+		RectangleConstraint contentConstraint = toContentConstraint(constraint);
+		ArrangeResult r = this.container.arrange(g2, contentConstraint, params);
+		Size2D contentSize = r.getSize();
+		r.setSize(calculateTotalWidth(contentSize.getWidth()), calculateTotalHeight(contentSize.getHeight()));
+		return r;
+	}
+
+	/**
+	 * Arranges the title with a fixed width and height.
+	 * 
+	 * @param g2
+	 *            the graphics device.
+	 * @param fixedWidth
+	 *            the fixed (content) width.
+	 * @param fixedHeight
+	 *            the fixed (content) height.
+	 * @param params
+	 *            the layout parameters (<code>null</code> not permitted).
+	 * 
+	 * @return The layout result.
+	 */
+	protected ArrangeResult arrangeFF(Graphics2D g2, double fixedWidth, double fixedHeight, ArrangeParams params) {
+		// the overridden arrange() method ensures that this is never called.
+		throw new RuntimeException("Not required.");
+	}
+
+	/**
+	 * Arranges the block with a fixed width and no height constraint, returning the
+	 * size of the content.
+	 * 
+	 * @param g2
+	 *            the graphics device.
+	 * @param fixedWidth
+	 *            the fixed width.
+	 * @param params
+	 *            the layout parameters (<code>null</code> not permitted).
+	 * 
+	 * @return The layout result.
+	 */
+	protected ArrangeResult arrangeFN(Graphics2D g2, double fixedWidth, ArrangeParams params) {
+		// the overridden arrange() method ensures that this is never called.
+		throw new RuntimeException("Not required.");
+	}
+
+	/**
+	 * Arranges the block with no width constraint and a fixed height, returning the
+	 * size of the content.
+	 * 
+	 * @param g2
+	 *            the graphics device.
+	 * @param fixedHeight
+	 *            the fixed height.
+	 * @param params
+	 *            the layout parameters (<code>null</code> not permitted).
+	 * 
+	 * @return The layout result.
+	 */
+	protected ArrangeResult arrangeNF(Graphics2D g2, double fixedHeight, ArrangeParams params) {
+		// the overridden arrange() method ensures that this is never called.
+		throw new RuntimeException("Not required.");
+	}
+
+	/**
+	 * Calculates the size of the title content (excludes margin, border and
+	 * padding) if there is no constraint. This is either the natural size of the
+	 * text, or the block size if this has been specified manually.
+	 * 
+	 * @param g2
+	 *            the graphics device.
+	 * @param params
+	 *            the layout parameters (<code>null</code> not permitted).
+	 * 
+	 * @return The layout result.
+	 */
+	protected ArrangeResult arrangeNN(Graphics2D g2, ArrangeParams params) {
+		// the overridden arrange() method ensures that this is never called.
+		throw new RuntimeException("Not required.");
+	}
+
+	/**
+	 * Draws the title on a Java 2D graphics device (such as the screen or a
+	 * printer).
+	 *
+	 * @param g2
+	 *            the graphics device.
+	 * @param area
+	 *            the area allocated for the title.
+	 */
+	public void draw(Graphics2D g2, Rectangle2D area) {
+		area = (Rectangle2D) area.clone();
+		area = trimMargin(area);
+		drawBorder(g2, area);
+		area = trimBorder(area);
+		area = trimPadding(area);
+		this.container.draw(g2, area);
+	}
+
+	/**
+	 * Draws the block within the specified area.
+	 * 
+	 * @param g2
+	 *            the graphics device.
+	 * @param area
+	 *            the area.
+	 * @param params
+	 *            ignored (<code>null</code> permitted).
+	 * 
+	 * @return Always <code>null</code>.
+	 */
+	public Object draw(Graphics2D g2, Rectangle2D area, Object params) {
+		draw(g2, area);
+		return null;
+	}
+
+	/**
+	 * Tests this title for equality with an arbitrary object.
+	 * 
+	 * @param obj
+	 *            the object (<code>null</code> permitted).
+	 * 
+	 * @return A boolean.
+	 */
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof CompositeTitle)) {
+			return false;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		CompositeTitle that = (CompositeTitle) obj;
+		if (!this.container.equals(that.container)) {
+			return false;
+		}
+		return true;
+	}
 
 }

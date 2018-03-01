@@ -110,710 +110,676 @@ import org.jfree.ui.RectangleEdge;
 import org.jfree.util.PublicCloneable;
 
 /**
- * A renderer that draws candlesticks on an {@link XYPlot} (requires a 
+ * A renderer that draws candlesticks on an {@link XYPlot} (requires a
  * {@link OHLCDataset}).
  * <P>
- * This renderer does not include code to calculate the crosshair point for the 
+ * This renderer does not include code to calculate the crosshair point for the
  * plot.
  *
  * @author Sylvain Vieujot
  */
-public class CandlestickRenderer extends AbstractXYItemRenderer 
-                                 implements XYItemRenderer, 
-                                            Cloneable,
-                                            PublicCloneable,
-                                            Serializable {
-            
-    /** For serialization. */
-    private static final long serialVersionUID = 50390395841817121L;
-    
-    /** The average width method. */                                          
-    public static final int WIDTHMETHOD_AVERAGE = 0;
-    
-    /** The smallest width method. */
-    public static final int WIDTHMETHOD_SMALLEST = 1;
-    
-    /** The interval data method. */
-    public static final int WIDTHMETHOD_INTERVALDATA = 2;
+public class CandlestickRenderer extends AbstractXYItemRenderer
+		implements XYItemRenderer, Cloneable, PublicCloneable, Serializable {
 
-    /** The method of automatically calculating the candle width. */
-    private int autoWidthMethod = WIDTHMETHOD_AVERAGE;
+	/** For serialization. */
+	private static final long serialVersionUID = 50390395841817121L;
 
-    /** 
-     * The number (generally between 0.0 and 1.0) by which the available space 
-     * automatically calculated for the candles will be multiplied to determine
-     * the actual width to use. 
-     */
-    private double autoWidthFactor = 4.5 / 7;
+	/** The average width method. */
+	public static final int WIDTHMETHOD_AVERAGE = 0;
 
-    /** The minimum gap between one candle and the next */
-    private double autoWidthGap = 0.0;
+	/** The smallest width method. */
+	public static final int WIDTHMETHOD_SMALLEST = 1;
 
-    /** The candle width. */
-    private double candleWidth;
-    
-    /** The maximum candlewidth in milliseconds. */
-    private double maxCandleWidthInMilliseconds = 1000.0 * 60.0 * 60.0 * 20.0;
-    
-    /** Temporary storage for the maximum candle width. */
-    private double maxCandleWidth;
+	/** The interval data method. */
+	public static final int WIDTHMETHOD_INTERVALDATA = 2;
 
-    /** 
-     * The paint used to fill the candle when the price moved up from open to 
-     * close. 
-     */
-    private transient Paint upPaint;
+	/** The method of automatically calculating the candle width. */
+	private int autoWidthMethod = WIDTHMETHOD_AVERAGE;
 
-    /** 
-     * The paint used to fill the candle when the price moved down from open 
-     * to close. 
-     */
-    private transient Paint downPaint;
+	/**
+	 * The number (generally between 0.0 and 1.0) by which the available space
+	 * automatically calculated for the candles will be multiplied to determine the
+	 * actual width to use.
+	 */
+	private double autoWidthFactor = 4.5 / 7;
 
-    /** A flag controlling whether or not volume bars are drawn on the chart. */
-    private boolean drawVolume;
-    
-    /** Temporary storage for the maximum volume. */
-    private transient double maxVolume;
+	/** The minimum gap between one candle and the next */
+	private double autoWidthGap = 0.0;
 
-    /**
-     * Creates a new renderer for candlestick charts.
-     */
-    public CandlestickRenderer() {
-        this(-1.0);
-    }
+	/** The candle width. */
+	private double candleWidth;
 
-    /**
-     * Creates a new renderer for candlestick charts.
-     * <P>
-     * Use -1 for the candle width if you prefer the width to be calculated 
-     * automatically.
-     *
-     * @param candleWidth  The candle width.
-     */
-    public CandlestickRenderer(double candleWidth) {
-        this(candleWidth, true, new HighLowItemLabelGenerator());
-    }
+	/** The maximum candlewidth in milliseconds. */
+	private double maxCandleWidthInMilliseconds = 1000.0 * 60.0 * 60.0 * 20.0;
 
-    /**
-     * Creates a new renderer for candlestick charts.
-     * <P>
-     * Use -1 for the candle width if you prefer the width to be calculated 
-     * automatically.
-     *
-     * @param candleWidth  the candle width.
-     * @param drawVolume  a flag indicating whether or not volume bars should 
-     *                    be drawn.
-     * @param toolTipGenerator  the tool tip generator. <code>null</code> is 
-     *                          none.
-     */
-    public CandlestickRenderer(double candleWidth, boolean drawVolume,
-                               XYToolTipGenerator toolTipGenerator) {
+	/** Temporary storage for the maximum candle width. */
+	private double maxCandleWidth;
 
-        super();
-        setToolTipGenerator(toolTipGenerator);
-        this.candleWidth = candleWidth;
-        this.drawVolume = drawVolume;
-        this.upPaint = Color.green;
-        this.downPaint = Color.red;
+	/**
+	 * The paint used to fill the candle when the price moved up from open to close.
+	 */
+	private transient Paint upPaint;
 
-    }
+	/**
+	 * The paint used to fill the candle when the price moved down from open to
+	 * close.
+	 */
+	private transient Paint downPaint;
 
-    /**
-     * Returns the width of each candle.
-     *
-     * @return The candle width.
-     * 
-     * @see #setCandleWidth(double)
-     */
-    public double getCandleWidth() {
-        return this.candleWidth;
-    }
+	/** A flag controlling whether or not volume bars are drawn on the chart. */
+	private boolean drawVolume;
 
-    /**
-     * Sets the candle width.
-     * <P>
-     * If you set the width to a negative value, the renderer will calculate
-     * the candle width automatically based on the space available on the chart.
-     *
-     * @param width  The width.
-     * @see #setAutoWidthMethod(int)
-     * @see #setAutoWidthGap(double)
-     * @see #setAutoWidthFactor(double)
-     * @see #setMaxCandleWidthInMilliseconds(double)
-     */
-    public void setCandleWidth(double width) {
-        if (width != this.candleWidth) {
-            this.candleWidth = width;
-            notifyListeners(new RendererChangeEvent(this));
-        }
-    }
+	/** Temporary storage for the maximum volume. */
+	private transient double maxVolume;
 
-    /**
-     * Returns the maximum width (in milliseconds) of each candle.
-     *
-     * @return The maximum candle width in milliseconds.
-     */
-    public double getMaxCandleWidthInMilliseconds() {
-        return this.maxCandleWidthInMilliseconds;
-    }
+	/**
+	 * Creates a new renderer for candlestick charts.
+	 */
+	public CandlestickRenderer() {
+		this(-1.0);
+	}
 
-    /**
-     * Sets the maximum candle width (in milliseconds).  
-     *
-     * @param millis  The maximum width.
-     * @see #setCandleWidth(double)
-     * @see #setAutoWidthMethod(int)
-     * @see #setAutoWidthGap(double)
-     * @see #setAutoWidthFactor(double)
-     */
-    public void setMaxCandleWidthInMilliseconds(double millis) {
-        this.maxCandleWidthInMilliseconds = millis;
-        notifyListeners(new RendererChangeEvent(this));
-    }
+	/**
+	 * Creates a new renderer for candlestick charts.
+	 * <P>
+	 * Use -1 for the candle width if you prefer the width to be calculated
+	 * automatically.
+	 *
+	 * @param candleWidth
+	 *            The candle width.
+	 */
+	public CandlestickRenderer(double candleWidth) {
+		this(candleWidth, true, new HighLowItemLabelGenerator());
+	}
 
-    /**
-     * Returns the method of automatically calculating the candle width.
-     *
-     * @return The method of automatically calculating the candle width.
-     */
-    public int getAutoWidthMethod() {
-        return this.autoWidthMethod;
-    }
+	/**
+	 * Creates a new renderer for candlestick charts.
+	 * <P>
+	 * Use -1 for the candle width if you prefer the width to be calculated
+	 * automatically.
+	 *
+	 * @param candleWidth
+	 *            the candle width.
+	 * @param drawVolume
+	 *            a flag indicating whether or not volume bars should be drawn.
+	 * @param toolTipGenerator
+	 *            the tool tip generator. <code>null</code> is none.
+	 */
+	public CandlestickRenderer(double candleWidth, boolean drawVolume, XYToolTipGenerator toolTipGenerator) {
 
-    /**
-     * Sets the method of automatically calculating the candle width.
-     * <p>
-     * <code>WIDTHMETHOD_AVERAGE</code>: Divides the entire display (ignoring 
-     * scale factor) by the number of items, and uses this as the available 
-     * width.<br>
-     * <code>WIDTHMETHOD_SMALLEST</code>: Checks the interval between each 
-     * item, and uses the smallest as the available width.<br>
-     * <code>WIDTHMETHOD_INTERVALDATA</code>: Assumes that the dataset supports
-     * the IntervalXYDataset interface, and uses the startXValue - endXValue as 
-     * the available width.
-     * <br>
-     *
-     * @param autoWidthMethod  The method of automatically calculating the 
-     * candle width.
-     *
-     * @see #WIDTHMETHOD_AVERAGE
-     * @see #WIDTHMETHOD_SMALLEST
-     * @see #WIDTHMETHOD_INTERVALDATA
-     * @see #setCandleWidth(double)
-     * @see #setAutoWidthGap(double)
-     * @see #setAutoWidthFactor(double)
-     * @see #setMaxCandleWidthInMilliseconds(double)
-     */
-    public void setAutoWidthMethod(int autoWidthMethod) {
-        if (this.autoWidthMethod != autoWidthMethod) {
-            this.autoWidthMethod = autoWidthMethod;
-            notifyListeners(new RendererChangeEvent(this));
-        }
-    }
+		super();
+		setToolTipGenerator(toolTipGenerator);
+		this.candleWidth = candleWidth;
+		this.drawVolume = drawVolume;
+		this.upPaint = Color.green;
+		this.downPaint = Color.red;
 
-    /**
-     * Returns the factor by which the available space automatically 
-     * calculated for the candles will be multiplied to determine the actual 
-     * width to use.
-     *
-     * @return The width factor (generally between 0.0 and 1.0).
-     */
-    public double getAutoWidthFactor() {
-        return this.autoWidthFactor;
-    }
+	}
 
-    /**
-     * Sets the factor by which the available space automatically calculated 
-     * for the candles will be multiplied to determine the actual width to use.
-     *
-     * @param autoWidthFactor The width factor (generally between 0.0 and 1.0).
-     * @see #setCandleWidth(double)
-     * @see #setAutoWidthMethod(int)
-     * @see #setAutoWidthGap(double)
-     * @see #setMaxCandleWidthInMilliseconds(double)
-     */
-    public void setAutoWidthFactor(double autoWidthFactor) {
-        if (this.autoWidthFactor != autoWidthFactor) {
-            this.autoWidthFactor = autoWidthFactor;
-            notifyListeners(new RendererChangeEvent(this));
-        }
-    }
+	/**
+	 * Returns the width of each candle.
+	 *
+	 * @return The candle width.
+	 * 
+	 * @see #setCandleWidth(double)
+	 */
+	public double getCandleWidth() {
+		return this.candleWidth;
+	}
 
-    /**
-     * Returns the amount of space to leave on the left and right of each 
-     * candle when automatically calculating widths.
-     *
-     * @return The gap.
-     */
-    public double getAutoWidthGap() {
-        return this.autoWidthGap;
-    }
+	/**
+	 * Sets the candle width.
+	 * <P>
+	 * If you set the width to a negative value, the renderer will calculate the
+	 * candle width automatically based on the space available on the chart.
+	 *
+	 * @param width
+	 *            The width.
+	 * @see #setAutoWidthMethod(int)
+	 * @see #setAutoWidthGap(double)
+	 * @see #setAutoWidthFactor(double)
+	 * @see #setMaxCandleWidthInMilliseconds(double)
+	 */
+	public void setCandleWidth(double width) {
+		if (width != this.candleWidth) {
+			this.candleWidth = width;
+			notifyListeners(new RendererChangeEvent(this));
+		}
+	}
 
-    /**
-     * Sets the amount of space to leave on the left and right of each candle 
-     * when automatically calculating widths.
-     *
-     * @param autoWidthGap The gap.
-     * @see #setCandleWidth(double)
-     * @see #setAutoWidthMethod(int)
-     * @see #setAutoWidthFactor(double)
-     * @see #setMaxCandleWidthInMilliseconds(double)
-     */
-    public void setAutoWidthGap(double autoWidthGap) {
-        if (this.autoWidthGap != autoWidthGap) {
-            this.autoWidthGap = autoWidthGap;
-            notifyListeners(new RendererChangeEvent(this));
-        }
-    }
+	/**
+	 * Returns the maximum width (in milliseconds) of each candle.
+	 *
+	 * @return The maximum candle width in milliseconds.
+	 */
+	public double getMaxCandleWidthInMilliseconds() {
+		return this.maxCandleWidthInMilliseconds;
+	}
 
-    /**
-     * Returns the paint used to fill candles when the price moves up from open
-     * to close.
-     *
-     * @return The paint.
-     */
-    public Paint getUpPaint() {
-        return this.upPaint;
-    }
+	/**
+	 * Sets the maximum candle width (in milliseconds).
+	 *
+	 * @param millis
+	 *            The maximum width.
+	 * @see #setCandleWidth(double)
+	 * @see #setAutoWidthMethod(int)
+	 * @see #setAutoWidthGap(double)
+	 * @see #setAutoWidthFactor(double)
+	 */
+	public void setMaxCandleWidthInMilliseconds(double millis) {
+		this.maxCandleWidthInMilliseconds = millis;
+		notifyListeners(new RendererChangeEvent(this));
+	}
 
-    /**
-     * Sets the paint used to fill candles when the price moves up from open
-     * to close.
-     * <P>
-     * Registered property change listeners are notified that the
-     * "CandleStickRenderer.upPaint" property has changed.
-     *
-     * @param paint The paint.
-     */
-    public void setUpPaint(Paint paint) {
-        this.upPaint = paint;
-        notifyListeners(new RendererChangeEvent(this));
-    }
+	/**
+	 * Returns the method of automatically calculating the candle width.
+	 *
+	 * @return The method of automatically calculating the candle width.
+	 */
+	public int getAutoWidthMethod() {
+		return this.autoWidthMethod;
+	}
 
-    /**
-     * Returns the paint used to fill candles when the price moves down from
-     * open to close.
-     *
-     * @return The paint.
-     */
-    public Paint getDownPaint() {
-        return this.downPaint;
-    }
+	/**
+	 * Sets the method of automatically calculating the candle width.
+	 * <p>
+	 * <code>WIDTHMETHOD_AVERAGE</code>: Divides the entire display (ignoring scale
+	 * factor) by the number of items, and uses this as the available width.<br>
+	 * <code>WIDTHMETHOD_SMALLEST</code>: Checks the interval between each item, and
+	 * uses the smallest as the available width.<br>
+	 * <code>WIDTHMETHOD_INTERVALDATA</code>: Assumes that the dataset supports the
+	 * IntervalXYDataset interface, and uses the startXValue - endXValue as the
+	 * available width. <br>
+	 *
+	 * @param autoWidthMethod
+	 *            The method of automatically calculating the candle width.
+	 *
+	 * @see #WIDTHMETHOD_AVERAGE
+	 * @see #WIDTHMETHOD_SMALLEST
+	 * @see #WIDTHMETHOD_INTERVALDATA
+	 * @see #setCandleWidth(double)
+	 * @see #setAutoWidthGap(double)
+	 * @see #setAutoWidthFactor(double)
+	 * @see #setMaxCandleWidthInMilliseconds(double)
+	 */
+	public void setAutoWidthMethod(int autoWidthMethod) {
+		if (this.autoWidthMethod != autoWidthMethod) {
+			this.autoWidthMethod = autoWidthMethod;
+			notifyListeners(new RendererChangeEvent(this));
+		}
+	}
 
-    /**
-     * Sets the paint used to fill candles when the price moves down from open
-     * to close.
-     * <P>
-     * Registered property change listeners are notified that the
-     * "CandleStickRenderer.downPaint" property has changed.
-     *
-     * @param paint  The paint.
-     */
-    public void setDownPaint(Paint paint) {
-        this.downPaint = paint;
-        notifyListeners(new RendererChangeEvent(this));
-    }
+	/**
+	 * Returns the factor by which the available space automatically calculated for
+	 * the candles will be multiplied to determine the actual width to use.
+	 *
+	 * @return The width factor (generally between 0.0 and 1.0).
+	 */
+	public double getAutoWidthFactor() {
+		return this.autoWidthFactor;
+	}
 
-    /**
-     * Returns a flag indicating whether or not volume bars are drawn on the
-     * chart.
-     *
-     * @return <code>true</code> if volume bars are drawn on the chart.
-     */
-    public boolean drawVolume() {
-        return this.drawVolume;
-    }
+	/**
+	 * Sets the factor by which the available space automatically calculated for the
+	 * candles will be multiplied to determine the actual width to use.
+	 *
+	 * @param autoWidthFactor
+	 *            The width factor (generally between 0.0 and 1.0).
+	 * @see #setCandleWidth(double)
+	 * @see #setAutoWidthMethod(int)
+	 * @see #setAutoWidthGap(double)
+	 * @see #setMaxCandleWidthInMilliseconds(double)
+	 */
+	public void setAutoWidthFactor(double autoWidthFactor) {
+		if (this.autoWidthFactor != autoWidthFactor) {
+			this.autoWidthFactor = autoWidthFactor;
+			notifyListeners(new RendererChangeEvent(this));
+		}
+	}
 
-    /**
-     * Sets a flag that controls whether or not volume bars are drawn in the
-     * background.
-     *
-     * @param flag The flag.
-     */
-    public void setDrawVolume(boolean flag) {
-        if (this.drawVolume != flag) {
-            this.drawVolume = flag;
-            notifyListeners(new RendererChangeEvent(this));
-        }
-    }
+	/**
+	 * Returns the amount of space to leave on the left and right of each candle
+	 * when automatically calculating widths.
+	 *
+	 * @return The gap.
+	 */
+	public double getAutoWidthGap() {
+		return this.autoWidthGap;
+	}
 
-    /**
-     * Initialises the renderer then returns the number of 'passes' through the
-     * data that the renderer will require (usually just one).  This method 
-     * will be called before the first item is rendered, giving the renderer 
-     * an opportunity to initialise any state information it wants to maintain.
-     * The renderer can do nothing if it chooses.
-     *
-     * @param g2  the graphics device.
-     * @param dataArea  the area inside the axes.
-     * @param plot  the plot.
-     * @param dataset  the data.
-     * @param info  an optional info collection object to return data back to 
-     *              the caller.
-     *
-     * @return The number of passes the renderer requires.
-     */
-    public XYItemRendererState initialise(Graphics2D g2,
-                                          Rectangle2D dataArea,
-                                          XYPlot plot,
-                                          XYDataset dataset,
-                                          PlotRenderingInfo info) {
-          
-        // calculate the maximum allowed candle width from the axis...
-        ValueAxis axis = plot.getDomainAxis();
-        double x1 = axis.getLowerBound();
-        double x2 = x1 + this.maxCandleWidthInMilliseconds;
-        RectangleEdge edge = plot.getDomainAxisEdge();
-        double xx1 = axis.valueToJava2D(x1, dataArea, edge);
-        double xx2 = axis.valueToJava2D(x2, dataArea, edge);
-        this.maxCandleWidth = Math.abs(xx2 - xx1); 
-            // Absolute value, since the relative x 
-            // positions are reversed for horizontal orientation
-        
-        // calculate the highest volume in the dataset... 
-        if (this.drawVolume) {
-            OHLCDataset highLowDataset = (OHLCDataset) dataset;
-            this.maxVolume = 0.0;
-            for (int series = 0; series < highLowDataset.getSeriesCount(); 
-                 series++) {
-                for (int item = 0; item < highLowDataset.getItemCount(series); 
-                     item++) {
-                    double volume = highLowDataset.getVolumeValue(series, item);
-                    if (volume > this.maxVolume) {
-                        this.maxVolume = volume;
-                    }
-                    
-                }    
-            }
-        }
-        
-        return new XYItemRendererState(info);
-    }
+	/**
+	 * Sets the amount of space to leave on the left and right of each candle when
+	 * automatically calculating widths.
+	 *
+	 * @param autoWidthGap
+	 *            The gap.
+	 * @see #setCandleWidth(double)
+	 * @see #setAutoWidthMethod(int)
+	 * @see #setAutoWidthFactor(double)
+	 * @see #setMaxCandleWidthInMilliseconds(double)
+	 */
+	public void setAutoWidthGap(double autoWidthGap) {
+		if (this.autoWidthGap != autoWidthGap) {
+			this.autoWidthGap = autoWidthGap;
+			notifyListeners(new RendererChangeEvent(this));
+		}
+	}
 
-    /**
-     * Draws the visual representation of a single data item.
-     *
-     * @param g2  the graphics device.
-     * @param state  the renderer state.
-     * @param dataArea  the area within which the plot is being drawn.
-     * @param info  collects info about the drawing.
-     * @param plot  the plot (can be used to obtain standard color 
-     *              information etc).
-     * @param domainAxis  the domain axis.
-     * @param rangeAxis  the range axis.
-     * @param dataset  the dataset.
-     * @param series  the series index (zero-based).
-     * @param item  the item index (zero-based).
-     * @param crosshairState  crosshair information for the plot 
-     *                        (<code>null</code> permitted).
-     * @param pass  the pass index.
-     */
-    public void drawItem(Graphics2D g2, 
-                         XYItemRendererState state,
-                         Rectangle2D dataArea,
-                         PlotRenderingInfo info,
-                         XYPlot plot, 
-                         ValueAxis domainAxis, 
-                         ValueAxis rangeAxis,
-                         XYDataset dataset, 
-                         int series, 
-                         int item,
-                         CrosshairState crosshairState,
-                         int pass) {
+	/**
+	 * Returns the paint used to fill candles when the price moves up from open to
+	 * close.
+	 *
+	 * @return The paint.
+	 */
+	public Paint getUpPaint() {
+		return this.upPaint;
+	}
 
-        boolean horiz;
-        PlotOrientation orientation = plot.getOrientation();
-        if (orientation == PlotOrientation.HORIZONTAL) {
-            horiz = true;
-        }
-        else if (orientation == PlotOrientation.VERTICAL) {
-            horiz = false;
-        }
-        else {
-            return;
-        }
-        
-        // setup for collecting optional entity info...
-        EntityCollection entities = null;
-        if (info != null) {
-            entities = info.getOwner().getEntityCollection();
-        }
+	/**
+	 * Sets the paint used to fill candles when the price moves up from open to
+	 * close.
+	 * <P>
+	 * Registered property change listeners are notified that the
+	 * "CandleStickRenderer.upPaint" property has changed.
+	 *
+	 * @param paint
+	 *            The paint.
+	 */
+	public void setUpPaint(Paint paint) {
+		this.upPaint = paint;
+		notifyListeners(new RendererChangeEvent(this));
+	}
 
-        OHLCDataset highLowData = (OHLCDataset) dataset;
+	/**
+	 * Returns the paint used to fill candles when the price moves down from open to
+	 * close.
+	 *
+	 * @return The paint.
+	 */
+	public Paint getDownPaint() {
+		return this.downPaint;
+	}
 
-        Number x = highLowData.getX(series, item);
-        Number yHigh = highLowData.getHigh(series, item);
-        Number yLow = highLowData.getLow(series, item);
-        Number yOpen = highLowData.getOpen(series, item);
-        Number yClose = highLowData.getClose(series, item);
+	/**
+	 * Sets the paint used to fill candles when the price moves down from open to
+	 * close.
+	 * <P>
+	 * Registered property change listeners are notified that the
+	 * "CandleStickRenderer.downPaint" property has changed.
+	 *
+	 * @param paint
+	 *            The paint.
+	 */
+	public void setDownPaint(Paint paint) {
+		this.downPaint = paint;
+		notifyListeners(new RendererChangeEvent(this));
+	}
 
-        RectangleEdge domainEdge = plot.getDomainAxisEdge();
-        double xx = domainAxis.valueToJava2D(x.doubleValue(), dataArea, 
-                domainEdge);
+	/**
+	 * Returns a flag indicating whether or not volume bars are drawn on the chart.
+	 *
+	 * @return <code>true</code> if volume bars are drawn on the chart.
+	 */
+	public boolean drawVolume() {
+		return this.drawVolume;
+	}
 
-        RectangleEdge edge = plot.getRangeAxisEdge();
-        double yyHigh = rangeAxis.valueToJava2D(yHigh.doubleValue(), dataArea,
-                edge);
-        double yyLow = rangeAxis.valueToJava2D(yLow.doubleValue(), dataArea, 
-                edge);
-        double yyOpen = rangeAxis.valueToJava2D(yOpen.doubleValue(), dataArea, 
-                edge);
-        double yyClose = rangeAxis.valueToJava2D(yClose.doubleValue(), dataArea,
-                edge);
+	/**
+	 * Sets a flag that controls whether or not volume bars are drawn in the
+	 * background.
+	 *
+	 * @param flag
+	 *            The flag.
+	 */
+	public void setDrawVolume(boolean flag) {
+		if (this.drawVolume != flag) {
+			this.drawVolume = flag;
+			notifyListeners(new RendererChangeEvent(this));
+		}
+	}
 
-        double volumeWidth;
-        double stickWidth;
-        if (this.candleWidth > 0) {
-            // These are deliberately not bounded to minimums/maxCandleWidth to
-            //  retain old behaviour.
-            volumeWidth = this.candleWidth;
-            stickWidth = this.candleWidth;
-        }
-        else {
-            double xxWidth = 0;
-            int itemCount;
-            switch (this.autoWidthMethod) {
-            
-                case WIDTHMETHOD_AVERAGE:
-                    itemCount = highLowData.getItemCount(series);
-                    if (horiz) {
-                        xxWidth = dataArea.getHeight() / itemCount;
-                    }
-                    else {
-                        xxWidth = dataArea.getWidth() / itemCount;
-                    }
-                    break;
-            
-                case WIDTHMETHOD_SMALLEST:
-                    // Note: It would be nice to pre-calculate this per series
-                    itemCount = highLowData.getItemCount(series);
-                    double lastPos = -1;
-                    xxWidth = dataArea.getWidth();
-                    for (int i = 0; i < itemCount; i++) {
-                        double pos = domainAxis.valueToJava2D(
-                            highLowData.getXValue(series, i), dataArea, 
-                            domainEdge
-                        );
-                        if (lastPos != -1) {
-                            xxWidth = Math.min(
-                                xxWidth, Math.abs(pos - lastPos)
-                            );
-                        }
-                        lastPos = pos;
-                    }
-                    break;
-            
-                case WIDTHMETHOD_INTERVALDATA:
-                    IntervalXYDataset intervalXYData 
-                        = (IntervalXYDataset) dataset;
-                    double startPos = domainAxis.valueToJava2D(
-                        intervalXYData.getStartXValue(series, item), dataArea, 
-                        plot.getDomainAxisEdge()
-                    );
-                    double endPos = domainAxis.valueToJava2D(
-                        intervalXYData.getEndXValue(series, item), dataArea, 
-                        plot.getDomainAxisEdge()
-                    );
-                    xxWidth = Math.abs(endPos - startPos);
-                    break;
-                
-            }
-            xxWidth -= 2 * this.autoWidthGap;
-            xxWidth *= this.autoWidthFactor;
-            xxWidth = Math.min(xxWidth, this.maxCandleWidth);
-            volumeWidth = Math.max(Math.min(1, this.maxCandleWidth), xxWidth);
-            stickWidth = Math.max(Math.min(3, this.maxCandleWidth), xxWidth);
-        }
+	/**
+	 * Initialises the renderer then returns the number of 'passes' through the data
+	 * that the renderer will require (usually just one). This method will be called
+	 * before the first item is rendered, giving the renderer an opportunity to
+	 * initialise any state information it wants to maintain. The renderer can do
+	 * nothing if it chooses.
+	 *
+	 * @param g2
+	 *            the graphics device.
+	 * @param dataArea
+	 *            the area inside the axes.
+	 * @param plot
+	 *            the plot.
+	 * @param dataset
+	 *            the data.
+	 * @param info
+	 *            an optional info collection object to return data back to the
+	 *            caller.
+	 *
+	 * @return The number of passes the renderer requires.
+	 */
+	public XYItemRendererState initialise(Graphics2D g2, Rectangle2D dataArea, XYPlot plot, XYDataset dataset,
+			PlotRenderingInfo info) {
 
-        Paint p = getItemPaint(series, item);
-        Stroke s = getItemStroke(series, item);
+		// calculate the maximum allowed candle width from the axis...
+		ValueAxis axis = plot.getDomainAxis();
+		double x1 = axis.getLowerBound();
+		double x2 = x1 + this.maxCandleWidthInMilliseconds;
+		RectangleEdge edge = plot.getDomainAxisEdge();
+		double xx1 = axis.valueToJava2D(x1, dataArea, edge);
+		double xx2 = axis.valueToJava2D(x2, dataArea, edge);
+		this.maxCandleWidth = Math.abs(xx2 - xx1);
+		// Absolute value, since the relative x
+		// positions are reversed for horizontal orientation
 
-        g2.setStroke(s);
+		// calculate the highest volume in the dataset...
+		if (this.drawVolume) {
+			OHLCDataset highLowDataset = (OHLCDataset) dataset;
+			this.maxVolume = 0.0;
+			for (int series = 0; series < highLowDataset.getSeriesCount(); series++) {
+				for (int item = 0; item < highLowDataset.getItemCount(series); item++) {
+					double volume = highLowDataset.getVolumeValue(series, item);
+					if (volume > this.maxVolume) {
+						this.maxVolume = volume;
+					}
 
-        if (this.drawVolume) {
-            int volume = (int) highLowData.getVolumeValue(series, item);
-            double volumeHeight = volume / this.maxVolume;
+				}
+			}
+		}
 
-            double min, max;
-            if (horiz) {
-                min = dataArea.getMinX();
-                max = dataArea.getMaxX();
-            }
-            else {
-                min = dataArea.getMinY();
-                max = dataArea.getMaxY();
-            }
+		return new XYItemRendererState(info);
+	}
 
-            double zzVolume = volumeHeight * (max - min);
+	/**
+	 * Draws the visual representation of a single data item.
+	 *
+	 * @param g2
+	 *            the graphics device.
+	 * @param state
+	 *            the renderer state.
+	 * @param dataArea
+	 *            the area within which the plot is being drawn.
+	 * @param info
+	 *            collects info about the drawing.
+	 * @param plot
+	 *            the plot (can be used to obtain standard color information etc).
+	 * @param domainAxis
+	 *            the domain axis.
+	 * @param rangeAxis
+	 *            the range axis.
+	 * @param dataset
+	 *            the dataset.
+	 * @param series
+	 *            the series index (zero-based).
+	 * @param item
+	 *            the item index (zero-based).
+	 * @param crosshairState
+	 *            crosshair information for the plot (<code>null</code> permitted).
+	 * @param pass
+	 *            the pass index.
+	 */
+	public void drawItem(Graphics2D g2, XYItemRendererState state, Rectangle2D dataArea, PlotRenderingInfo info,
+			XYPlot plot, ValueAxis domainAxis, ValueAxis rangeAxis, XYDataset dataset, int series, int item,
+			CrosshairState crosshairState, int pass) {
 
-            g2.setPaint(Color.gray);
-            Composite originalComposite = g2.getComposite();
-            g2.setComposite(
-                AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f)
-            );
+		boolean horiz;
+		PlotOrientation orientation = plot.getOrientation();
+		if (orientation == PlotOrientation.HORIZONTAL) {
+			horiz = true;
+		} else if (orientation == PlotOrientation.VERTICAL) {
+			horiz = false;
+		} else {
+			return;
+		}
 
-            if (horiz) {
-                g2.fill(new Rectangle2D.Double(min,
-                                               xx - volumeWidth / 2,
-                                               zzVolume, volumeWidth));
-            }
-            else {
-                g2.fill(
-                    new Rectangle2D.Double(
-                        xx - volumeWidth / 2,
-                        max - zzVolume, volumeWidth, zzVolume
-                    )
-                );
-            }
+		// setup for collecting optional entity info...
+		EntityCollection entities = null;
+		if (info != null) {
+			entities = info.getOwner().getEntityCollection();
+		}
 
-            g2.setComposite(originalComposite);
-        }
+		OHLCDataset highLowData = (OHLCDataset) dataset;
 
-        g2.setPaint(p);
+		Number x = highLowData.getX(series, item);
+		Number yHigh = highLowData.getHigh(series, item);
+		Number yLow = highLowData.getLow(series, item);
+		Number yOpen = highLowData.getOpen(series, item);
+		Number yClose = highLowData.getClose(series, item);
 
-        double yyMaxOpenClose = Math.max(yyOpen, yyClose);
-        double yyMinOpenClose = Math.min(yyOpen, yyClose);
-        double maxOpenClose = Math.max(yOpen.doubleValue(), 
-                yClose.doubleValue());
-        double minOpenClose = Math.min(yOpen.doubleValue(), 
-                yClose.doubleValue());
+		RectangleEdge domainEdge = plot.getDomainAxisEdge();
+		double xx = domainAxis.valueToJava2D(x.doubleValue(), dataArea, domainEdge);
 
-        // draw the upper shadow
-        if (yHigh.doubleValue() > maxOpenClose) {
-            if (horiz) {
-                g2.draw(new Line2D.Double(yyHigh, xx, yyMaxOpenClose, xx));
-            }
-            else {
-                g2.draw(new Line2D.Double(xx, yyHigh, xx, yyMaxOpenClose));
-            }
-        }
+		RectangleEdge edge = plot.getRangeAxisEdge();
+		double yyHigh = rangeAxis.valueToJava2D(yHigh.doubleValue(), dataArea, edge);
+		double yyLow = rangeAxis.valueToJava2D(yLow.doubleValue(), dataArea, edge);
+		double yyOpen = rangeAxis.valueToJava2D(yOpen.doubleValue(), dataArea, edge);
+		double yyClose = rangeAxis.valueToJava2D(yClose.doubleValue(), dataArea, edge);
 
-        // draw the lower shadow
-        if (yLow.doubleValue() < minOpenClose) {
-            if (horiz) {
-                g2.draw(new Line2D.Double(yyLow, xx, yyMinOpenClose, xx));
-            }
-            else {
-                g2.draw(new Line2D.Double(xx, yyLow, xx, yyMinOpenClose));
-            }
-        }
+		double volumeWidth;
+		double stickWidth;
+		if (this.candleWidth > 0) {
+			// These are deliberately not bounded to minimums/maxCandleWidth to
+			// retain old behaviour.
+			volumeWidth = this.candleWidth;
+			stickWidth = this.candleWidth;
+		} else {
+			double xxWidth = 0;
+			int itemCount;
+			switch (this.autoWidthMethod) {
 
-        // draw the body
-        Shape body = null;
-        if (horiz) {
-            body = new Rectangle2D.Double(
-                yyMinOpenClose, xx - stickWidth / 2, 
-                yyMaxOpenClose - yyMinOpenClose, stickWidth
-            );
-        } 
-        else {
-            body = new Rectangle2D.Double(
-                xx - stickWidth / 2, yyMinOpenClose,
-                stickWidth, yyMaxOpenClose - yyMinOpenClose
-            );
-        }
-        if (yClose.doubleValue() > yOpen.doubleValue()) {
-            if (this.upPaint != null) {
-                g2.setPaint(this.upPaint);
-                g2.fill(body);
-            }
-        }
-        else {
-            if (this.downPaint != null) {
-                g2.setPaint(this.downPaint);
-            }
-            g2.fill(body);
-        }
-        g2.setPaint(p);
-        g2.draw(body);
+			case WIDTHMETHOD_AVERAGE:
+				itemCount = highLowData.getItemCount(series);
+				if (horiz) {
+					xxWidth = dataArea.getHeight() / itemCount;
+				} else {
+					xxWidth = dataArea.getWidth() / itemCount;
+				}
+				break;
 
-        // add an entity for the item...
-        if (entities != null) {
-            String tip = null;
-            XYToolTipGenerator generator = getToolTipGenerator(series, item);
-            if (generator != null) {
-                tip = generator.generateToolTip(dataset, series, item);
-            }
-            String url = null;
-            if (getURLGenerator() != null) {
-                url = getURLGenerator().generateURL(dataset, series, item);
-            }
-            XYItemEntity entity = new XYItemEntity(body, dataset, series, item, 
-                    tip, url);
-            entities.add(entity);
-        }
+			case WIDTHMETHOD_SMALLEST:
+				// Note: It would be nice to pre-calculate this per series
+				itemCount = highLowData.getItemCount(series);
+				double lastPos = -1;
+				xxWidth = dataArea.getWidth();
+				for (int i = 0; i < itemCount; i++) {
+					double pos = domainAxis.valueToJava2D(highLowData.getXValue(series, i), dataArea, domainEdge);
+					if (lastPos != -1) {
+						xxWidth = Math.min(xxWidth, Math.abs(pos - lastPos));
+					}
+					lastPos = pos;
+				}
+				break;
 
-    }
+			case WIDTHMETHOD_INTERVALDATA:
+				IntervalXYDataset intervalXYData = (IntervalXYDataset) dataset;
+				double startPos = domainAxis.valueToJava2D(intervalXYData.getStartXValue(series, item), dataArea,
+						plot.getDomainAxisEdge());
+				double endPos = domainAxis.valueToJava2D(intervalXYData.getEndXValue(series, item), dataArea,
+						plot.getDomainAxisEdge());
+				xxWidth = Math.abs(endPos - startPos);
+				break;
 
-    /**
-     * Tests this renderer for equality with another object.
-     *
-     * @param obj  the object.
-     *
-     * @return <code>true</code> or <code>false</code>.
-     */
-    public boolean equals(Object obj) {
+			}
+			xxWidth -= 2 * this.autoWidthGap;
+			xxWidth *= this.autoWidthFactor;
+			xxWidth = Math.min(xxWidth, this.maxCandleWidth);
+			volumeWidth = Math.max(Math.min(1, this.maxCandleWidth), xxWidth);
+			stickWidth = Math.max(Math.min(3, this.maxCandleWidth), xxWidth);
+		}
 
-        if (obj == null) {
-            return false;
-        }
+		Paint p = getItemPaint(series, item);
+		Stroke s = getItemStroke(series, item);
 
-        if (obj == this) {
-            return true;
-        }
+		g2.setStroke(s);
 
-        if (obj instanceof CandlestickRenderer) {
-            CandlestickRenderer renderer = (CandlestickRenderer) obj;
-            boolean result = super.equals(obj);
-            result = result && (this.candleWidth == renderer.getCandleWidth());
-            result = result && (this.upPaint.equals(renderer.getUpPaint()));
-            result = result && (this.downPaint.equals(renderer.getDownPaint()));
-            result = result && (this.drawVolume == renderer.drawVolume);
-            return result;
-        }
+		if (this.drawVolume) {
+			int volume = (int) highLowData.getVolumeValue(series, item);
+			double volumeHeight = volume / this.maxVolume;
 
-        return false;
+			double min, max;
+			if (horiz) {
+				min = dataArea.getMinX();
+				max = dataArea.getMaxX();
+			} else {
+				min = dataArea.getMinY();
+				max = dataArea.getMaxY();
+			}
 
-    }
+			double zzVolume = volumeHeight * (max - min);
 
-    /**
-     * Returns a clone of the renderer.
-     * 
-     * @return A clone.
-     * 
-     * @throws CloneNotSupportedException  if the renderer cannot be cloned.
-     */
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
+			g2.setPaint(Color.gray);
+			Composite originalComposite = g2.getComposite();
+			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
 
-    /**
-     * Provides serialization support.
-     *
-     * @param stream  the output stream.
-     *
-     * @throws IOException  if there is an I/O error.
-     */
-    private void writeObject(ObjectOutputStream stream) throws IOException {
-        stream.defaultWriteObject();
-        SerialUtilities.writePaint(this.upPaint, stream);
-        SerialUtilities.writePaint(this.downPaint, stream);
-    }
+			if (horiz) {
+				g2.fill(new Rectangle2D.Double(min, xx - volumeWidth / 2, zzVolume, volumeWidth));
+			} else {
+				g2.fill(new Rectangle2D.Double(xx - volumeWidth / 2, max - zzVolume, volumeWidth, zzVolume));
+			}
 
-    /**
-     * Provides serialization support.
-     *
-     * @param stream  the input stream.
-     *
-     * @throws IOException  if there is an I/O error.
-     * @throws ClassNotFoundException  if there is a classpath problem.
-     */
-    private void readObject(ObjectInputStream stream) 
-            throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        this.upPaint = SerialUtilities.readPaint(stream);
-        this.downPaint = SerialUtilities.readPaint(stream);
-    }
-    
+			g2.setComposite(originalComposite);
+		}
+
+		g2.setPaint(p);
+
+		double yyMaxOpenClose = Math.max(yyOpen, yyClose);
+		double yyMinOpenClose = Math.min(yyOpen, yyClose);
+		double maxOpenClose = Math.max(yOpen.doubleValue(), yClose.doubleValue());
+		double minOpenClose = Math.min(yOpen.doubleValue(), yClose.doubleValue());
+
+		// draw the upper shadow
+		if (yHigh.doubleValue() > maxOpenClose) {
+			if (horiz) {
+				g2.draw(new Line2D.Double(yyHigh, xx, yyMaxOpenClose, xx));
+			} else {
+				g2.draw(new Line2D.Double(xx, yyHigh, xx, yyMaxOpenClose));
+			}
+		}
+
+		// draw the lower shadow
+		if (yLow.doubleValue() < minOpenClose) {
+			if (horiz) {
+				g2.draw(new Line2D.Double(yyLow, xx, yyMinOpenClose, xx));
+			} else {
+				g2.draw(new Line2D.Double(xx, yyLow, xx, yyMinOpenClose));
+			}
+		}
+
+		// draw the body
+		Shape body = null;
+		if (horiz) {
+			body = new Rectangle2D.Double(yyMinOpenClose, xx - stickWidth / 2, yyMaxOpenClose - yyMinOpenClose,
+					stickWidth);
+		} else {
+			body = new Rectangle2D.Double(xx - stickWidth / 2, yyMinOpenClose, stickWidth,
+					yyMaxOpenClose - yyMinOpenClose);
+		}
+		if (yClose.doubleValue() > yOpen.doubleValue()) {
+			if (this.upPaint != null) {
+				g2.setPaint(this.upPaint);
+				g2.fill(body);
+			}
+		} else {
+			if (this.downPaint != null) {
+				g2.setPaint(this.downPaint);
+			}
+			g2.fill(body);
+		}
+		g2.setPaint(p);
+		g2.draw(body);
+
+		// add an entity for the item...
+		if (entities != null) {
+			String tip = null;
+			XYToolTipGenerator generator = getToolTipGenerator(series, item);
+			if (generator != null) {
+				tip = generator.generateToolTip(dataset, series, item);
+			}
+			String url = null;
+			if (getURLGenerator() != null) {
+				url = getURLGenerator().generateURL(dataset, series, item);
+			}
+			XYItemEntity entity = new XYItemEntity(body, dataset, series, item, tip, url);
+			entities.add(entity);
+		}
+
+	}
+
+	/**
+	 * Tests this renderer for equality with another object.
+	 *
+	 * @param obj
+	 *            the object.
+	 *
+	 * @return <code>true</code> or <code>false</code>.
+	 */
+	public boolean equals(Object obj) {
+
+		if (obj == null) {
+			return false;
+		}
+
+		if (obj == this) {
+			return true;
+		}
+
+		if (obj instanceof CandlestickRenderer) {
+			CandlestickRenderer renderer = (CandlestickRenderer) obj;
+			boolean result = super.equals(obj);
+			result = result && (this.candleWidth == renderer.getCandleWidth());
+			result = result && (this.upPaint.equals(renderer.getUpPaint()));
+			result = result && (this.downPaint.equals(renderer.getDownPaint()));
+			result = result && (this.drawVolume == renderer.drawVolume);
+			return result;
+		}
+
+		return false;
+
+	}
+
+	/**
+	 * Returns a clone of the renderer.
+	 * 
+	 * @return A clone.
+	 * 
+	 * @throws CloneNotSupportedException
+	 *             if the renderer cannot be cloned.
+	 */
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+
+	/**
+	 * Provides serialization support.
+	 *
+	 * @param stream
+	 *            the output stream.
+	 *
+	 * @throws IOException
+	 *             if there is an I/O error.
+	 */
+	private void writeObject(ObjectOutputStream stream) throws IOException {
+		stream.defaultWriteObject();
+		SerialUtilities.writePaint(this.upPaint, stream);
+		SerialUtilities.writePaint(this.downPaint, stream);
+	}
+
+	/**
+	 * Provides serialization support.
+	 *
+	 * @param stream
+	 *            the input stream.
+	 *
+	 * @throws IOException
+	 *             if there is an I/O error.
+	 * @throws ClassNotFoundException
+	 *             if there is a classpath problem.
+	 */
+	private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+		stream.defaultReadObject();
+		this.upPaint = SerialUtilities.readPaint(stream);
+		this.downPaint = SerialUtilities.readPaint(stream);
+	}
+
 }

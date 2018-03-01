@@ -65,173 +65,177 @@ import java.io.Serializable;
  * <li>{@link FixedMillisecond}</li>
  * </ul>
  *
- * The time period is an immutable property of the data item.  Data items will
+ * The time period is an immutable property of the data item. Data items will
  * often be sorted within a list, and allowing the time period to be changed
  * could destroy the sort order.
  * <P>
- * Implements the <code>Comparable</code> interface so that standard Java 
+ * Implements the <code>Comparable</code> interface so that standard Java
  * sorting can be used to keep the data items in order.
  *
  */
 public class TimeSeriesDataItem implements Cloneable, Comparable, Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = -2235346966016401302L;
-    
-    /** The time period. */
-    private RegularTimePeriod period;
+	/** For serialization. */
+	private static final long serialVersionUID = -2235346966016401302L;
 
-    /** The value associated with the time period. */
-    private Number value;
+	/** The time period. */
+	private RegularTimePeriod period;
 
-    /**
-     * Constructs a new data item that associates a value with a time period.
-     *
-     * @param period  the time period (<code>null</code> not permitted).
-     * @param value  the value (<code>null</code> permitted).
-     */
-    public TimeSeriesDataItem(RegularTimePeriod period, Number value) {
-        if (period == null) {
-            throw new IllegalArgumentException("Null 'period' argument.");   
-        }
-        this.period = period;
-        this.value = value;
-    }
+	/** The value associated with the time period. */
+	private Number value;
 
-    /**
-     * Constructs a new data item that associates a value with a time period.
-     *
-     * @param period  the time period (<code>null</code> not permitted).
-     * @param value  the value associated with the time period.
-     */
-    public TimeSeriesDataItem(RegularTimePeriod period, double value) {
-        this(period, new Double(value));
-    }
+	/**
+	 * Constructs a new data item that associates a value with a time period.
+	 *
+	 * @param period
+	 *            the time period (<code>null</code> not permitted).
+	 * @param value
+	 *            the value (<code>null</code> permitted).
+	 */
+	public TimeSeriesDataItem(RegularTimePeriod period, Number value) {
+		if (period == null) {
+			throw new IllegalArgumentException("Null 'period' argument.");
+		}
+		this.period = period;
+		this.value = value;
+	}
 
-    /**
-     * Returns the time period.
-     *
-     * @return The time period (never <code>null</code>).
-     */
-    public RegularTimePeriod getPeriod() {
-        return this.period;
-    }
+	/**
+	 * Constructs a new data item that associates a value with a time period.
+	 *
+	 * @param period
+	 *            the time period (<code>null</code> not permitted).
+	 * @param value
+	 *            the value associated with the time period.
+	 */
+	public TimeSeriesDataItem(RegularTimePeriod period, double value) {
+		this(period, new Double(value));
+	}
 
-    /**
-     * Returns the value.
-     *
-     * @return The value (<code>null</code> possible).
-     */
-    public Number getValue() {
-        return this.value;
-    }
+	/**
+	 * Returns the time period.
+	 *
+	 * @return The time period (never <code>null</code>).
+	 */
+	public RegularTimePeriod getPeriod() {
+		return this.period;
+	}
 
-    /**
-     * Sets the value for this data item.
-     *
-     * @param value  the value (<code>null</code> permitted).
-     */
-    public void setValue(Number value) {
-        this.value = value;
-    }
+	/**
+	 * Returns the value.
+	 *
+	 * @return The value (<code>null</code> possible).
+	 */
+	public Number getValue() {
+		return this.value;
+	}
 
-    /**
-     * Tests this object for equality with an arbitrary object.
-     *
-     * @param o  the other object.
-     *
-     * @return A boolean.
-     */
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof TimeSeriesDataItem)) {
-            return false;
-        }
-        TimeSeriesDataItem timeSeriesDataItem = (TimeSeriesDataItem) o;
-        if (this.period != null) {
-            if (!this.period.equals(timeSeriesDataItem.period)) {
-                return false;
-            }
-        }
-        else if (timeSeriesDataItem.period != null) {
-           return false;
-        }
-        
-        if (this.value != null) {
-            if (!this.value.equals(timeSeriesDataItem.value)) {
-                return false;
-            }
-        }
-        else if (timeSeriesDataItem.value != null) {
-            return false;
-        }
+	/**
+	 * Sets the value for this data item.
+	 *
+	 * @param value
+	 *            the value (<code>null</code> permitted).
+	 */
+	public void setValue(Number value) {
+		this.value = value;
+	}
 
-        return true;
-    }
+	/**
+	 * Tests this object for equality with an arbitrary object.
+	 *
+	 * @param o
+	 *            the other object.
+	 *
+	 * @return A boolean.
+	 */
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof TimeSeriesDataItem)) {
+			return false;
+		}
+		TimeSeriesDataItem timeSeriesDataItem = (TimeSeriesDataItem) o;
+		if (this.period != null) {
+			if (!this.period.equals(timeSeriesDataItem.period)) {
+				return false;
+			}
+		} else if (timeSeriesDataItem.period != null) {
+			return false;
+		}
 
-    /**
-     * Returns a hash code.
-     * 
-     * @return A hash code.
-     */
-    public int hashCode() {
-        int result;
-        result = (this.period != null ? this.period.hashCode() : 0);
-        result = 29 * result + (this.value != null ? this.value.hashCode() : 0);
-        return result;
-    }
+		if (this.value != null) {
+			if (!this.value.equals(timeSeriesDataItem.value)) {
+				return false;
+			}
+		} else if (timeSeriesDataItem.value != null) {
+			return false;
+		}
 
-    /**
-     * Returns an integer indicating the order of this data pair object
-     * relative to another object.
-     * <P>
-     * For the order we consider only the timing:
-     * negative == before, zero == same, positive == after.
-     *
-     * @param o1  The object being compared to.
-     *
-     * @return An integer indicating the order of the data item object 
-     *         relative to another object.
-     */
-    public int compareTo(Object o1) {
+		return true;
+	}
 
-        int result;
+	/**
+	 * Returns a hash code.
+	 * 
+	 * @return A hash code.
+	 */
+	public int hashCode() {
+		int result;
+		result = (this.period != null ? this.period.hashCode() : 0);
+		result = 29 * result + (this.value != null ? this.value.hashCode() : 0);
+		return result;
+	}
 
-        // CASE 1 : Comparing to another TimeSeriesDataItem object
-        // -------------------------------------------------------
-        if (o1 instanceof TimeSeriesDataItem) {
-            TimeSeriesDataItem datapair = (TimeSeriesDataItem) o1;
-            result = getPeriod().compareTo(datapair.getPeriod());
-        }
+	/**
+	 * Returns an integer indicating the order of this data pair object relative to
+	 * another object.
+	 * <P>
+	 * For the order we consider only the timing: negative == before, zero == same,
+	 * positive == after.
+	 *
+	 * @param o1
+	 *            The object being compared to.
+	 *
+	 * @return An integer indicating the order of the data item object relative to
+	 *         another object.
+	 */
+	public int compareTo(Object o1) {
 
-        // CASE 2 : Comparing to a general object
-        // ---------------------------------------------
-        else {
-            // consider time periods to be ordered after general objects
-            result = 1;
-        }
+		int result;
 
-        return result;
+		// CASE 1 : Comparing to another TimeSeriesDataItem object
+		// -------------------------------------------------------
+		if (o1 instanceof TimeSeriesDataItem) {
+			TimeSeriesDataItem datapair = (TimeSeriesDataItem) o1;
+			result = getPeriod().compareTo(datapair.getPeriod());
+		}
 
-    }
+		// CASE 2 : Comparing to a general object
+		// ---------------------------------------------
+		else {
+			// consider time periods to be ordered after general objects
+			result = 1;
+		}
 
-    /**
-     * Clones the data item.  Note: there is no need to clone the period or 
-     * value since they are immutable classes.
-     *
-     * @return A clone of the data item.
-     */
-    public Object clone() {
-        Object clone = null;
-        try {
-            clone = super.clone();
-        }
-        catch (CloneNotSupportedException e) { // won't get here...
-            e.printStackTrace();
-        }
-        return clone;
-    }
+		return result;
+
+	}
+
+	/**
+	 * Clones the data item. Note: there is no need to clone the period or value
+	 * since they are immutable classes.
+	 *
+	 * @return A clone of the data item.
+	 */
+	public Object clone() {
+		Object clone = null;
+		try {
+			clone = super.clone();
+		} catch (CloneNotSupportedException e) { // won't get here...
+			e.printStackTrace();
+		}
+		return clone;
+	}
 
 }

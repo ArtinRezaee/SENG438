@@ -78,177 +78,164 @@ import org.jfree.ui.RectangleEdge;
 import org.jfree.util.PublicCloneable;
 
 /**
- * A renderer that draws stacked area charts for a 
+ * A renderer that draws stacked area charts for a
  * {@link org.jfree.chart.plot.CategoryPlot}.
  *
  * @author Dan Rivett
  */
-public class StackedAreaRenderer extends AreaRenderer 
-                                 implements Cloneable, PublicCloneable, 
-                                            Serializable {
+public class StackedAreaRenderer extends AreaRenderer implements Cloneable, PublicCloneable, Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = -3595635038460823663L;
-     
-    /**
-     * Creates a new renderer.
-     */
-    public StackedAreaRenderer() {
-        super();
-    }
+	/** For serialization. */
+	private static final long serialVersionUID = -3595635038460823663L;
 
-    /**
-     * Returns the range of values the renderer requires to display all the 
-     * items from the specified dataset.
-     * 
-     * @param dataset  the dataset (<code>null</code> not permitted).
-     * 
-     * @return The range (or <code>null</code> if the dataset is empty).
-     */
-    public Range findRangeBounds(CategoryDataset dataset) {
-        return DatasetUtilities.findStackedRangeBounds(dataset);   
-    }
+	/**
+	 * Creates a new renderer.
+	 */
+	public StackedAreaRenderer() {
+		super();
+	}
 
-    /**
-     * Draw a single data item.
-     *
-     * @param g2  the graphics device.
-     * @param state  the renderer state.
-     * @param dataArea  the data plot area.
-     * @param plot  the plot.
-     * @param domainAxis  the domain axis.
-     * @param rangeAxis  the range axis.
-     * @param dataset  the data.
-     * @param row  the row index (zero-based).
-     * @param column  the column index (zero-based).
-     * @param pass  the pass index.
-     */
-    public void drawItem(Graphics2D g2,
-                         CategoryItemRendererState state,
-                         Rectangle2D dataArea,
-                         CategoryPlot plot,
-                         CategoryAxis domainAxis,
-                         ValueAxis rangeAxis,
-                         CategoryDataset dataset,
-                         int row,
-                         int column,
-                         int pass) {
+	/**
+	 * Returns the range of values the renderer requires to display all the items
+	 * from the specified dataset.
+	 * 
+	 * @param dataset
+	 *            the dataset (<code>null</code> not permitted).
+	 * 
+	 * @return The range (or <code>null</code> if the dataset is empty).
+	 */
+	public Range findRangeBounds(CategoryDataset dataset) {
+		return DatasetUtilities.findStackedRangeBounds(dataset);
+	}
 
-        // plot non-null values...
-        Number value = dataset.getValue(row, column);
-        if (value == null) {
-            return;
-        }
+	/**
+	 * Draw a single data item.
+	 *
+	 * @param g2
+	 *            the graphics device.
+	 * @param state
+	 *            the renderer state.
+	 * @param dataArea
+	 *            the data plot area.
+	 * @param plot
+	 *            the plot.
+	 * @param domainAxis
+	 *            the domain axis.
+	 * @param rangeAxis
+	 *            the range axis.
+	 * @param dataset
+	 *            the data.
+	 * @param row
+	 *            the row index (zero-based).
+	 * @param column
+	 *            the column index (zero-based).
+	 * @param pass
+	 *            the pass index.
+	 */
+	public void drawItem(Graphics2D g2, CategoryItemRendererState state, Rectangle2D dataArea, CategoryPlot plot,
+			CategoryAxis domainAxis, ValueAxis rangeAxis, CategoryDataset dataset, int row, int column, int pass) {
 
-        // leave the y values (y1, y0) untranslated as it is going to be be 
-        // stacked up later by previous series values, after this it will be 
-        // translated.
-        double x1 = domainAxis.getCategoryMiddle(
-            column, getColumnCount(), dataArea, plot.getDomainAxisEdge()
-        );
-        double y1 = 0.0;  // calculate later
-        double y1Untranslated = value.doubleValue();
+		// plot non-null values...
+		Number value = dataset.getValue(row, column);
+		if (value == null) {
+			return;
+		}
 
-        g2.setPaint(getItemPaint(row, column));
-        g2.setStroke(getItemStroke(row, column));
+		// leave the y values (y1, y0) untranslated as it is going to be be
+		// stacked up later by previous series values, after this it will be
+		// translated.
+		double x1 = domainAxis.getCategoryMiddle(column, getColumnCount(), dataArea, plot.getDomainAxisEdge());
+		double y1 = 0.0; // calculate later
+		double y1Untranslated = value.doubleValue();
 
-        if (column != 0) {
+		g2.setPaint(getItemPaint(row, column));
+		g2.setStroke(getItemStroke(row, column));
 
-            Number previousValue = dataset.getValue(row, column - 1);
-            if (previousValue != null) {
+		if (column != 0) {
 
-                double x0 = domainAxis.getCategoryMiddle(
-                    column - 1, getColumnCount(), dataArea, 
-                    plot.getDomainAxisEdge()
-                );
-                double y0Untranslated = previousValue.doubleValue();
+			Number previousValue = dataset.getValue(row, column - 1);
+			if (previousValue != null) {
 
-                // Get the previous height, but this will be different for both
-                // y0 and y1 as the previous series values could differ.
-                double previousHeightx0Untranslated 
-                    = getPreviousHeight(dataset, row, column - 1);
-                double previousHeightx1Untranslated 
-                    = getPreviousHeight(dataset, row, column);
+				double x0 = domainAxis.getCategoryMiddle(column - 1, getColumnCount(), dataArea,
+						plot.getDomainAxisEdge());
+				double y0Untranslated = previousValue.doubleValue();
 
-                // Now stack the current y values on top of the previous values.
-                y0Untranslated += previousHeightx0Untranslated;
-                y1Untranslated += previousHeightx1Untranslated;
+				// Get the previous height, but this will be different for both
+				// y0 and y1 as the previous series values could differ.
+				double previousHeightx0Untranslated = getPreviousHeight(dataset, row, column - 1);
+				double previousHeightx1Untranslated = getPreviousHeight(dataset, row, column);
 
-                // Now translate the previous heights
-                RectangleEdge location = plot.getRangeAxisEdge();
-                double previousHeightx0 = rangeAxis.valueToJava2D(
-                    previousHeightx0Untranslated, dataArea, location
-                );
-                double previousHeightx1 = rangeAxis.valueToJava2D(
-                    previousHeightx1Untranslated, dataArea, location
-                );
+				// Now stack the current y values on top of the previous values.
+				y0Untranslated += previousHeightx0Untranslated;
+				y1Untranslated += previousHeightx1Untranslated;
 
-                // Now translate the current y values.
-                double y0 = rangeAxis.valueToJava2D(
-                    y0Untranslated, dataArea, location
-                );
-                y1 = rangeAxis.valueToJava2D(
-                    y1Untranslated, dataArea, location
-                );
+				// Now translate the previous heights
+				RectangleEdge location = plot.getRangeAxisEdge();
+				double previousHeightx0 = rangeAxis.valueToJava2D(previousHeightx0Untranslated, dataArea, location);
+				double previousHeightx1 = rangeAxis.valueToJava2D(previousHeightx1Untranslated, dataArea, location);
 
-                Polygon p = null;
-                PlotOrientation orientation = plot.getOrientation();
-                if (orientation == PlotOrientation.HORIZONTAL) {
-                    p = new Polygon();
-                    p.addPoint((int) y0, (int) x0);
-                    p.addPoint((int) y1, (int) x1);
-                    p.addPoint((int) previousHeightx1, (int) x1);
-                    p.addPoint((int) previousHeightx0, (int) x0);
-                }
-                else if (orientation == PlotOrientation.VERTICAL) {
-                    p = new Polygon();
-                    p.addPoint((int) x0, (int) y0);
-                    p.addPoint((int) x1, (int) y1);
-                    p.addPoint((int) x1, (int) previousHeightx1);
-                    p.addPoint((int) x0, (int) previousHeightx0);
-                }
-                g2.setPaint(getItemPaint(row, column));
-                g2.setStroke(getItemStroke(row, column));
-                g2.fill(p);
-            }
+				// Now translate the current y values.
+				double y0 = rangeAxis.valueToJava2D(y0Untranslated, dataArea, location);
+				y1 = rangeAxis.valueToJava2D(y1Untranslated, dataArea, location);
 
-        }
+				Polygon p = null;
+				PlotOrientation orientation = plot.getOrientation();
+				if (orientation == PlotOrientation.HORIZONTAL) {
+					p = new Polygon();
+					p.addPoint((int) y0, (int) x0);
+					p.addPoint((int) y1, (int) x1);
+					p.addPoint((int) previousHeightx1, (int) x1);
+					p.addPoint((int) previousHeightx0, (int) x0);
+				} else if (orientation == PlotOrientation.VERTICAL) {
+					p = new Polygon();
+					p.addPoint((int) x0, (int) y0);
+					p.addPoint((int) x1, (int) y1);
+					p.addPoint((int) x1, (int) previousHeightx1);
+					p.addPoint((int) x0, (int) previousHeightx0);
+				}
+				g2.setPaint(getItemPaint(row, column));
+				g2.setStroke(getItemStroke(row, column));
+				g2.fill(p);
+			}
 
-        // add an item entity, if this information is being collected
-        EntityCollection entities = state.getEntityCollection();
-        if (entities != null) {
-            Shape shape = new Rectangle2D.Double(x1 - 3.0, y1 - 3.0, 6.0, 6.0);
-            addItemEntity(entities, dataset, row, column, shape);
-        }
+		}
 
-    }
+		// add an item entity, if this information is being collected
+		EntityCollection entities = state.getEntityCollection();
+		if (entities != null) {
+			Shape shape = new Rectangle2D.Double(x1 - 3.0, y1 - 3.0, 6.0, 6.0);
+			addItemEntity(entities, dataset, row, column, shape);
+		}
 
-    /**
-     * Calculates the stacked value of the all series up to, but not including 
-     * <code>series</code> for the specified category, <code>category</code>.  
-     * It returns 0.0 if <code>series</code> is the first series, i.e. 0.
-     *
-     * @param data  the data.
-     * @param series  the series.
-     * @param category  the category.
-     *
-     * @return double returns a cumulative value for all series' values up to 
-     *         but excluding <code>series</code> for Object 
-     *         <code>category</code>.
-     */
-    protected double getPreviousHeight(CategoryDataset data, 
-                                       int series, int category) {
+	}
 
-        double result = 0.0;
-        Number tmp;
-        for (int i = 0; i < series; i++) {
-            tmp = data.getValue(i, category);
-            if (tmp != null) {
-                result += tmp.doubleValue();
-            }
-        }
-        return result;
+	/**
+	 * Calculates the stacked value of the all series up to, but not including
+	 * <code>series</code> for the specified category, <code>category</code>. It
+	 * returns 0.0 if <code>series</code> is the first series, i.e. 0.
+	 *
+	 * @param data
+	 *            the data.
+	 * @param series
+	 *            the series.
+	 * @param category
+	 *            the category.
+	 *
+	 * @return double returns a cumulative value for all series' values up to but
+	 *         excluding <code>series</code> for Object <code>category</code>.
+	 */
+	protected double getPreviousHeight(CategoryDataset data, int series, int category) {
 
-    }
+		double result = 0.0;
+		Number tmp;
+		for (int i = 0; i < series; i++) {
+			tmp = data.getValue(i, category);
+			if (tmp != null) {
+				result += tmp.doubleValue();
+			}
+		}
+		return result;
+
+	}
 
 }

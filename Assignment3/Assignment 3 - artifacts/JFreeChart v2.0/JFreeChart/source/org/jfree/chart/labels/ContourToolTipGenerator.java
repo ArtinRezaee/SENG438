@@ -44,21 +44,23 @@ package org.jfree.chart.labels;
 import org.jfree.data.contour.ContourDataset;
 
 /**
- * Interface for a tooltip generator for plots that use data from a 
+ * Interface for a tooltip generator for plots that use data from a
  * {@link ContourDataset}.
  *
  * @author David M. O'Donnell
  */
 public interface ContourToolTipGenerator {
 
-    /**
-     * Generates a tooltip text item for a particular item within a series.
-     *
-     * @param dataset  the dataset.
-     * @param item  the item index (zero-based).
-     *
-     * @return The tooltip text.
-     */
-    public String generateToolTip(ContourDataset dataset, int item);
+	/**
+	 * Generates a tooltip text item for a particular item within a series.
+	 *
+	 * @param dataset
+	 *            the dataset.
+	 * @param item
+	 *            the item index (zero-based).
+	 *
+	 * @return The tooltip text.
+	 */
+	public String generateToolTip(ContourDataset dataset, int item);
 
 }

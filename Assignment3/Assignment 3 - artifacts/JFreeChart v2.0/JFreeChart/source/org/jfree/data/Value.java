@@ -47,11 +47,11 @@ package org.jfree.data;
  */
 public interface Value {
 
-    /**
-     * Returns the value.
-     *
-     * @return The value (possibly <code>null</code>).
-     */
-    public Number getValue();
+	/**
+	 * Returns the value.
+	 *
+	 * @return The value (possibly <code>null</code>).
+	 */
+	public Number getValue();
 
 }

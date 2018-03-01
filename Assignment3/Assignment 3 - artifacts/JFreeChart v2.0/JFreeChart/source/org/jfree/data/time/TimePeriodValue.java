@@ -48,122 +48,124 @@ import java.io.Serializable;
  */
 public class TimePeriodValue implements Cloneable, Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = 3390443360845711275L;
-    
-    /** The time period. */
-    private TimePeriod period;
+	/** For serialization. */
+	private static final long serialVersionUID = 3390443360845711275L;
 
-    /** The value associated with the time period. */
-    private Number value;
+	/** The time period. */
+	private TimePeriod period;
 
-    /**
-     * Constructs a new data item.
-     *
-     * @param period  the time period.
-     * @param value  the value associated with the time period.
-     */
-    public TimePeriodValue(TimePeriod period, Number value) {
-        this.period = period;
-        this.value = value;
-    }
+	/** The value associated with the time period. */
+	private Number value;
 
-    /**
-     * Constructs a new data pair.
-     *
-     * @param period  the time period.
-     * @param value  the value associated with the time period.
-     */
-    public TimePeriodValue(TimePeriod period, double value) {
-        this(period, new Double(value));
-    }
+	/**
+	 * Constructs a new data item.
+	 *
+	 * @param period
+	 *            the time period.
+	 * @param value
+	 *            the value associated with the time period.
+	 */
+	public TimePeriodValue(TimePeriod period, Number value) {
+		this.period = period;
+		this.value = value;
+	}
 
-    /**
-     * Returns the time period.
-     *
-     * @return The time period.
-     */
-    public TimePeriod getPeriod() {
-        return this.period;
-    }
+	/**
+	 * Constructs a new data pair.
+	 *
+	 * @param period
+	 *            the time period.
+	 * @param value
+	 *            the value associated with the time period.
+	 */
+	public TimePeriodValue(TimePeriod period, double value) {
+		this(period, new Double(value));
+	}
 
-    /**
-     * Returns the value.
-     *
-     * @return The value (possibly <code>null</code>).
-     */
-    public Number getValue() {
-        return this.value;
-    }
+	/**
+	 * Returns the time period.
+	 *
+	 * @return The time period.
+	 */
+	public TimePeriod getPeriod() {
+		return this.period;
+	}
 
-    /**
-     * Sets the value for this data item.
-     *
-     * @param value  the new value (<code>null</code> permitted).
-     */
-    public void setValue(Number value) {
-        this.value = value;
-    }
+	/**
+	 * Returns the value.
+	 *
+	 * @return The value (possibly <code>null</code>).
+	 */
+	public Number getValue() {
+		return this.value;
+	}
 
-    /**
-     * Tests this object for equality with the target object.
-     *
-     * @param obj  the object (<code>null</code> permitted).
-     *
-     * @return A boolean.
-     */
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof TimePeriodValue)) {
-            return false;
-        }
+	/**
+	 * Sets the value for this data item.
+	 *
+	 * @param value
+	 *            the new value (<code>null</code> permitted).
+	 */
+	public void setValue(Number value) {
+		this.value = value;
+	}
 
-        TimePeriodValue timePeriodValue = (TimePeriodValue) obj;
+	/**
+	 * Tests this object for equality with the target object.
+	 *
+	 * @param obj
+	 *            the object (<code>null</code> permitted).
+	 *
+	 * @return A boolean.
+	 */
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof TimePeriodValue)) {
+			return false;
+		}
 
-        if (this.period != null ? !this.period.equals(timePeriodValue.period) 
-                : timePeriodValue.period != null) {
-            return false;
-        }
-        if (this.value != null ? !this.value.equals(timePeriodValue.value) 
-                : timePeriodValue.value != null) {
-            return false;
-        }
+		TimePeriodValue timePeriodValue = (TimePeriodValue) obj;
 
-        return true;
-    }
+		if (this.period != null ? !this.period.equals(timePeriodValue.period) : timePeriodValue.period != null) {
+			return false;
+		}
+		if (this.value != null ? !this.value.equals(timePeriodValue.value) : timePeriodValue.value != null) {
+			return false;
+		}
 
-    /**
-     * Returns a hash code value for the object.
-     *
-     * @return The hashcode
-     */
-    public int hashCode() {
-        int result;
-        result = (this.period != null ? this.period.hashCode() : 0);
-        result = 29 * result + (this.value != null ? this.value.hashCode() : 0);
-        return result;
-    }
+		return true;
+	}
 
-    /**
-     * Clones the object.
-     * <P>
-     * Note: no need to clone the period or value since they are immutable 
-     * classes.
-     *
-     * @return A clone.
-     */
-    public Object clone() {
-        Object clone = null;
-        try {
-            clone = super.clone();
-        }
-        catch (CloneNotSupportedException e) { // won't get here...
-            System.err.println("Operation not supported.");
-        }
-        return clone;
+	/**
+	 * Returns a hash code value for the object.
+	 *
+	 * @return The hashcode
+	 */
+	public int hashCode() {
+		int result;
+		result = (this.period != null ? this.period.hashCode() : 0);
+		result = 29 * result + (this.value != null ? this.value.hashCode() : 0);
+		return result;
+	}
 
-    }
+	/**
+	 * Clones the object.
+	 * <P>
+	 * Note: no need to clone the period or value since they are immutable classes.
+	 *
+	 * @return A clone.
+	 */
+	public Object clone() {
+		Object clone = null;
+		try {
+			clone = super.clone();
+		} catch (CloneNotSupportedException e) { // won't get here...
+			System.err.println("Operation not supported.");
+		}
+		return clone;
+
+	}
 
 }

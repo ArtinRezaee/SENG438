@@ -40,123 +40,146 @@
  *
  */
 
- package org.jfree.data.gantt;
+package org.jfree.data.gantt;
 
 import org.jfree.data.category.IntervalCategoryDataset;
 
 /**
- * An extension of the {@link IntervalCategoryDataset} interface that adds 
+ * An extension of the {@link IntervalCategoryDataset} interface that adds
  * support for multiple sub-intervals.
  */
 public interface GanttCategoryDataset extends IntervalCategoryDataset {
 
-    /**
-     * Returns the percent complete for a given item.
-     *
-     * @param row  the row index (zero-based).
-     * @param column  the column index (zero-based).
-     *
-     * @return The percent complete.
-     */
-    public Number getPercentComplete(int row, int column);
+	/**
+	 * Returns the percent complete for a given item.
+	 *
+	 * @param row
+	 *            the row index (zero-based).
+	 * @param column
+	 *            the column index (zero-based).
+	 *
+	 * @return The percent complete.
+	 */
+	public Number getPercentComplete(int row, int column);
 
-    /**
-     * Returns the percent complete for a given item.
-     *
-     * @param rowKey  the row key.
-     * @param columnKey  the column key.
-     *
-     * @return The percent complete.
-     */
-    public Number getPercentComplete(Comparable rowKey, Comparable columnKey);
+	/**
+	 * Returns the percent complete for a given item.
+	 *
+	 * @param rowKey
+	 *            the row key.
+	 * @param columnKey
+	 *            the column key.
+	 *
+	 * @return The percent complete.
+	 */
+	public Number getPercentComplete(Comparable rowKey, Comparable columnKey);
 
-    /**
-     * Returns the number of sub-intervals for a given item.
-     *
-     * @param row  the row index (zero-based).
-     * @param column  the column index (zero-based).
-     *
-     * @return The sub-interval count.
-     */
-    public int getSubIntervalCount(int row, int column);
+	/**
+	 * Returns the number of sub-intervals for a given item.
+	 *
+	 * @param row
+	 *            the row index (zero-based).
+	 * @param column
+	 *            the column index (zero-based).
+	 *
+	 * @return The sub-interval count.
+	 */
+	public int getSubIntervalCount(int row, int column);
 
-    /**
-     * Returns the number of sub-intervals for a given item.
-     *
-     * @param rowKey  the row key.
-     * @param columnKey  the column key.
-     *
-     * @return The sub-interval count.
-     */
-    public int getSubIntervalCount(Comparable rowKey, Comparable columnKey);
+	/**
+	 * Returns the number of sub-intervals for a given item.
+	 *
+	 * @param rowKey
+	 *            the row key.
+	 * @param columnKey
+	 *            the column key.
+	 *
+	 * @return The sub-interval count.
+	 */
+	public int getSubIntervalCount(Comparable rowKey, Comparable columnKey);
 
-    /**
-     * Returns the start value of a sub-interval for a given item.
-     *
-     * @param row  the row index (zero-based).
-     * @param column  the column index (zero-based).
-     * @param subinterval  the sub-interval index (zero-based).
-     *
-     * @return The start value (possibly <code>null</code>).
-     */
-    public Number getStartValue(int row, int column, int subinterval);
+	/**
+	 * Returns the start value of a sub-interval for a given item.
+	 *
+	 * @param row
+	 *            the row index (zero-based).
+	 * @param column
+	 *            the column index (zero-based).
+	 * @param subinterval
+	 *            the sub-interval index (zero-based).
+	 *
+	 * @return The start value (possibly <code>null</code>).
+	 */
+	public Number getStartValue(int row, int column, int subinterval);
 
-    /**
-     * Returns the start value of a sub-interval for a given item.
-     *
-     * @param rowKey  the row key.
-     * @param columnKey  the column key.
-     * @param subinterval  the sub-interval.
-     *
-     * @return The start value (possibly <code>null</code>).
-     */
-    public Number getStartValue(Comparable rowKey, Comparable columnKey, 
-                                int subinterval);
+	/**
+	 * Returns the start value of a sub-interval for a given item.
+	 *
+	 * @param rowKey
+	 *            the row key.
+	 * @param columnKey
+	 *            the column key.
+	 * @param subinterval
+	 *            the sub-interval.
+	 *
+	 * @return The start value (possibly <code>null</code>).
+	 */
+	public Number getStartValue(Comparable rowKey, Comparable columnKey, int subinterval);
 
-    /**
-     * Returns the end value of a sub-interval for a given item.
-     *
-     * @param row  the row index (zero-based).
-     * @param column  the column index (zero-based).
-     * @param subinterval  the sub-interval.
-     *
-     * @return The end value (possibly <code>null</code>).
-     */
-    public Number getEndValue(int row, int column, int subinterval);
+	/**
+	 * Returns the end value of a sub-interval for a given item.
+	 *
+	 * @param row
+	 *            the row index (zero-based).
+	 * @param column
+	 *            the column index (zero-based).
+	 * @param subinterval
+	 *            the sub-interval.
+	 *
+	 * @return The end value (possibly <code>null</code>).
+	 */
+	public Number getEndValue(int row, int column, int subinterval);
 
-    /**
-     * Returns the end value of a sub-interval for a given item.
-     *
-     * @param rowKey  the row key.
-     * @param columnKey  the column key.
-     * @param subinterval  the sub-interval.
-     *
-     * @return The end value (possibly <code>null</code>).
-     */
-    public Number getEndValue(Comparable rowKey, Comparable columnKey, 
-                              int subinterval);
+	/**
+	 * Returns the end value of a sub-interval for a given item.
+	 *
+	 * @param rowKey
+	 *            the row key.
+	 * @param columnKey
+	 *            the column key.
+	 * @param subinterval
+	 *            the sub-interval.
+	 *
+	 * @return The end value (possibly <code>null</code>).
+	 */
+	public Number getEndValue(Comparable rowKey, Comparable columnKey, int subinterval);
 
-    /**
-     * Returns the percentage complete value of a sub-interval for a given item.
-     *
-     * @param row  the row index (zero-based).
-     * @param column  the column index (zero-based).
-     * @param subinterval  the sub-interval.
-     *
-     * @return The percent complete value (possibly <code>null</code>).
-     */
-    public Number getPercentComplete(int row, int column, int subinterval);
+	/**
+	 * Returns the percentage complete value of a sub-interval for a given item.
+	 *
+	 * @param row
+	 *            the row index (zero-based).
+	 * @param column
+	 *            the column index (zero-based).
+	 * @param subinterval
+	 *            the sub-interval.
+	 *
+	 * @return The percent complete value (possibly <code>null</code>).
+	 */
+	public Number getPercentComplete(int row, int column, int subinterval);
 
-    /**
-     * Returns the percentage complete value of a sub-interval for a given item.
-     *
-     * @param rowKey  the row key.
-     * @param columnKey  the column key.
-     * @param subinterval  the sub-interval.
-     *
-     * @return The precent complete value (possibly <code>null</code>).
-     */
-    public Number getPercentComplete(Comparable rowKey, Comparable columnKey, 
-                                     int subinterval);
+	/**
+	 * Returns the percentage complete value of a sub-interval for a given item.
+	 *
+	 * @param rowKey
+	 *            the row key.
+	 * @param columnKey
+	 *            the column key.
+	 * @param subinterval
+	 *            the sub-interval.
+	 *
+	 * @return The precent complete value (possibly <code>null</code>).
+	 */
+	public Number getPercentComplete(Comparable rowKey, Comparable columnKey, int subinterval);
 
 }

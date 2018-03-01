@@ -63,29 +63,31 @@ import org.jfree.data.xy.XYZDataset;
 
 public interface SeriesDataset extends Dataset {
 
-    /**
-     * Returns the number of series in the dataset.
-     *
-     * @return The series count.
-     */
-    public int getSeriesCount();
+	/**
+	 * Returns the number of series in the dataset.
+	 *
+	 * @return The series count.
+	 */
+	public int getSeriesCount();
 
-    /**
-     * Returns the key for a series.
-     *
-     * @param series  the series (zero-based index).
-     *
-     * @return The key for the series.
-     */
-    public Comparable getSeriesKey(int series);
+	/**
+	 * Returns the key for a series.
+	 *
+	 * @param series
+	 *            the series (zero-based index).
+	 *
+	 * @return The key for the series.
+	 */
+	public Comparable getSeriesKey(int series);
 
-    /**
-     * Returns the index of the named series, or -1.
-     * 
-     * @param seriesKey  the series key.
-     * 
-     * @return The index.
-     */
-    public int indexOf(Comparable seriesKey);
-    
+	/**
+	 * Returns the index of the named series, or -1.
+	 * 
+	 * @param seriesKey
+	 *            the series key.
+	 * 
+	 * @return The index.
+	 */
+	public int indexOf(Comparable seriesKey);
+
 }

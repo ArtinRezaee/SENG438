@@ -46,99 +46,97 @@ import java.io.ObjectStreamException;
 import java.io.Serializable;
 
 /**
- * Used to indicate one of three positions in a time period: 
- * <code>START</code>, <code>MIDDLE</code> and <code>END</code>.
+ * Used to indicate one of three positions in a time period: <code>START</code>,
+ * <code>MIDDLE</code> and <code>END</code>.
  */
 public final class TimePeriodAnchor implements Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = 2011955697457548862L;
-    
-    /** Start of period. */
-    public static final TimePeriodAnchor START 
-        = new TimePeriodAnchor("TimePeriodAnchor.START");
+	/** For serialization. */
+	private static final long serialVersionUID = 2011955697457548862L;
 
-    /** Middle of period. */
-    public static final TimePeriodAnchor MIDDLE 
-        = new TimePeriodAnchor("TimePeriodAnchor.MIDDLE");
+	/** Start of period. */
+	public static final TimePeriodAnchor START = new TimePeriodAnchor("TimePeriodAnchor.START");
 
-    /** End of period. */
-    public static final TimePeriodAnchor END 
-        = new TimePeriodAnchor("TimePeriodAnchor.END");
+	/** Middle of period. */
+	public static final TimePeriodAnchor MIDDLE = new TimePeriodAnchor("TimePeriodAnchor.MIDDLE");
 
-    /** The name. */
-    private String name;
+	/** End of period. */
+	public static final TimePeriodAnchor END = new TimePeriodAnchor("TimePeriodAnchor.END");
 
-    /**
-     * Private constructor.
-     *
-     * @param name  the name.
-     */
-    private TimePeriodAnchor(String name) {
-        this.name = name;
-    }
+	/** The name. */
+	private String name;
 
-    /**
-     * Returns a string representing the object.
-     *
-     * @return The string.
-     */
-    public String toString() {
-        return this.name;
-    }
+	/**
+	 * Private constructor.
+	 *
+	 * @param name
+	 *            the name.
+	 */
+	private TimePeriodAnchor(String name) {
+		this.name = name;
+	}
 
-    /**
-     * Returns <code>true</code> if this object is equal to the specified 
-     * object, and <code>false</code> otherwise.
-     *
-     * @param obj  the other object.
-     *
-     * @return A boolean.
-     */
-    public boolean equals(Object obj) {
+	/**
+	 * Returns a string representing the object.
+	 *
+	 * @return The string.
+	 */
+	public String toString() {
+		return this.name;
+	}
 
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof TimePeriodAnchor)) {
-            return false;
-        }
+	/**
+	 * Returns <code>true</code> if this object is equal to the specified object,
+	 * and <code>false</code> otherwise.
+	 *
+	 * @param obj
+	 *            the other object.
+	 *
+	 * @return A boolean.
+	 */
+	public boolean equals(Object obj) {
 
-        TimePeriodAnchor position = (TimePeriodAnchor) obj;
-        if (!this.name.equals(position.name)) {
-            return false;
-        }
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof TimePeriodAnchor)) {
+			return false;
+		}
 
-        return true;
-    }
+		TimePeriodAnchor position = (TimePeriodAnchor) obj;
+		if (!this.name.equals(position.name)) {
+			return false;
+		}
 
-    /**
-     * Returns a hash code value for the object.
-     *
-     * @return The hashcode
-     */
-    public int hashCode() {
-        return this.name.hashCode();
-    }
-    
-    /**
-     * Ensures that serialization returns the unique instances.
-     * 
-     * @return The object.
-     * 
-     * @throws ObjectStreamException if there is a problem.
-     */
-    private Object readResolve() throws ObjectStreamException {
-        if (this.equals(TimePeriodAnchor.START)) {
-            return TimePeriodAnchor.START;
-        }
-        else if (this.equals(TimePeriodAnchor.MIDDLE)) {
-            return TimePeriodAnchor.MIDDLE;
-        }
-        else if (this.equals(TimePeriodAnchor.END)) {
-            return TimePeriodAnchor.END;
-        }
-        return null;
-    }
+		return true;
+	}
+
+	/**
+	 * Returns a hash code value for the object.
+	 *
+	 * @return The hashcode
+	 */
+	public int hashCode() {
+		return this.name.hashCode();
+	}
+
+	/**
+	 * Ensures that serialization returns the unique instances.
+	 * 
+	 * @return The object.
+	 * 
+	 * @throws ObjectStreamException
+	 *             if there is a problem.
+	 */
+	private Object readResolve() throws ObjectStreamException {
+		if (this.equals(TimePeriodAnchor.START)) {
+			return TimePeriodAnchor.START;
+		} else if (this.equals(TimePeriodAnchor.MIDDLE)) {
+			return TimePeriodAnchor.MIDDLE;
+		} else if (this.equals(TimePeriodAnchor.END)) {
+			return TimePeriodAnchor.END;
+		}
+		return null;
+	}
 
 }

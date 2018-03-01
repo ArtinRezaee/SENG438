@@ -47,20 +47,21 @@ package org.jfree.data;
  */
 public interface Values {
 
-    /**
-     * Returns the number of items (values) in the collection.
-     *
-     * @return The item count.
-     */
-    public int getItemCount();
+	/**
+	 * Returns the number of items (values) in the collection.
+	 *
+	 * @return The item count.
+	 */
+	public int getItemCount();
 
-    /**
-     * Returns a value.
-     *
-     * @param item  the item of interest (zero-based index).
-     *
-     * @return The value.
-     */
-    public Number getValue(int item);
+	/**
+	 * Returns a value.
+	 *
+	 * @param item
+	 *            the item of interest (zero-based index).
+	 *
+	 * @return The value.
+	 */
+	public Number getValue(int item);
 
 }

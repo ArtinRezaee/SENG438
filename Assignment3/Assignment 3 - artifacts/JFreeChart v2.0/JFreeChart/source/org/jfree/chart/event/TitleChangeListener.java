@@ -53,11 +53,12 @@ import java.util.EventListener;
  */
 public interface TitleChangeListener extends EventListener {
 
-    /**
-     * Receives notification of a chart title change event.
-     *
-     * @param event  the event.
-     */
-    public void titleChanged(TitleChangeEvent event);
+	/**
+	 * Receives notification of a chart title change event.
+	 *
+	 * @param event
+	 *            the event.
+	 */
+	public void titleChanged(TitleChangeEvent event);
 
 }

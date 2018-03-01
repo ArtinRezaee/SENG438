@@ -70,206 +70,201 @@ import org.jfree.util.ObjectUtilities;
  */
 public class MarkerAxisBand implements Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = -1729482413886398919L;
-    
-    /** The axis that the band belongs to. */
-    private NumberAxis axis;
+	/** For serialization. */
+	private static final long serialVersionUID = -1729482413886398919L;
 
-    /** The top outer gap. */
-    private double topOuterGap;
+	/** The axis that the band belongs to. */
+	private NumberAxis axis;
 
-    /** The top inner gap. */
-    private double topInnerGap;
+	/** The top outer gap. */
+	private double topOuterGap;
 
-    /** The bottom outer gap. */
-    private double bottomOuterGap;
+	/** The top inner gap. */
+	private double topInnerGap;
 
-    /** The bottom inner gap. */
-    private double bottomInnerGap;
+	/** The bottom outer gap. */
+	private double bottomOuterGap;
 
-    /** The font. */
-    private Font font;
+	/** The bottom inner gap. */
+	private double bottomInnerGap;
 
-    /** Storage for the markers. */
-    private List markers;
+	/** The font. */
+	private Font font;
 
-    /**
-     * Constructs a new axis band.
-     *
-     * @param axis  the owner.
-     * @param topOuterGap  the top outer gap.
-     * @param topInnerGap  the top inner gap.
-     * @param bottomOuterGap  the bottom outer gap.
-     * @param bottomInnerGap  the bottom inner gap.
-     * @param font  the font.
-     */
-    public MarkerAxisBand(NumberAxis axis,
-                          double topOuterGap, double topInnerGap,
-                          double bottomOuterGap, double bottomInnerGap,
-                          Font font) {
-        this.axis = axis;
-        this.topOuterGap = topOuterGap;
-        this.topInnerGap = topInnerGap;
-        this.bottomOuterGap = bottomOuterGap;
-        this.bottomInnerGap = bottomInnerGap;
-        this.font = font;
-        this.markers = new java.util.ArrayList();
-    }
+	/** Storage for the markers. */
+	private List markers;
 
-    /**
-     * Adds a marker to the band.
-     *
-     * @param marker  the marker.
-     */
-    public void addMarker(IntervalMarker marker) {
-        this.markers.add(marker);
-    }
+	/**
+	 * Constructs a new axis band.
+	 *
+	 * @param axis
+	 *            the owner.
+	 * @param topOuterGap
+	 *            the top outer gap.
+	 * @param topInnerGap
+	 *            the top inner gap.
+	 * @param bottomOuterGap
+	 *            the bottom outer gap.
+	 * @param bottomInnerGap
+	 *            the bottom inner gap.
+	 * @param font
+	 *            the font.
+	 */
+	public MarkerAxisBand(NumberAxis axis, double topOuterGap, double topInnerGap, double bottomOuterGap,
+			double bottomInnerGap, Font font) {
+		this.axis = axis;
+		this.topOuterGap = topOuterGap;
+		this.topInnerGap = topInnerGap;
+		this.bottomOuterGap = bottomOuterGap;
+		this.bottomInnerGap = bottomInnerGap;
+		this.font = font;
+		this.markers = new java.util.ArrayList();
+	}
 
-    /**
-     * Returns the height of the band.
-     *
-     * @param g2  the graphics device.
-     *
-     * @return The height of the band.
-     */
-    public double getHeight(Graphics2D g2) {
+	/**
+	 * Adds a marker to the band.
+	 *
+	 * @param marker
+	 *            the marker.
+	 */
+	public void addMarker(IntervalMarker marker) {
+		this.markers.add(marker);
+	}
 
-        double result = 0.0;
-        if (this.markers.size() > 0) {
-            LineMetrics metrics = this.font.getLineMetrics(
-                "123g", g2.getFontRenderContext()
-            );
-            result = this.topOuterGap + this.topInnerGap + metrics.getHeight()
-                     + this.bottomInnerGap + this.bottomOuterGap;
-        }
-        return result;
+	/**
+	 * Returns the height of the band.
+	 *
+	 * @param g2
+	 *            the graphics device.
+	 *
+	 * @return The height of the band.
+	 */
+	public double getHeight(Graphics2D g2) {
 
-    }
+		double result = 0.0;
+		if (this.markers.size() > 0) {
+			LineMetrics metrics = this.font.getLineMetrics("123g", g2.getFontRenderContext());
+			result = this.topOuterGap + this.topInnerGap + metrics.getHeight() + this.bottomInnerGap
+					+ this.bottomOuterGap;
+		}
+		return result;
 
-    /**
-     * A utility method that draws a string inside a rectangle.
-     *
-     * @param g2  the graphics device.
-     * @param bounds  the rectangle.
-     * @param font  the font.
-     * @param text  the text.
-     */
-    private void drawStringInRect(Graphics2D g2, Rectangle2D bounds, Font font,
-                                  String text) {
+	}
 
-        g2.setFont(font);
-        FontMetrics fm = g2.getFontMetrics(font);
-        Rectangle2D r = TextUtilities.getTextBounds(text, g2, fm);
-        double x = bounds.getX();
-        if (r.getWidth() < bounds.getWidth()) {
-            x = x + (bounds.getWidth() - r.getWidth()) / 2;
-        }
-        LineMetrics metrics = font.getLineMetrics(
-            text, g2.getFontRenderContext()
-        );
-        g2.drawString(
-            text, (float) x, (float) (bounds.getMaxY() 
-                - this.bottomInnerGap - metrics.getDescent())
-        );
-    }
+	/**
+	 * A utility method that draws a string inside a rectangle.
+	 *
+	 * @param g2
+	 *            the graphics device.
+	 * @param bounds
+	 *            the rectangle.
+	 * @param font
+	 *            the font.
+	 * @param text
+	 *            the text.
+	 */
+	private void drawStringInRect(Graphics2D g2, Rectangle2D bounds, Font font, String text) {
 
-    /**
-     * Draws the band.
-     *
-     * @param g2  the graphics device.
-     * @param plotArea  the plot area.
-     * @param dataArea  the data area.
-     * @param x  the x-coordinate.
-     * @param y  the y-coordinate.
-     */
-    public void draw(Graphics2D g2, Rectangle2D plotArea, Rectangle2D dataArea,
-                     double x, double y) {
+		g2.setFont(font);
+		FontMetrics fm = g2.getFontMetrics(font);
+		Rectangle2D r = TextUtilities.getTextBounds(text, g2, fm);
+		double x = bounds.getX();
+		if (r.getWidth() < bounds.getWidth()) {
+			x = x + (bounds.getWidth() - r.getWidth()) / 2;
+		}
+		LineMetrics metrics = font.getLineMetrics(text, g2.getFontRenderContext());
+		g2.drawString(text, (float) x, (float) (bounds.getMaxY() - this.bottomInnerGap - metrics.getDescent()));
+	}
 
-        double h = getHeight(g2);
-        Iterator iterator = this.markers.iterator();
-        while (iterator.hasNext()) {
-            IntervalMarker marker = (IntervalMarker) iterator.next();
-            double start =  Math.max(
-                marker.getStartValue(), this.axis.getRange().getLowerBound()
-            );
-            double end = Math.min(
-                marker.getEndValue(), this.axis.getRange().getUpperBound()
-            );
-            double s = this.axis.valueToJava2D(
-                start, dataArea, RectangleEdge.BOTTOM
-            );
-            double e = this.axis.valueToJava2D(
-                end, dataArea, RectangleEdge.BOTTOM
-            );
-            Rectangle2D r = new Rectangle2D.Double(
-                s, y + this.topOuterGap, e - s, 
-                h - this.topOuterGap - this.bottomOuterGap
-            );
+	/**
+	 * Draws the band.
+	 *
+	 * @param g2
+	 *            the graphics device.
+	 * @param plotArea
+	 *            the plot area.
+	 * @param dataArea
+	 *            the data area.
+	 * @param x
+	 *            the x-coordinate.
+	 * @param y
+	 *            the y-coordinate.
+	 */
+	public void draw(Graphics2D g2, Rectangle2D plotArea, Rectangle2D dataArea, double x, double y) {
 
-            Composite originalComposite = g2.getComposite();
-            g2.setComposite(AlphaComposite.getInstance(
-                AlphaComposite.SRC_OVER, marker.getAlpha())
-            );
-            g2.setPaint(marker.getPaint());
-            g2.fill(r);
-            g2.setPaint(marker.getOutlinePaint());
-            g2.draw(r);
-            g2.setComposite(originalComposite);
+		double h = getHeight(g2);
+		Iterator iterator = this.markers.iterator();
+		while (iterator.hasNext()) {
+			IntervalMarker marker = (IntervalMarker) iterator.next();
+			double start = Math.max(marker.getStartValue(), this.axis.getRange().getLowerBound());
+			double end = Math.min(marker.getEndValue(), this.axis.getRange().getUpperBound());
+			double s = this.axis.valueToJava2D(start, dataArea, RectangleEdge.BOTTOM);
+			double e = this.axis.valueToJava2D(end, dataArea, RectangleEdge.BOTTOM);
+			Rectangle2D r = new Rectangle2D.Double(s, y + this.topOuterGap, e - s,
+					h - this.topOuterGap - this.bottomOuterGap);
 
-            g2.setPaint(Color.black);
-            drawStringInRect(g2, r, this.font, marker.getLabel());
-        }
+			Composite originalComposite = g2.getComposite();
+			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, marker.getAlpha()));
+			g2.setPaint(marker.getPaint());
+			g2.fill(r);
+			g2.setPaint(marker.getOutlinePaint());
+			g2.draw(r);
+			g2.setComposite(originalComposite);
 
-    }
+			g2.setPaint(Color.black);
+			drawStringInRect(g2, r, this.font, marker.getLabel());
+		}
 
-    /**
-     * Tests this axis for equality with another object.  Note that the axis 
-     * that the band belongs to is ignored in the test.
-     *
-     * @param obj  the object (<code>null</code> permitted).
-     *
-     * @return <code>true</code> or <code>false</code>.
-     */
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof MarkerAxisBand)) {
-            return false;
-        }
-        MarkerAxisBand that = (MarkerAxisBand) obj;
-        if (this.topOuterGap != that.topOuterGap) {
-            return false;
-        }
-        if (this.topInnerGap != that.topInnerGap) {
-            return false;
-        }
-        if (this.bottomInnerGap != that.bottomInnerGap) {
-            return false;
-        }
-        if (this.bottomOuterGap != that.bottomOuterGap) {
-            return false;
-        }
-        if (!ObjectUtilities.equal(this.font, that.font)) {
-            return false;
-        }
-        if (!ObjectUtilities.equal(this.markers, that.markers)) {
-            return false;
-        }
-        return true;
-    }
-    
-    /**
-     * Returns a hash code for the object.
-     * 
-     * @return A hash code.
-     */
-    public int hashCode() {
-        int result = 37;
-        result = 19 * result + this.font.hashCode();
-        result = 19 * result + this.markers.hashCode();
-        return result;
-    }
+	}
+
+	/**
+	 * Tests this axis for equality with another object. Note that the axis that the
+	 * band belongs to is ignored in the test.
+	 *
+	 * @param obj
+	 *            the object (<code>null</code> permitted).
+	 *
+	 * @return <code>true</code> or <code>false</code>.
+	 */
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof MarkerAxisBand)) {
+			return false;
+		}
+		MarkerAxisBand that = (MarkerAxisBand) obj;
+		if (this.topOuterGap != that.topOuterGap) {
+			return false;
+		}
+		if (this.topInnerGap != that.topInnerGap) {
+			return false;
+		}
+		if (this.bottomInnerGap != that.bottomInnerGap) {
+			return false;
+		}
+		if (this.bottomOuterGap != that.bottomOuterGap) {
+			return false;
+		}
+		if (!ObjectUtilities.equal(this.font, that.font)) {
+			return false;
+		}
+		if (!ObjectUtilities.equal(this.markers, that.markers)) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Returns a hash code for the object.
+	 * 
+	 * @return A hash code.
+	 */
+	public int hashCode() {
+		int result = 37;
+		result = 19 * result + this.font.hashCode();
+		result = 19 * result + this.markers.hashCode();
+		return result;
+	}
 
 }

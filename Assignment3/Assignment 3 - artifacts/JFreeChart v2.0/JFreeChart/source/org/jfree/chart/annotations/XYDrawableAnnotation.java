@@ -58,165 +58,164 @@ import org.jfree.util.ObjectUtilities;
 import org.jfree.util.PublicCloneable;
 
 /**
- * A general annotation that can be placed on 
- * an {@link org.jfree.chart.plot.XYPlot}.
+ * A general annotation that can be placed on an
+ * {@link org.jfree.chart.plot.XYPlot}.
  */
-public class XYDrawableAnnotation extends AbstractXYAnnotation
-                                  implements Cloneable, PublicCloneable, 
-                                             Serializable {
+public class XYDrawableAnnotation extends AbstractXYAnnotation implements Cloneable, PublicCloneable, Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = -6540812859722691020L;
-    
-    /** The x-coordinate. */
-    private double x;
+	/** For serialization. */
+	private static final long serialVersionUID = -6540812859722691020L;
 
-    /** The y-coordinate. */
-    private double y;
+	/** The x-coordinate. */
+	private double x;
 
-    /** The width. */
-    private double width;
+	/** The y-coordinate. */
+	private double y;
 
-    /** The height. */
-    private double height;
+	/** The width. */
+	private double width;
 
-    /** The drawable object. */
-    private Drawable drawable;
+	/** The height. */
+	private double height;
 
-    /**
-     * Creates a new annotation to be displayed within the given area.
-     *
-     * @param x  the x-coordinate for the area.
-     * @param y  the y-coordinate for the area.
-     * @param width  the width of the area.
-     * @param height  the height of the area.
-     * @param drawable  the drawable object (<code>null</code> not permitted).
-     */
-    public XYDrawableAnnotation(double x, double y, double width, double height,
-                                Drawable drawable) {
+	/** The drawable object. */
+	private Drawable drawable;
 
-        if (drawable == null) {
-            throw new IllegalArgumentException("Null 'drawable' argument.");
-        }
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-        this.drawable = drawable;
+	/**
+	 * Creates a new annotation to be displayed within the given area.
+	 *
+	 * @param x
+	 *            the x-coordinate for the area.
+	 * @param y
+	 *            the y-coordinate for the area.
+	 * @param width
+	 *            the width of the area.
+	 * @param height
+	 *            the height of the area.
+	 * @param drawable
+	 *            the drawable object (<code>null</code> not permitted).
+	 */
+	public XYDrawableAnnotation(double x, double y, double width, double height, Drawable drawable) {
 
-    }
+		if (drawable == null) {
+			throw new IllegalArgumentException("Null 'drawable' argument.");
+		}
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+		this.drawable = drawable;
 
-    /**
-     * Draws the annotation.
-     *
-     * @param g2  the graphics device.
-     * @param plot  the plot.
-     * @param dataArea  the data area.
-     * @param domainAxis  the domain axis.
-     * @param rangeAxis  the range axis.
-     * @param rendererIndex  the renderer index.
-     * @param info  if supplied, this info object will be populated with
-     *              entity information.
-     */
-    public void draw(Graphics2D g2, XYPlot plot, Rectangle2D dataArea,
-                     ValueAxis domainAxis, ValueAxis rangeAxis, 
-                     int rendererIndex,
-                     PlotRenderingInfo info) {
+	}
 
-        PlotOrientation orientation = plot.getOrientation();
-        RectangleEdge domainEdge = Plot.resolveDomainAxisLocation(
-            plot.getDomainAxisLocation(), orientation
-        );
-        RectangleEdge rangeEdge = Plot.resolveRangeAxisLocation(
-            plot.getRangeAxisLocation(), orientation
-        );
-        float j2DX = (float) domainAxis.valueToJava2D(
-            this.x, dataArea, domainEdge
-        );
-        float j2DY = (float) rangeAxis.valueToJava2D(
-            this.y, dataArea, rangeEdge
-        );
-        Rectangle2D area = new Rectangle2D.Double(
-            j2DX - this.width / 2.0, j2DY - this.height / 2.0,
-            this.width, this.height
-        );
-        this.drawable.draw(g2, area);
-        String toolTip = getToolTipText();
-        String url = getURL();
-        if (toolTip != null || url != null) {
-            addEntity(info, area, rendererIndex, toolTip, url);
-        }
-        
-    }
+	/**
+	 * Draws the annotation.
+	 *
+	 * @param g2
+	 *            the graphics device.
+	 * @param plot
+	 *            the plot.
+	 * @param dataArea
+	 *            the data area.
+	 * @param domainAxis
+	 *            the domain axis.
+	 * @param rangeAxis
+	 *            the range axis.
+	 * @param rendererIndex
+	 *            the renderer index.
+	 * @param info
+	 *            if supplied, this info object will be populated with entity
+	 *            information.
+	 */
+	public void draw(Graphics2D g2, XYPlot plot, Rectangle2D dataArea, ValueAxis domainAxis, ValueAxis rangeAxis,
+			int rendererIndex, PlotRenderingInfo info) {
 
-    /**
-     * Tests this annotation for equality with an arbitrary object.
-     * 
-     * @param obj  the object to test against.
-     * 
-     * @return <code>true</code> or <code>false</code>.
-     */
-    public boolean equals(Object obj) {
-        
-        if (obj == this) { // simple case
-            return true;
-        }      
-        // now try to reject equality...
-        if (!super.equals(obj)) {
-            return false;
-        }
-        if (!(obj instanceof XYDrawableAnnotation)) {
-            return false;
-        }
-        XYDrawableAnnotation that = (XYDrawableAnnotation) obj;
-        if (this.x != that.x) {
-            return false;
-        }
-        if (this.y != that.y) {
-            return false;
-        }
-        if (this.width != that.width) {
-            return false;
-        }
-        if (this.height != that.height) {
-            return false;
-        }
-        if (!ObjectUtilities.equal(this.drawable, that.drawable)) {
-            return false;
-        }
-        // seem to be the same... 
-        return true;
-        
-    }
-    
-    /**
-     * Returns a hash code.
-     * 
-     * @return A hash code.
-     */
-    public int hashCode() {
-        int result;
-        long temp;
-        temp = Double.doubleToLongBits(this.x);
-        result = (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(this.y);
-        result = 29 * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(this.width);
-        result = 29 * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(this.height);
-        result = 29 * result + (int) (temp ^ (temp >>> 32));
-        return result;
-    }
-    
-    /**
-     * Returns a clone of the annotation.
-     * 
-     * @return A clone.
-     * 
-     * @throws CloneNotSupportedException  if the annotation can't be cloned.
-     */
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
+		PlotOrientation orientation = plot.getOrientation();
+		RectangleEdge domainEdge = Plot.resolveDomainAxisLocation(plot.getDomainAxisLocation(), orientation);
+		RectangleEdge rangeEdge = Plot.resolveRangeAxisLocation(plot.getRangeAxisLocation(), orientation);
+		float j2DX = (float) domainAxis.valueToJava2D(this.x, dataArea, domainEdge);
+		float j2DY = (float) rangeAxis.valueToJava2D(this.y, dataArea, rangeEdge);
+		Rectangle2D area = new Rectangle2D.Double(j2DX - this.width / 2.0, j2DY - this.height / 2.0, this.width,
+				this.height);
+		this.drawable.draw(g2, area);
+		String toolTip = getToolTipText();
+		String url = getURL();
+		if (toolTip != null || url != null) {
+			addEntity(info, area, rendererIndex, toolTip, url);
+		}
+
+	}
+
+	/**
+	 * Tests this annotation for equality with an arbitrary object.
+	 * 
+	 * @param obj
+	 *            the object to test against.
+	 * 
+	 * @return <code>true</code> or <code>false</code>.
+	 */
+	public boolean equals(Object obj) {
+
+		if (obj == this) { // simple case
+			return true;
+		}
+		// now try to reject equality...
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (!(obj instanceof XYDrawableAnnotation)) {
+			return false;
+		}
+		XYDrawableAnnotation that = (XYDrawableAnnotation) obj;
+		if (this.x != that.x) {
+			return false;
+		}
+		if (this.y != that.y) {
+			return false;
+		}
+		if (this.width != that.width) {
+			return false;
+		}
+		if (this.height != that.height) {
+			return false;
+		}
+		if (!ObjectUtilities.equal(this.drawable, that.drawable)) {
+			return false;
+		}
+		// seem to be the same...
+		return true;
+
+	}
+
+	/**
+	 * Returns a hash code.
+	 * 
+	 * @return A hash code.
+	 */
+	public int hashCode() {
+		int result;
+		long temp;
+		temp = Double.doubleToLongBits(this.x);
+		result = (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(this.y);
+		result = 29 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(this.width);
+		result = 29 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(this.height);
+		result = 29 * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
+	/**
+	 * Returns a clone of the annotation.
+	 * 
+	 * @return A clone.
+	 * 
+	 * @throws CloneNotSupportedException
+	 *             if the annotation can't be cloned.
+	 */
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
 
 }

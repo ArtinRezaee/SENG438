@@ -44,57 +44,56 @@ package org.jfree.chart.axis;
 import java.text.DecimalFormat;
 
 /**
- * A source that can used by the {@link NumberAxis} class to obtain a
- * suitable {@link TickUnit}.
+ * A source that can used by the {@link NumberAxis} class to obtain a suitable
+ * {@link TickUnit}.
  *
  */
 public class StandardTickUnitSource implements TickUnitSource {
 
-    /** Constant for log(10.0). */
-    private static final double LOG_10_VALUE = Math.log(10.0);
-    
-    /**
-     * Returns a tick unit that is larger than the supplied unit.
-     *
-     * @param unit   the unit.
-     *
-     * @return A tick unit that is larger than the supplied unit.
-     */
-    public TickUnit getLargerTickUnit(TickUnit unit) {
-        double x = unit.getSize();
-        double log = Math.log(x) / LOG_10_VALUE;
-        double higher = Math.ceil(log);
-        return new NumberTickUnit(
-            Math.pow(10, higher), new DecimalFormat("0.0E0")
-        );
-    }
+	/** Constant for log(10.0). */
+	private static final double LOG_10_VALUE = Math.log(10.0);
 
-    /**
-     * Returns the tick unit in the collection that is greater than or equal
-     * to (in size) the specified unit.
-     *
-     * @param unit  the unit.
-     *
-     * @return A unit from the collection.
-     */
-    public TickUnit getCeilingTickUnit(TickUnit unit) {
-        return getLargerTickUnit(unit);
-    }
+	/**
+	 * Returns a tick unit that is larger than the supplied unit.
+	 *
+	 * @param unit
+	 *            the unit.
+	 *
+	 * @return A tick unit that is larger than the supplied unit.
+	 */
+	public TickUnit getLargerTickUnit(TickUnit unit) {
+		double x = unit.getSize();
+		double log = Math.log(x) / LOG_10_VALUE;
+		double higher = Math.ceil(log);
+		return new NumberTickUnit(Math.pow(10, higher), new DecimalFormat("0.0E0"));
+	}
 
-    /**
-     * Returns the tick unit in the collection that is greater than or equal
-     * to the specified size.
-     *
-     * @param size  the size.
-     *
-     * @return A unit from the collection.
-     */
-    public TickUnit getCeilingTickUnit(double size) {
-        double log = Math.log(size) / LOG_10_VALUE;
-        double higher = Math.ceil(log);
-        return new NumberTickUnit(
-            Math.pow(10, higher), new DecimalFormat("0.0E0")
-        );
-    }
-    
+	/**
+	 * Returns the tick unit in the collection that is greater than or equal to (in
+	 * size) the specified unit.
+	 *
+	 * @param unit
+	 *            the unit.
+	 *
+	 * @return A unit from the collection.
+	 */
+	public TickUnit getCeilingTickUnit(TickUnit unit) {
+		return getLargerTickUnit(unit);
+	}
+
+	/**
+	 * Returns the tick unit in the collection that is greater than or equal to the
+	 * specified size.
+	 *
+	 * @param size
+	 *            the size.
+	 *
+	 * @return A unit from the collection.
+	 */
+	public TickUnit getCeilingTickUnit(double size) {
+		double log = Math.log(size) / LOG_10_VALUE;
+		double higher = Math.ceil(log);
+		return new NumberTickUnit(Math.pow(10, higher), new DecimalFormat("0.0E0"));
+	}
+
 }

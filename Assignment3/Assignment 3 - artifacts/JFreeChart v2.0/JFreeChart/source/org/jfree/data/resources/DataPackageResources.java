@@ -50,21 +50,20 @@ import java.util.ListResourceBundle;
  */
 public class DataPackageResources extends ListResourceBundle {
 
-    /**
-     * Returns the array of strings in the resource bundle.
-     *
-     * @return The localised resources.
-     */
-    public Object[][] getContents() {
-        return CONTENTS;
-    }
+	/**
+	 * Returns the array of strings in the resource bundle.
+	 *
+	 * @return The localised resources.
+	 */
+	public Object[][] getContents() {
+		return CONTENTS;
+	}
 
-    /** The resources to be localised. */
-    private static final Object[][] CONTENTS = {
+	/** The resources to be localised. */
+	private static final Object[][] CONTENTS = {
 
-        {"series.default-prefix",     "Series"},
-        {"categories.default-prefix", "Category"},
+			{ "series.default-prefix", "Series" }, { "categories.default-prefix", "Category" },
 
-    };
+	};
 
 }

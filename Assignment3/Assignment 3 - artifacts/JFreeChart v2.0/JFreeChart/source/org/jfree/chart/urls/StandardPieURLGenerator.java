@@ -45,7 +45,7 @@
  * 13-Jan-2005 : Fixed for compliance with XHTML 1.0 (DG):
  *
  */
- 
+
 package org.jfree.chart.urls;
 
 import java.io.Serializable;
@@ -59,113 +59,115 @@ import org.jfree.data.general.PieDataset;
  */
 public class StandardPieURLGenerator implements PieURLGenerator, Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = 1626966402065883419L;
-    
-    /** The prefix. */
-    private String prefix = "index.html";
+	/** For serialization. */
+	private static final long serialVersionUID = 1626966402065883419L;
 
-    /** The category parameter name. */
-    private String categoryParameterName = "category";
-    
-    /** The pie index parameter name. */
-    private String indexParameterName = "pieIndex";
+	/** The prefix. */
+	private String prefix = "index.html";
 
-    /**
-     * Default constructor.
-     */
-    public StandardPieURLGenerator() {
-        super();
-    }
+	/** The category parameter name. */
+	private String categoryParameterName = "category";
 
-    /**
-     * Creates a new generator.
-     *
-     * @param prefix  the prefix.
-     */
-    public StandardPieURLGenerator(String prefix) {
-        this.prefix = prefix;
-    }
+	/** The pie index parameter name. */
+	private String indexParameterName = "pieIndex";
 
-    /**
-     * Creates a new generator.
-     *
-     * @param prefix  the prefix.
-     * @param categoryParameterName  the category parameter name.
-     */
-    public StandardPieURLGenerator(String prefix, 
-                                   String categoryParameterName) {
-        this.prefix = prefix;
-        this.categoryParameterName = categoryParameterName;
-    }
+	/**
+	 * Default constructor.
+	 */
+	public StandardPieURLGenerator() {
+		super();
+	}
 
-    /**
-     * Creates a new generator.
-     *
-     * @param prefix  the prefix.
-     * @param categoryParameterName  the category parameter name.
-     * @param indexParameterName  the index parameter name 
-     *                            (<code>null</code> permitted).
-     */
-    public StandardPieURLGenerator(String prefix, 
-                                   String categoryParameterName, 
-                                   String indexParameterName) {
-        this.prefix = prefix;
-        this.categoryParameterName = categoryParameterName;
-        this.indexParameterName = indexParameterName;
-    }
+	/**
+	 * Creates a new generator.
+	 *
+	 * @param prefix
+	 *            the prefix.
+	 */
+	public StandardPieURLGenerator(String prefix) {
+		this.prefix = prefix;
+	}
 
-    /**
-     * Generates a URL.
-     *
-     * @param data  the dataset.
-     * @param key  the item key.
-     * @param pieIndex  the pie index (ignored).
-     *
-     * @return A string containing the generated URL.
-     */
-    public String generateURL(PieDataset data, Comparable key, int pieIndex) {
+	/**
+	 * Creates a new generator.
+	 *
+	 * @param prefix
+	 *            the prefix.
+	 * @param categoryParameterName
+	 *            the category parameter name.
+	 */
+	public StandardPieURLGenerator(String prefix, String categoryParameterName) {
+		this.prefix = prefix;
+		this.categoryParameterName = categoryParameterName;
+	}
 
-        String url = this.prefix;
-        if (url.indexOf("?") > -1) {
-            url += "&amp;" + this.categoryParameterName + "=" + key.toString();
-        }
-        else {
-            url += "?" + this.categoryParameterName + "=" + key.toString();
-        }
-        if (this.indexParameterName != null) {
-            url += "&amp;" + this.indexParameterName + "=" 
-                   + String.valueOf(pieIndex);
-        }
-        return url;
+	/**
+	 * Creates a new generator.
+	 *
+	 * @param prefix
+	 *            the prefix.
+	 * @param categoryParameterName
+	 *            the category parameter name.
+	 * @param indexParameterName
+	 *            the index parameter name (<code>null</code> permitted).
+	 */
+	public StandardPieURLGenerator(String prefix, String categoryParameterName, String indexParameterName) {
+		this.prefix = prefix;
+		this.categoryParameterName = categoryParameterName;
+		this.indexParameterName = indexParameterName;
+	}
 
-    }
+	/**
+	 * Generates a URL.
+	 *
+	 * @param data
+	 *            the dataset.
+	 * @param key
+	 *            the item key.
+	 * @param pieIndex
+	 *            the pie index (ignored).
+	 *
+	 * @return A string containing the generated URL.
+	 */
+	public String generateURL(PieDataset data, Comparable key, int pieIndex) {
 
-    /**
-     * Tests if this object is equal to another.
-     *
-     * @param obj  the object (<code>null</code> permitted).
-     *
-     * @return A boolean.
-     */
-    public boolean equals(Object obj) {
+		String url = this.prefix;
+		if (url.indexOf("?") > -1) {
+			url += "&amp;" + this.categoryParameterName + "=" + key.toString();
+		} else {
+			url += "?" + this.categoryParameterName + "=" + key.toString();
+		}
+		if (this.indexParameterName != null) {
+			url += "&amp;" + this.indexParameterName + "=" + String.valueOf(pieIndex);
+		}
+		return url;
 
-        if (obj == null) {
-            return false;
-        }
-        if (obj == this) {
-            return true;
-        }
+	}
 
-        if ((obj instanceof StandardPieURLGenerator) == false) {
-            return false;
-        }
+	/**
+	 * Tests if this object is equal to another.
+	 *
+	 * @param obj
+	 *            the object (<code>null</code> permitted).
+	 *
+	 * @return A boolean.
+	 */
+	public boolean equals(Object obj) {
 
-        StandardPieURLGenerator generator = (StandardPieURLGenerator) obj;
-        return (
-            this.categoryParameterName.equals(generator.categoryParameterName))
-            && (this.prefix.equals(generator.prefix)
-        );
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
 
-    }
+		if ((obj instanceof StandardPieURLGenerator) == false) {
+			return false;
+		}
+
+		StandardPieURLGenerator generator = (StandardPieURLGenerator) obj;
+		return (this.categoryParameterName.equals(generator.categoryParameterName))
+				&& (this.prefix.equals(generator.prefix));
+
+	}
 }

@@ -62,131 +62,137 @@ import org.jfree.data.general.PieDataset;
 /**
  * A chart entity that represents one section within a pie plot.
  */
-public class PieSectionEntity extends ChartEntity
-                              implements Serializable {
+public class PieSectionEntity extends ChartEntity implements Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = 9199892576531984162L;
-    
-    /** The dataset. */
-    private PieDataset dataset;
-    
-    /** The pie index. */
-    private int pieIndex;
+	/** For serialization. */
+	private static final long serialVersionUID = 9199892576531984162L;
 
-    /** The section index. */
-    private int sectionIndex;
+	/** The dataset. */
+	private PieDataset dataset;
 
-    /** The section key. */
-    private Comparable sectionKey;
+	/** The pie index. */
+	private int pieIndex;
 
-    /**
-     * Creates a new pie section entity.
-     *
-     * @param area  the area.
-     * @param dataset  the pie dataset.
-     * @param pieIndex  the pie index (zero-based).
-     * @param sectionIndex  the section index (zero-based).
-     * @param sectionKey  the section key.
-     * @param toolTipText  the tool tip text.
-     * @param urlText  the URL text for HTML image maps.
-     */
-    public PieSectionEntity(Shape area, 
-                            PieDataset dataset,
-                            int pieIndex, int sectionIndex, 
-                            Comparable sectionKey,
-                            String toolTipText, String urlText) {
+	/** The section index. */
+	private int sectionIndex;
 
-        super(area, toolTipText, urlText);
-        this.dataset = dataset;
-        this.pieIndex = pieIndex;
-        this.sectionIndex = sectionIndex;
-        this.sectionKey = sectionKey;
+	/** The section key. */
+	private Comparable sectionKey;
 
-    }
+	/**
+	 * Creates a new pie section entity.
+	 *
+	 * @param area
+	 *            the area.
+	 * @param dataset
+	 *            the pie dataset.
+	 * @param pieIndex
+	 *            the pie index (zero-based).
+	 * @param sectionIndex
+	 *            the section index (zero-based).
+	 * @param sectionKey
+	 *            the section key.
+	 * @param toolTipText
+	 *            the tool tip text.
+	 * @param urlText
+	 *            the URL text for HTML image maps.
+	 */
+	public PieSectionEntity(Shape area, PieDataset dataset, int pieIndex, int sectionIndex, Comparable sectionKey,
+			String toolTipText, String urlText) {
 
-    /**
-     * Returns the datset this entity refers to.
-     *
-     * @return The dataset.
-     */
-    public PieDataset getDataset() {
-        return this.dataset;
-    }
+		super(area, toolTipText, urlText);
+		this.dataset = dataset;
+		this.pieIndex = pieIndex;
+		this.sectionIndex = sectionIndex;
+		this.sectionKey = sectionKey;
 
-    /**
-     * Sets the datset this entity refers to.
-     *
-     * @param dataset  the dataset.
-     */
-    public void setDataset(PieDataset dataset) {
-        this.dataset = dataset;
-    }
+	}
 
-    /**
-     * Returns the pie index.  For a regular pie chart, the section index is 0. 
-     * For a pie chart containing multiple pie plots, the pie index is the row 
-     * or column index from which the pie data is extracted.
-     *
-     * @return The pie index.
-     */
-    public int getPieIndex() {
-        return this.pieIndex;
-    }
+	/**
+	 * Returns the datset this entity refers to.
+	 *
+	 * @return The dataset.
+	 */
+	public PieDataset getDataset() {
+		return this.dataset;
+	}
 
-    /**
-     * Sets the pie index.
-     *
-     * @param index  the new index value.
-     */
-    public void setPieIndex(int index) {
-        this.pieIndex = index;
-    }
+	/**
+	 * Sets the datset this entity refers to.
+	 *
+	 * @param dataset
+	 *            the dataset.
+	 */
+	public void setDataset(PieDataset dataset) {
+		this.dataset = dataset;
+	}
 
-    /**
-     * Returns the section index.
-     *
-     * @return The section index.
-     */
-    public int getSectionIndex() {
-        return this.sectionIndex;
-    }
+	/**
+	 * Returns the pie index. For a regular pie chart, the section index is 0. For a
+	 * pie chart containing multiple pie plots, the pie index is the row or column
+	 * index from which the pie data is extracted.
+	 *
+	 * @return The pie index.
+	 */
+	public int getPieIndex() {
+		return this.pieIndex;
+	}
 
-    /**
-     * Sets the section index.
-     *
-     * @param index  the section index.
-     */
-    public void setSectionIndex(int index) {
-        this.sectionIndex = index;
-    }
+	/**
+	 * Sets the pie index.
+	 *
+	 * @param index
+	 *            the new index value.
+	 */
+	public void setPieIndex(int index) {
+		this.pieIndex = index;
+	}
 
-    /**
-     * Returns the section key.
-     *
-     * @return The section key.
-     */
-    public Comparable getSectionKey() {
-        return this.sectionKey;
-    }
+	/**
+	 * Returns the section index.
+	 *
+	 * @return The section index.
+	 */
+	public int getSectionIndex() {
+		return this.sectionIndex;
+	}
 
-    /**
-     * Sets the section key.
-     *
-     * @param key  the section key.
-     */
-    public void setSectionKey(Comparable key) {
-        this.sectionKey = key;
-    }
+	/**
+	 * Sets the section index.
+	 *
+	 * @param index
+	 *            the section index.
+	 */
+	public void setSectionIndex(int index) {
+		this.sectionIndex = index;
+	}
 
-    /**
-     * Returns a string representing the entity.
-     *
-     * @return A string representing the entity.
-     */
-    public String toString() {
-        return "PieSection: " + this.pieIndex + ", " + this.sectionIndex + "("
-                              + this.sectionKey.toString() + ")";
-    }
+	/**
+	 * Returns the section key.
+	 *
+	 * @return The section key.
+	 */
+	public Comparable getSectionKey() {
+		return this.sectionKey;
+	}
+
+	/**
+	 * Sets the section key.
+	 *
+	 * @param key
+	 *            the section key.
+	 */
+	public void setSectionKey(Comparable key) {
+		this.sectionKey = key;
+	}
+
+	/**
+	 * Returns a string representing the entity.
+	 *
+	 * @return A string representing the entity.
+	 */
+	public String toString() {
+		return "PieSection: " + this.pieIndex + ", " + this.sectionIndex + "(" + this.sectionKey.toString() + ")";
+	}
 
 }

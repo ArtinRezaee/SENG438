@@ -48,85 +48,85 @@ import java.io.Serializable;
  */
 public final class SeriesRenderingOrder implements Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = 209336477448807735L;
-    
-    /**
-     * Render series in the order 0, 1, 2, ..., N-1, where N is the number
-     * of series.
-     */
-    public static final SeriesRenderingOrder FORWARD
-        = new SeriesRenderingOrder("SeriesRenderingOrder.FORWARD");
+	/** For serialization. */
+	private static final long serialVersionUID = 209336477448807735L;
 
-    /**
-     * Render series in the order N-1, N-2, ..., 2, 1, 0, where N is the
-     * number of series.
-     */
-    public static final SeriesRenderingOrder REVERSE
-        = new SeriesRenderingOrder("SeriesRenderingOrder.REVERSE");
+	/**
+	 * Render series in the order 0, 1, 2, ..., N-1, where N is the number of
+	 * series.
+	 */
+	public static final SeriesRenderingOrder FORWARD = new SeriesRenderingOrder("SeriesRenderingOrder.FORWARD");
 
-    /** The name. */
-    private String name;
+	/**
+	 * Render series in the order N-1, N-2, ..., 2, 1, 0, where N is the number of
+	 * series.
+	 */
+	public static final SeriesRenderingOrder REVERSE = new SeriesRenderingOrder("SeriesRenderingOrder.REVERSE");
 
-    /**
-     * Private constructor.
-     *
-     * @param name  the name.
-     */
-    private SeriesRenderingOrder(String name) {
-        this.name = name;
-    }
+	/** The name. */
+	private String name;
 
-    /**
-     * Returns a string representing the object.
-     *
-     * @return The string (never <code>null</code>).
-     */
-    public String toString() {
-        return this.name;
-    }
+	/**
+	 * Private constructor.
+	 *
+	 * @param name
+	 *            the name.
+	 */
+	private SeriesRenderingOrder(String name) {
+		this.name = name;
+	}
 
-    /**
-     * Returns <code>true</code> if this object is equal to the specified
-     * object, and <code>false</code> otherwise.
-     *
-     * @param obj  the other object.
-     *
-     * @return A boolean.
-     */
-    public boolean equals(Object obj) {
+	/**
+	 * Returns a string representing the object.
+	 *
+	 * @return The string (never <code>null</code>).
+	 */
+	public String toString() {
+		return this.name;
+	}
 
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof SeriesRenderingOrder)) {
-            return false;
-        }
+	/**
+	 * Returns <code>true</code> if this object is equal to the specified object,
+	 * and <code>false</code> otherwise.
+	 *
+	 * @param obj
+	 *            the other object.
+	 *
+	 * @return A boolean.
+	 */
+	public boolean equals(Object obj) {
 
-        SeriesRenderingOrder order = (SeriesRenderingOrder) obj;
-        if (!this.name.equals(order.toString())) {
-            return false;
-        }
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof SeriesRenderingOrder)) {
+			return false;
+		}
 
-        return true;
+		SeriesRenderingOrder order = (SeriesRenderingOrder) obj;
+		if (!this.name.equals(order.toString())) {
+			return false;
+		}
 
-    }
+		return true;
 
-    /**
-     * Ensures that serialization returns the unique instances.
-     *
-     * @return The object.
-     *
-     * @throws ObjectStreamException if there is a problem.
-     */
-    private Object readResolve() throws ObjectStreamException {
-        if (this.equals(SeriesRenderingOrder.FORWARD)) {
-            return SeriesRenderingOrder.FORWARD;
-        }
-        else if (this.equals(SeriesRenderingOrder.REVERSE)) {
-            return SeriesRenderingOrder.REVERSE;
-        }
-        return null;
-    }
+	}
+
+	/**
+	 * Ensures that serialization returns the unique instances.
+	 *
+	 * @return The object.
+	 *
+	 * @throws ObjectStreamException
+	 *             if there is a problem.
+	 */
+	private Object readResolve() throws ObjectStreamException {
+		if (this.equals(SeriesRenderingOrder.FORWARD)) {
+			return SeriesRenderingOrder.FORWARD;
+		} else if (this.equals(SeriesRenderingOrder.REVERSE)) {
+			return SeriesRenderingOrder.REVERSE;
+		}
+		return null;
+	}
 
 }

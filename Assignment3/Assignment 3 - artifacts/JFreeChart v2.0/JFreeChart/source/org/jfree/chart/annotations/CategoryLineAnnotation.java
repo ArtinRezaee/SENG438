@@ -65,318 +65,330 @@ import org.jfree.util.ObjectUtilities;
 import org.jfree.util.PaintUtilities;
 
 /**
- * A line annotation that can be placed on a 
+ * A line annotation that can be placed on a
  * {@link org.jfree.chart.plot.CategoryPlot}.
  */
-public class CategoryLineAnnotation implements CategoryAnnotation, 
-                                               Cloneable, Serializable {
-    
-    /** The category for the start of the line. */
-    private Comparable category1;
+public class CategoryLineAnnotation implements CategoryAnnotation, Cloneable, Serializable {
 
-    /** The value for the start of the line. */
-    private double value1;
+	/** The category for the start of the line. */
+	private Comparable category1;
 
-    /** The category for the end of the line. */
-    private Comparable category2;
-    
-    /** The value for the end of the line. */
-    private double value2;
-    
-    /** The line color. */
-    private transient Paint paint = Color.black;
-    
-    /** The line stroke. */
-    private transient Stroke stroke = new BasicStroke(1.0f);
-     
-    /**
-     * Creates a new annotation that draws a line between (category1, value1)
-     * and (category2, value2).
-     *
-     * @param category1  the category (<code>null</code> not permitted).
-     * @param value1  the value.
-     * @param category2  the category (<code>null</code> not permitted).
-     * @param value2  the value.
-     */
-    public CategoryLineAnnotation(Comparable category1, double value1, 
-                                  Comparable category2, double value2,
-                                  Paint paint, Stroke stroke) {
-        if (category1 == null) {
-            throw new IllegalArgumentException("Null 'category1' argument.");   
-        }
-        if (category2 == null) {
-            throw new IllegalArgumentException("Null 'category2' argument.");   
-        }
-        if (paint == null) {
-            throw new IllegalArgumentException("Null 'paint' argument.");   
-        }
-        if (stroke == null) {
-            throw new IllegalArgumentException("Null 'stroke' argument.");   
-        }
-        this.category1 = category1;
-        this.value1 = value1;
-        this.category2 = category2;
-        this.value2 = value2;
-        this.paint = paint;
-        this.stroke = stroke;
-    }
+	/** The value for the start of the line. */
+	private double value1;
 
-    /**
-     * Returns the category for the start of the line.
-     * 
-     * @return The category for the start of the line (never <code>null</code>).
-     */
-    public Comparable getCategory1() {
-        return this.category1;
-    }
-    
-    /**
-     * Sets the category for the start of the line.
-     * 
-     * @param category  the category (<code>null</code> not permitted).
-     */
-    public void setCategory1(Comparable category) {
-        if (category == null) {
-            throw new IllegalArgumentException("Null 'category' argument.");   
-        }
-        this.category1 = category;
-    }
-    
-    /**
-     * Returns the y-value for the start of the line.
-     * 
-     * @return The y-value for the start of the line.
-     */
-    public double getValue1() {
-        return this.value1;
-    }
-    
-    /**
-     * Sets the y-value for the start of the line.
-     * 
-     * @param value  the value.
-     */
-    public void setValue1(double value) {
-        this.value1 = value;    
-    }
-    
-    /**
-     * Returns the category for the end of the line.
-     * 
-     * @return The category for the end of the line (never <code>null</code>).
-     */
-    public Comparable getCategory2() {
-        return this.category2;
-    }
-    
-    /**
-     * Sets the category for the end of the line.
-     * 
-     * @param category  the category (<code>null</code> not permitted).
-     */
-    public void setCategory2(Comparable category) {
-        if (category == null) {
-            throw new IllegalArgumentException("Null 'category' argument.");   
-        }
-        this.category2 = category;
-    }
-    
-    /**
-     * Returns the y-value for the end of the line.
-     * 
-     * @return The y-value for the end of the line.
-     */
-    public double getValue2() {
-        return this.value2;
-    }
-    
-    /**
-     * Sets the y-value for the end of the line.
-     * 
-     * @param value  the value.
-     */
-    public void setValue2(double value) {
-        this.value2 = value;    
-    }
-    
-    /**
-     * Returns the paint used to draw the connecting line.
-     * 
-     * @return The paint (never <code>null</code>).
-     */
-    public Paint getPaint() {
-        return this.paint;
-    }
-    
-    /**
-     * Sets the paint used to draw the connecting line.
-     * 
-     * @param paint  the paint (<code>null</code> not permitted).
-     */
-    public void setPaint(Paint paint) {
-        if (paint == null) {
-            throw new IllegalArgumentException("Null 'paint' argument.");
-        }
-        this.paint = paint;
-    }
-    
-    /**
-     * Returns the stroke used to draw the connecting line.
-     * 
-     * @return The stroke (never <code>null</code>).
-     */
-    public Stroke getStroke() {
-        return this.stroke;
-    }
-    
-    /**
-     * Sets the stroke used to draw the connecting line.
-     * 
-     * @param stroke  the stroke (<code>null</code> not permitted).
-     */
-    public void setStroke(Stroke stroke) {
-        if (stroke == null) {
-            throw new IllegalArgumentException("Null 'stroke' argument.");
-        }
-        this.stroke = stroke;
-    }
-    
-    /**
-     * Draws the annotation.
-     *
-     * @param g2  the graphics device.
-     * @param plot  the plot.
-     * @param dataArea  the data area.
-     * @param domainAxis  the domain axis.
-     * @param rangeAxis  the range axis.
-     */
-    public void draw(Graphics2D g2, CategoryPlot plot, Rectangle2D dataArea,
-                     CategoryAxis domainAxis, ValueAxis rangeAxis) {
+	/** The category for the end of the line. */
+	private Comparable category2;
 
-        CategoryDataset dataset = plot.getDataset();
-        int catIndex1 = dataset.getColumnIndex(this.category1);
-        int catIndex2 = dataset.getColumnIndex(this.category2);
-        int catCount = dataset.getColumnCount();
+	/** The value for the end of the line. */
+	private double value2;
 
-        double lineX1 = 0.0f;
-        double lineY1 = 0.0f;
-        double lineX2 = 0.0f;
-        double lineY2 = 0.0f;
-        PlotOrientation orientation = plot.getOrientation();
-        RectangleEdge domainEdge = Plot.resolveDomainAxisLocation(
-            plot.getDomainAxisLocation(), orientation);
-        RectangleEdge rangeEdge = Plot.resolveRangeAxisLocation(
-            plot.getRangeAxisLocation(), orientation);
-        
-        if (orientation == PlotOrientation.HORIZONTAL) {
-            lineY1 = domainAxis.getCategoryJava2DCoordinate(
-                CategoryAnchor.MIDDLE, catIndex1, catCount, dataArea, 
-                domainEdge);
-            lineX1 = rangeAxis.valueToJava2D(this.value1, dataArea, rangeEdge);
-            lineY2 = domainAxis.getCategoryJava2DCoordinate(
-                CategoryAnchor.MIDDLE, catIndex2, catCount, dataArea, 
-                domainEdge);
-            lineX2 = rangeAxis.valueToJava2D(this.value2, dataArea, rangeEdge);
-        }
-        else if (orientation == PlotOrientation.VERTICAL) {
-            lineX1 = domainAxis.getCategoryJava2DCoordinate(
-                CategoryAnchor.MIDDLE, catIndex1, catCount, dataArea, 
-                domainEdge);
-            lineY1 = rangeAxis.valueToJava2D(this.value1, dataArea, rangeEdge);
-            lineX2 = domainAxis.getCategoryJava2DCoordinate(
-                CategoryAnchor.MIDDLE, catIndex2, catCount, dataArea, 
-                domainEdge);
-            lineY2 = rangeAxis.valueToJava2D(this.value2, dataArea, rangeEdge);
-        }
-        g2.setPaint(this.paint);
-        g2.setStroke(this.stroke);
-        g2.drawLine((int) lineX1, (int) lineY1, (int) lineX2, (int) lineY2);
-    }
+	/** The line color. */
+	private transient Paint paint = Color.black;
 
-    /**
-     * Tests this object for equality with another.
-     * 
-     * @param obj  the object (<code>null</code> permitted).
-     * 
-     * @return <code>true</code> or <code>false</code>.
-     */
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof CategoryLineAnnotation)) {
-            return false;
-        }
-        CategoryLineAnnotation that = (CategoryLineAnnotation) obj;
-        if (!this.category1.equals(that.getCategory1())) {
-            return false;
-        }
-        if (this.value1 != that.getValue1()) {
-            return false;    
-        }
-        if (!this.category2.equals(that.getCategory2())) {
-            return false;
-        }
-        if (this.value2 != that.getValue2()) {
-            return false;    
-        }
-        if (!PaintUtilities.equal(this.paint, that.paint)) {
-            return false;
-        }
-        if (!ObjectUtilities.equal(this.stroke, that.stroke)) {
-            return false;
-        }
-        return true;
-    }
-    
-    /**
-     * Returns a hash code for this instance.
-     * 
-     * @return A hash code.
-     */
-    public int hashCode() {
-        // TODO: this needs work
-        return this.category1.hashCode() + this.category2.hashCode(); 
-    }
-    
-    /**
-     * Returns a clone of the annotation.
-     * 
-     * @return A clone.
-     * 
-     * @throws CloneNotSupportedException  this class will not throw this 
-     *         exception, but subclasses (if any) might.
-     */
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();    
-    }
-  
-    /**
-     * Provides serialization support.
-     *
-     * @param stream  the output stream.
-     *
-     * @throws IOException if there is an I/O error.
-     */
-    private void writeObject(ObjectOutputStream stream) throws IOException {
-        stream.defaultWriteObject();
-        SerialUtilities.writePaint(this.paint, stream);
-        SerialUtilities.writeStroke(this.stroke, stream);
-    }
+	/** The line stroke. */
+	private transient Stroke stroke = new BasicStroke(1.0f);
 
-    /**
-     * Provides serialization support.
-     *
-     * @param stream  the input stream.
-     *
-     * @throws IOException  if there is an I/O error.
-     * @throws ClassNotFoundException  if there is a classpath problem.
-     */
-    private void readObject(ObjectInputStream stream) 
-        throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        this.paint = SerialUtilities.readPaint(stream);
-        this.stroke = SerialUtilities.readStroke(stream);
-    }
+	/**
+	 * Creates a new annotation that draws a line between (category1, value1) and
+	 * (category2, value2).
+	 *
+	 * @param category1
+	 *            the category (<code>null</code> not permitted).
+	 * @param value1
+	 *            the value.
+	 * @param category2
+	 *            the category (<code>null</code> not permitted).
+	 * @param value2
+	 *            the value.
+	 */
+	public CategoryLineAnnotation(Comparable category1, double value1, Comparable category2, double value2, Paint paint,
+			Stroke stroke) {
+		if (category1 == null) {
+			throw new IllegalArgumentException("Null 'category1' argument.");
+		}
+		if (category2 == null) {
+			throw new IllegalArgumentException("Null 'category2' argument.");
+		}
+		if (paint == null) {
+			throw new IllegalArgumentException("Null 'paint' argument.");
+		}
+		if (stroke == null) {
+			throw new IllegalArgumentException("Null 'stroke' argument.");
+		}
+		this.category1 = category1;
+		this.value1 = value1;
+		this.category2 = category2;
+		this.value2 = value2;
+		this.paint = paint;
+		this.stroke = stroke;
+	}
+
+	/**
+	 * Returns the category for the start of the line.
+	 * 
+	 * @return The category for the start of the line (never <code>null</code>).
+	 */
+	public Comparable getCategory1() {
+		return this.category1;
+	}
+
+	/**
+	 * Sets the category for the start of the line.
+	 * 
+	 * @param category
+	 *            the category (<code>null</code> not permitted).
+	 */
+	public void setCategory1(Comparable category) {
+		if (category == null) {
+			throw new IllegalArgumentException("Null 'category' argument.");
+		}
+		this.category1 = category;
+	}
+
+	/**
+	 * Returns the y-value for the start of the line.
+	 * 
+	 * @return The y-value for the start of the line.
+	 */
+	public double getValue1() {
+		return this.value1;
+	}
+
+	/**
+	 * Sets the y-value for the start of the line.
+	 * 
+	 * @param value
+	 *            the value.
+	 */
+	public void setValue1(double value) {
+		this.value1 = value;
+	}
+
+	/**
+	 * Returns the category for the end of the line.
+	 * 
+	 * @return The category for the end of the line (never <code>null</code>).
+	 */
+	public Comparable getCategory2() {
+		return this.category2;
+	}
+
+	/**
+	 * Sets the category for the end of the line.
+	 * 
+	 * @param category
+	 *            the category (<code>null</code> not permitted).
+	 */
+	public void setCategory2(Comparable category) {
+		if (category == null) {
+			throw new IllegalArgumentException("Null 'category' argument.");
+		}
+		this.category2 = category;
+	}
+
+	/**
+	 * Returns the y-value for the end of the line.
+	 * 
+	 * @return The y-value for the end of the line.
+	 */
+	public double getValue2() {
+		return this.value2;
+	}
+
+	/**
+	 * Sets the y-value for the end of the line.
+	 * 
+	 * @param value
+	 *            the value.
+	 */
+	public void setValue2(double value) {
+		this.value2 = value;
+	}
+
+	/**
+	 * Returns the paint used to draw the connecting line.
+	 * 
+	 * @return The paint (never <code>null</code>).
+	 */
+	public Paint getPaint() {
+		return this.paint;
+	}
+
+	/**
+	 * Sets the paint used to draw the connecting line.
+	 * 
+	 * @param paint
+	 *            the paint (<code>null</code> not permitted).
+	 */
+	public void setPaint(Paint paint) {
+		if (paint == null) {
+			throw new IllegalArgumentException("Null 'paint' argument.");
+		}
+		this.paint = paint;
+	}
+
+	/**
+	 * Returns the stroke used to draw the connecting line.
+	 * 
+	 * @return The stroke (never <code>null</code>).
+	 */
+	public Stroke getStroke() {
+		return this.stroke;
+	}
+
+	/**
+	 * Sets the stroke used to draw the connecting line.
+	 * 
+	 * @param stroke
+	 *            the stroke (<code>null</code> not permitted).
+	 */
+	public void setStroke(Stroke stroke) {
+		if (stroke == null) {
+			throw new IllegalArgumentException("Null 'stroke' argument.");
+		}
+		this.stroke = stroke;
+	}
+
+	/**
+	 * Draws the annotation.
+	 *
+	 * @param g2
+	 *            the graphics device.
+	 * @param plot
+	 *            the plot.
+	 * @param dataArea
+	 *            the data area.
+	 * @param domainAxis
+	 *            the domain axis.
+	 * @param rangeAxis
+	 *            the range axis.
+	 */
+	public void draw(Graphics2D g2, CategoryPlot plot, Rectangle2D dataArea, CategoryAxis domainAxis,
+			ValueAxis rangeAxis) {
+
+		CategoryDataset dataset = plot.getDataset();
+		int catIndex1 = dataset.getColumnIndex(this.category1);
+		int catIndex2 = dataset.getColumnIndex(this.category2);
+		int catCount = dataset.getColumnCount();
+
+		double lineX1 = 0.0f;
+		double lineY1 = 0.0f;
+		double lineX2 = 0.0f;
+		double lineY2 = 0.0f;
+		PlotOrientation orientation = plot.getOrientation();
+		RectangleEdge domainEdge = Plot.resolveDomainAxisLocation(plot.getDomainAxisLocation(), orientation);
+		RectangleEdge rangeEdge = Plot.resolveRangeAxisLocation(plot.getRangeAxisLocation(), orientation);
+
+		if (orientation == PlotOrientation.HORIZONTAL) {
+			lineY1 = domainAxis.getCategoryJava2DCoordinate(CategoryAnchor.MIDDLE, catIndex1, catCount, dataArea,
+					domainEdge);
+			lineX1 = rangeAxis.valueToJava2D(this.value1, dataArea, rangeEdge);
+			lineY2 = domainAxis.getCategoryJava2DCoordinate(CategoryAnchor.MIDDLE, catIndex2, catCount, dataArea,
+					domainEdge);
+			lineX2 = rangeAxis.valueToJava2D(this.value2, dataArea, rangeEdge);
+		} else if (orientation == PlotOrientation.VERTICAL) {
+			lineX1 = domainAxis.getCategoryJava2DCoordinate(CategoryAnchor.MIDDLE, catIndex1, catCount, dataArea,
+					domainEdge);
+			lineY1 = rangeAxis.valueToJava2D(this.value1, dataArea, rangeEdge);
+			lineX2 = domainAxis.getCategoryJava2DCoordinate(CategoryAnchor.MIDDLE, catIndex2, catCount, dataArea,
+					domainEdge);
+			lineY2 = rangeAxis.valueToJava2D(this.value2, dataArea, rangeEdge);
+		}
+		g2.setPaint(this.paint);
+		g2.setStroke(this.stroke);
+		g2.drawLine((int) lineX1, (int) lineY1, (int) lineX2, (int) lineY2);
+	}
+
+	/**
+	 * Tests this object for equality with another.
+	 * 
+	 * @param obj
+	 *            the object (<code>null</code> permitted).
+	 * 
+	 * @return <code>true</code> or <code>false</code>.
+	 */
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof CategoryLineAnnotation)) {
+			return false;
+		}
+		CategoryLineAnnotation that = (CategoryLineAnnotation) obj;
+		if (!this.category1.equals(that.getCategory1())) {
+			return false;
+		}
+		if (this.value1 != that.getValue1()) {
+			return false;
+		}
+		if (!this.category2.equals(that.getCategory2())) {
+			return false;
+		}
+		if (this.value2 != that.getValue2()) {
+			return false;
+		}
+		if (!PaintUtilities.equal(this.paint, that.paint)) {
+			return false;
+		}
+		if (!ObjectUtilities.equal(this.stroke, that.stroke)) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Returns a hash code for this instance.
+	 * 
+	 * @return A hash code.
+	 */
+	public int hashCode() {
+		// TODO: this needs work
+		return this.category1.hashCode() + this.category2.hashCode();
+	}
+
+	/**
+	 * Returns a clone of the annotation.
+	 * 
+	 * @return A clone.
+	 * 
+	 * @throws CloneNotSupportedException
+	 *             this class will not throw this exception, but subclasses (if any)
+	 *             might.
+	 */
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+
+	/**
+	 * Provides serialization support.
+	 *
+	 * @param stream
+	 *            the output stream.
+	 *
+	 * @throws IOException
+	 *             if there is an I/O error.
+	 */
+	private void writeObject(ObjectOutputStream stream) throws IOException {
+		stream.defaultWriteObject();
+		SerialUtilities.writePaint(this.paint, stream);
+		SerialUtilities.writeStroke(this.stroke, stream);
+	}
+
+	/**
+	 * Provides serialization support.
+	 *
+	 * @param stream
+	 *            the input stream.
+	 *
+	 * @throws IOException
+	 *             if there is an I/O error.
+	 * @throws ClassNotFoundException
+	 *             if there is a classpath problem.
+	 */
+	private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+		stream.defaultReadObject();
+		this.paint = SerialUtilities.readPaint(stream);
+		this.stroke = SerialUtilities.readStroke(stream);
+	}
 
 }

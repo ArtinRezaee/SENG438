@@ -56,68 +56,67 @@ import java.io.Serializable;
  */
 public class WindNeedle extends ArrowNeedle implements Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = -2861061368907167834L;
-    
-    /**
-     * Default constructor.
-     */
-    public WindNeedle() {
-        super(false);  // isArrowAtTop
-    }
+	/** For serialization. */
+	private static final long serialVersionUID = -2861061368907167834L;
 
-    /**
-     * Draws the needle.
-     *
-     * @param g2  the graphics device.
-     * @param plotArea  the plot area.
-     * @param rotate  the rotation point.
-     * @param angle  the angle.
-     */
-    protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea, 
-                              Point2D rotate, double angle) {
+	/**
+	 * Default constructor.
+	 */
+	public WindNeedle() {
+		super(false); // isArrowAtTop
+	}
 
-        super.drawNeedle(g2, plotArea, rotate, angle);
-        if ((rotate != null) && (plotArea != null)) {
+	/**
+	 * Draws the needle.
+	 *
+	 * @param g2
+	 *            the graphics device.
+	 * @param plotArea
+	 *            the plot area.
+	 * @param rotate
+	 *            the rotation point.
+	 * @param angle
+	 *            the angle.
+	 */
+	protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea, Point2D rotate, double angle) {
 
-            int spacing = getSize() * 3;
-            Rectangle2D newArea = new Rectangle2D.Double();
+		super.drawNeedle(g2, plotArea, rotate, angle);
+		if ((rotate != null) && (plotArea != null)) {
 
-            Point2D newRotate = rotate;
-            newArea.setRect(
-                plotArea.getMinX() - spacing, plotArea.getMinY(),
-                plotArea.getWidth(), plotArea.getHeight()
-            );
-            super.drawNeedle(g2, newArea, newRotate, angle);
+			int spacing = getSize() * 3;
+			Rectangle2D newArea = new Rectangle2D.Double();
 
-            newArea.setRect(
-                plotArea.getMinX() + spacing, plotArea.getMinY(),
-                plotArea.getWidth(), plotArea.getHeight()
-            );
-            super.drawNeedle(g2, newArea, newRotate, angle);
+			Point2D newRotate = rotate;
+			newArea.setRect(plotArea.getMinX() - spacing, plotArea.getMinY(), plotArea.getWidth(),
+					plotArea.getHeight());
+			super.drawNeedle(g2, newArea, newRotate, angle);
 
-        }
-    }
+			newArea.setRect(plotArea.getMinX() + spacing, plotArea.getMinY(), plotArea.getWidth(),
+					plotArea.getHeight());
+			super.drawNeedle(g2, newArea, newRotate, angle);
 
-    /**
-     * Tests another object for equality with this object.
-     * 
-     * @param object  the object to test.
-     * 
-     * @return A boolean.
-     */
-    public boolean equals(Object object) {
-        if (object == null) {
-            return false;
-        }
-        if (object == this) {
-            return true;
-        }
-        if (super.equals(object) && object instanceof WindNeedle) {
-            return true;
-        }
-        return false;
-    }
+		}
+	}
+
+	/**
+	 * Tests another object for equality with this object.
+	 * 
+	 * @param object
+	 *            the object to test.
+	 * 
+	 * @return A boolean.
+	 */
+	public boolean equals(Object object) {
+		if (object == null) {
+			return false;
+		}
+		if (object == this) {
+			return true;
+		}
+		if (super.equals(object) && object instanceof WindNeedle) {
+			return true;
+		}
+		return false;
+	}
 
 }
-

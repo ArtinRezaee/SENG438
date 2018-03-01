@@ -50,174 +50,179 @@ import org.jfree.chart.Effect3D;
 import org.jfree.chart.event.RendererChangeEvent;
 
 /**
- * A XYLineAndShapeRenderer that adds a shadow line to the graph
- * to emulate a 3D-effect.
+ * A XYLineAndShapeRenderer that adds a shadow line to the graph to emulate a
+ * 3D-effect.
  */
-public class XYLine3DRenderer extends XYLineAndShapeRenderer 
-                              implements Effect3D, Serializable {
+public class XYLine3DRenderer extends XYLineAndShapeRenderer implements Effect3D, Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = 588933208243446087L;
-    
-    /** The default x-offset for the 3D effect. */
-    public static final double DEFAULT_X_OFFSET = 12.0;
+	/** For serialization. */
+	private static final long serialVersionUID = 588933208243446087L;
 
-    /** The default y-offset for the 3D effect. */
-    public static final double DEFAULT_Y_OFFSET = 8.0;
+	/** The default x-offset for the 3D effect. */
+	public static final double DEFAULT_X_OFFSET = 12.0;
 
-    /** The default wall paint. */
-    public static final Paint DEFAULT_WALL_PAINT = new Color(0xDD, 0xDD, 0xDD);
+	/** The default y-offset for the 3D effect. */
+	public static final double DEFAULT_Y_OFFSET = 8.0;
 
-    /** The size of x-offset for the 3D effect. */
-    private double xOffset;
+	/** The default wall paint. */
+	public static final Paint DEFAULT_WALL_PAINT = new Color(0xDD, 0xDD, 0xDD);
 
-    /** The size of y-offset for the 3D effect. */
-    private double yOffset;
+	/** The size of x-offset for the 3D effect. */
+	private double xOffset;
 
-    /** The paint used to shade the left and lower 3D wall. */
-    private transient Paint wallPaint;
+	/** The size of y-offset for the 3D effect. */
+	private double yOffset;
 
-    /**
-     * Creates a new renderer.
-     */
-    public XYLine3DRenderer() {
-        this.wallPaint = DEFAULT_WALL_PAINT;
-        this.xOffset = DEFAULT_X_OFFSET;
-        this.yOffset = DEFAULT_Y_OFFSET;
-    }
+	/** The paint used to shade the left and lower 3D wall. */
+	private transient Paint wallPaint;
 
-    /**
-     * Returns the x-offset for the 3D effect.
-     *
-     * @return The 3D effect.
-     */
-    public double getXOffset() {
-        return this.xOffset;
-    }
+	/**
+	 * Creates a new renderer.
+	 */
+	public XYLine3DRenderer() {
+		this.wallPaint = DEFAULT_WALL_PAINT;
+		this.xOffset = DEFAULT_X_OFFSET;
+		this.yOffset = DEFAULT_Y_OFFSET;
+	}
 
-    /**
-     * Returns the y-offset for the 3D effect.
-     *
-     * @return The 3D effect.
-     */
-    public double getYOffset() {
-        return this.yOffset;
-    }
+	/**
+	 * Returns the x-offset for the 3D effect.
+	 *
+	 * @return The 3D effect.
+	 */
+	public double getXOffset() {
+		return this.xOffset;
+	}
 
-    /**
-     * Sets the x-offset and sends a {@link RendererChangeEvent} to all 
-     * registered listeners.
-     * 
-     * @param xOffset  the x-offset.
-     */
-    public void setXOffset(double xOffset) {
-        this.xOffset = xOffset;
-        notifyListeners(new RendererChangeEvent(this));
-    }
+	/**
+	 * Returns the y-offset for the 3D effect.
+	 *
+	 * @return The 3D effect.
+	 */
+	public double getYOffset() {
+		return this.yOffset;
+	}
 
-    /**
-     * Sets the y-offset and sends a {@link RendererChangeEvent} to all 
-     * registered listeners.
-     * 
-     * @param yOffset  the y-offset.
-     */
-    public void setYOffset(double yOffset) {
-        this.yOffset = yOffset;
-        notifyListeners(new RendererChangeEvent(this));
-    }
+	/**
+	 * Sets the x-offset and sends a {@link RendererChangeEvent} to all registered
+	 * listeners.
+	 * 
+	 * @param xOffset
+	 *            the x-offset.
+	 */
+	public void setXOffset(double xOffset) {
+		this.xOffset = xOffset;
+		notifyListeners(new RendererChangeEvent(this));
+	}
 
-    /**
-     * Returns the paint used to highlight the left and bottom wall in the plot
-     * background.
-     *
-     * @return The paint.
-     */
-    public Paint getWallPaint() {
-        return this.wallPaint;
-    }
+	/**
+	 * Sets the y-offset and sends a {@link RendererChangeEvent} to all registered
+	 * listeners.
+	 * 
+	 * @param yOffset
+	 *            the y-offset.
+	 */
+	public void setYOffset(double yOffset) {
+		this.yOffset = yOffset;
+		notifyListeners(new RendererChangeEvent(this));
+	}
 
-    /**
-     * Sets the paint used to hightlight the left and bottom walls in the plot 
-     * background.
-     *
-     * @param paint  the paint.
-     */
-    public void setWallPaint(Paint paint) {
-        this.wallPaint = paint;
-        notifyListeners(new RendererChangeEvent(this));
-    }
+	/**
+	 * Returns the paint used to highlight the left and bottom wall in the plot
+	 * background.
+	 *
+	 * @return The paint.
+	 */
+	public Paint getWallPaint() {
+		return this.wallPaint;
+	}
 
-    /**
-     * Returns the number of passes through the data that the renderer requires 
-     * in order to draw the chart.  Most charts will require a single pass, 
-     * but some require two passes.
-     *
-     * @return The pass count.
-     */
-    public int getPassCount() {
-        return 3;
-    }
+	/**
+	 * Sets the paint used to hightlight the left and bottom walls in the plot
+	 * background.
+	 *
+	 * @param paint
+	 *            the paint.
+	 */
+	public void setWallPaint(Paint paint) {
+		this.wallPaint = paint;
+		notifyListeners(new RendererChangeEvent(this));
+	}
 
-    /**
-     * Returns <code>true</code> if the specified pass involves drawing lines.
-     * 
-     * @param pass  the pass.
-     * 
-     * @return A boolean.
-     */
-    protected boolean isLinePass(int pass) {
-        return pass == 0 || pass == 1;
-    }
+	/**
+	 * Returns the number of passes through the data that the renderer requires in
+	 * order to draw the chart. Most charts will require a single pass, but some
+	 * require two passes.
+	 *
+	 * @return The pass count.
+	 */
+	public int getPassCount() {
+		return 3;
+	}
 
-    /**
-     * Returns <code>true</code> if the specified pass involves drawing items.
-     * 
-     * @param pass  the pass.
-     * 
-     * @return A boolean.
-     */
-    protected boolean isItemPass(int pass) {
-        return pass == 2;
-    }
+	/**
+	 * Returns <code>true</code> if the specified pass involves drawing lines.
+	 * 
+	 * @param pass
+	 *            the pass.
+	 * 
+	 * @return A boolean.
+	 */
+	protected boolean isLinePass(int pass) {
+		return pass == 0 || pass == 1;
+	}
 
-    /**
-     * Returns <code>true</code> if the specified pass involves drawing shadows.
-     * 
-     * @param pass  the pass.
-     * 
-     * @return A boolean.
-     */
-    protected boolean isShadowPass (int pass) {
-        return pass == 0;
-    }
+	/**
+	 * Returns <code>true</code> if the specified pass involves drawing items.
+	 * 
+	 * @param pass
+	 *            the pass.
+	 * 
+	 * @return A boolean.
+	 */
+	protected boolean isItemPass(int pass) {
+		return pass == 2;
+	}
 
-    /**
-     * Overrides the method in the subclass to draw a shadow in the first pass.
-     * 
-     * @param g2  the graphics device.
-     * @param pass  the pass.
-     * @param series  the series index (zero-based).
-     * @param item  the item index (zero-based).
-     * @param shape  the shape.
-     */
-    protected void drawFirstPassShape(Graphics2D g2,
-                                      int pass,
-                                      int series,
-                                      int item,
-                                      Shape shape) {
-        if (isShadowPass(pass)) {
-            if (getWallPaint() != null) {
-                g2.setStroke(getItemStroke(series, item));
-                g2.setPaint(getWallPaint());
-                g2.translate(getXOffset(), getYOffset());
-                g2.draw(shape);
-                g2.translate(-getXOffset(), -getYOffset());
-            }
-        }
-        else {
-            // now draw the real shape
-            super.drawFirstPassShape(g2, pass, series, item, shape);
-        }
-    }
+	/**
+	 * Returns <code>true</code> if the specified pass involves drawing shadows.
+	 * 
+	 * @param pass
+	 *            the pass.
+	 * 
+	 * @return A boolean.
+	 */
+	protected boolean isShadowPass(int pass) {
+		return pass == 0;
+	}
+
+	/**
+	 * Overrides the method in the subclass to draw a shadow in the first pass.
+	 * 
+	 * @param g2
+	 *            the graphics device.
+	 * @param pass
+	 *            the pass.
+	 * @param series
+	 *            the series index (zero-based).
+	 * @param item
+	 *            the item index (zero-based).
+	 * @param shape
+	 *            the shape.
+	 */
+	protected void drawFirstPassShape(Graphics2D g2, int pass, int series, int item, Shape shape) {
+		if (isShadowPass(pass)) {
+			if (getWallPaint() != null) {
+				g2.setStroke(getItemStroke(series, item));
+				g2.setPaint(getWallPaint());
+				g2.translate(getXOffset(), getYOffset());
+				g2.draw(shape);
+				g2.translate(-getXOffset(), -getYOffset());
+			}
+		} else {
+			// now draw the real shape
+			super.drawFirstPassShape(g2, pass, series, item, shape);
+		}
+	}
 
 }

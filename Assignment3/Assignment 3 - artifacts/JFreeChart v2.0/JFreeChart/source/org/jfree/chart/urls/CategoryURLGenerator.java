@@ -59,16 +59,19 @@ import org.jfree.data.category.CategoryDataset;
  */
 public interface CategoryURLGenerator {
 
-    /**
-     * Returns a URL for one item in a dataset. As a guideline, the URL 
-     * should be valid within the context of an XHTML 1.0 document.
-     *
-     * @param data  the dataset.
-     * @param series  the series (zero-based index).
-     * @param category  the category.
-     *
-     * @return A string containing the URL.
-     */
-    public String generateURL(CategoryDataset data, int series, int category);
+	/**
+	 * Returns a URL for one item in a dataset. As a guideline, the URL should be
+	 * valid within the context of an XHTML 1.0 document.
+	 *
+	 * @param data
+	 *            the dataset.
+	 * @param series
+	 *            the series (zero-based index).
+	 * @param category
+	 *            the category.
+	 *
+	 * @return A string containing the URL.
+	 */
+	public String generateURL(CategoryDataset data, int series, int category);
 
 }

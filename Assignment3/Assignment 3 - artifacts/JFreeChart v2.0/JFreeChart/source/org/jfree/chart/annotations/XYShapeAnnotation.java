@@ -47,7 +47,7 @@
  * 06-Jun-2005 : Fixed equals() method to handle GradientPaint (DG);
  * 
  */
- 
+
 package org.jfree.chart.annotations;
 
 import java.awt.BasicStroke;
@@ -75,225 +75,231 @@ import org.jfree.util.PaintUtilities;
 import org.jfree.util.PublicCloneable;
 
 /**
- * A simple <code>Shape</code> annotation that can be placed on an 
- * {@link XYPlot}.  The shape coordinates are specified in data space.
+ * A simple <code>Shape</code> annotation that can be placed on an
+ * {@link XYPlot}. The shape coordinates are specified in data space.
  *
  * @author Greg Steckman
  */
-public class XYShapeAnnotation extends AbstractXYAnnotation
-                               implements Cloneable, PublicCloneable, 
-                                          Serializable {
-    
-    /** For serialization. */
-    private static final long serialVersionUID = -8553218317600684041L;
-    
-    /** The shape. */
-    private transient Shape shape;
+public class XYShapeAnnotation extends AbstractXYAnnotation implements Cloneable, PublicCloneable, Serializable {
 
-    /** The stroke used to draw the shape's outline. */
-    private transient Stroke stroke;
+	/** For serialization. */
+	private static final long serialVersionUID = -8553218317600684041L;
 
-    /** The paint used to draw the shape's outline. */
-    private transient Paint outlinePaint;
-    
-    /** The paint used to fill the shape. */
-    private transient Paint fillPaint;
+	/** The shape. */
+	private transient Shape shape;
 
-    /**
-     * Creates a new annotation (where, by default, the shape is drawn 
-     * with a black outline).
-     * 
-     * @param shape  the shape (coordinates in data space).
-     */
-    public XYShapeAnnotation(Shape shape) {
-        this(shape, new BasicStroke(1.0f), Color.black);
-    }
-    
-    /**
-     * Creates a new annotation where the shape is drawn as an outline using
-     * the specified <code>stroke</code> and <code>outlinePaint</code>.
-     *
-     * @param shape  the shape (<code>null</code> not permitted).
-     * @param stroke  the shape stroke (<code>null</code> permitted).
-     * @param outlinePaint  the shape color (<code>null</code> permitted).
-     */
-    public XYShapeAnnotation(Shape shape, Stroke stroke, Paint outlinePaint) {
-        this(shape, stroke, outlinePaint, null);
-    }
+	/** The stroke used to draw the shape's outline. */
+	private transient Stroke stroke;
 
-    /**
-     * Creates a new annotation.
-     *
-     * @param shape  the shape (<code>null</code> not permitted).
-     * @param stroke  the shape stroke (<code>null</code> permitted).
-     * @param outlinePaint  the shape color (<code>null</code> permitted).
-     * @param fillPaint  the paint used to fill the shape (<code>null</code> 
-     *                   permitted.
-     */
-    public XYShapeAnnotation(Shape shape, Stroke stroke, Paint outlinePaint, 
-                             Paint fillPaint) {
-        if (shape == null) {
-            throw new IllegalArgumentException("Null 'shape' argument.");   
-        }
-        this.shape = shape;
-        this.stroke = stroke;
-        this.outlinePaint = outlinePaint;
-        this.fillPaint = fillPaint;
-    }
+	/** The paint used to draw the shape's outline. */
+	private transient Paint outlinePaint;
 
-    /**
-     * Draws the annotation.  This method is usually called by the 
-     * {@link XYPlot} class, you shouldn't need to call it directly.
-     *
-     * @param g2  the graphics device.
-     * @param plot  the plot.
-     * @param dataArea  the data area.
-     * @param domainAxis  the domain axis.
-     * @param rangeAxis  the range axis.
-     * @param rendererIndex  the renderer index.
-     * @param info  the plot rendering info.
-     */
-    public void draw(Graphics2D g2, XYPlot plot, Rectangle2D dataArea,
-                     ValueAxis domainAxis, ValueAxis rangeAxis, 
-                     int rendererIndex,
-                     PlotRenderingInfo info) {
+	/** The paint used to fill the shape. */
+	private transient Paint fillPaint;
 
-        PlotOrientation orientation = plot.getOrientation();
-        RectangleEdge domainEdge = Plot.resolveDomainAxisLocation(
-            plot.getDomainAxisLocation(), orientation
-        );
-        RectangleEdge rangeEdge = Plot.resolveRangeAxisLocation(
-            plot.getRangeAxisLocation(), orientation
-        );
+	/**
+	 * Creates a new annotation (where, by default, the shape is drawn with a black
+	 * outline).
+	 * 
+	 * @param shape
+	 *            the shape (coordinates in data space).
+	 */
+	public XYShapeAnnotation(Shape shape) {
+		this(shape, new BasicStroke(1.0f), Color.black);
+	}
 
-        //compute transform matrix elements via sample points. Assume no 
-        // rotation or shear.
-        // x-axis translation
-        double m02 = domainAxis.valueToJava2D(0, dataArea, domainEdge); 
-        // y-axis translation
-        double m12 = rangeAxis.valueToJava2D(0, dataArea, rangeEdge);
-        // x-axis scale 
-        double m00 = domainAxis.valueToJava2D(1, dataArea, domainEdge) - m02; 
-        // y-axis scale
-        double m11 = rangeAxis.valueToJava2D(1, dataArea, rangeEdge) - m12; 
+	/**
+	 * Creates a new annotation where the shape is drawn as an outline using the
+	 * specified <code>stroke</code> and <code>outlinePaint</code>.
+	 *
+	 * @param shape
+	 *            the shape (<code>null</code> not permitted).
+	 * @param stroke
+	 *            the shape stroke (<code>null</code> permitted).
+	 * @param outlinePaint
+	 *            the shape color (<code>null</code> permitted).
+	 */
+	public XYShapeAnnotation(Shape shape, Stroke stroke, Paint outlinePaint) {
+		this(shape, stroke, outlinePaint, null);
+	}
 
-        //create transform & transform shape
-        Shape s = null;
-        if (orientation == PlotOrientation.HORIZONTAL) {
-            AffineTransform t1 = new AffineTransform(
-                0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f
-            );
-            AffineTransform t2 = new AffineTransform(
-                m11, 0.0f, 0.0f, m00, m12, m02
-            );
-            s = t1.createTransformedShape(this.shape);
-            s = t2.createTransformedShape(s);
-        }
-        else if (orientation == PlotOrientation.VERTICAL) {
-            AffineTransform t = new AffineTransform(m00, 0, 0, m11, m02, m12);
-            s = t.createTransformedShape(this.shape);
-        }
+	/**
+	 * Creates a new annotation.
+	 *
+	 * @param shape
+	 *            the shape (<code>null</code> not permitted).
+	 * @param stroke
+	 *            the shape stroke (<code>null</code> permitted).
+	 * @param outlinePaint
+	 *            the shape color (<code>null</code> permitted).
+	 * @param fillPaint
+	 *            the paint used to fill the shape (<code>null</code> permitted.
+	 */
+	public XYShapeAnnotation(Shape shape, Stroke stroke, Paint outlinePaint, Paint fillPaint) {
+		if (shape == null) {
+			throw new IllegalArgumentException("Null 'shape' argument.");
+		}
+		this.shape = shape;
+		this.stroke = stroke;
+		this.outlinePaint = outlinePaint;
+		this.fillPaint = fillPaint;
+	}
 
-        if (this.fillPaint != null) {
-            g2.setPaint(this.fillPaint);
-            g2.fill(s);
-        }
-        
-        if (this.stroke != null && this.outlinePaint != null) {
-            g2.setPaint(this.outlinePaint);
-            g2.setStroke(this.stroke);
-            g2.draw(s);
-        }
-        addEntity(info, s, rendererIndex, getToolTipText(), getURL());
-        
-    }
-        
-    /**
-     * Tests this annotation for equality with an arbitrary object.
-     * 
-     * @param obj  the object (<code>null</code> permitted).
-     * 
-     * @return A boolean.
-     */
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        // now try to reject equality
-        if (!super.equals(obj)) {
-            return false;
-        }
-        if (!(obj instanceof XYShapeAnnotation)) {
-            return false;
-        }
-        XYShapeAnnotation that = (XYShapeAnnotation) obj;
-        if (!this.shape.equals(that.shape)) {
-            return false;
-        }
-        if (!ObjectUtilities.equal(this.stroke, that.stroke)) {
-            return false;
-        }
-        if (!PaintUtilities.equal(this.outlinePaint, that.outlinePaint)) {
-            return false;
-        }
-        if (!PaintUtilities.equal(this.fillPaint, that.fillPaint)) {
-            return false;
-        }
-        // seem to be the same
-        return true;
-    }
-    
-    /**
-     * Returns a hash code for this instance.
-     * 
-     * @return A hash code.
-     */
-    public int hashCode() {
-        // TODO:  implement this properly.
-        return this.shape.hashCode();   
-    }
-    
-    /**
-     * Returns a clone.
-     * 
-     * @return A clone.
-     * 
-     * @throws CloneNotSupportedException ???.
-     */
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
-    
-    /**
-     * Provides serialization support.
-     *
-     * @param stream  the output stream.
-     *
-     * @throws IOException if there is an I/O error.
-     */
-    private void writeObject(ObjectOutputStream stream) throws IOException {
-        stream.defaultWriteObject();
-        SerialUtilities.writeShape(this.shape, stream);
-        SerialUtilities.writeStroke(this.stroke, stream);
-        SerialUtilities.writePaint(this.outlinePaint, stream);
-        SerialUtilities.writePaint(this.fillPaint, stream);
-    }
+	/**
+	 * Draws the annotation. This method is usually called by the {@link XYPlot}
+	 * class, you shouldn't need to call it directly.
+	 *
+	 * @param g2
+	 *            the graphics device.
+	 * @param plot
+	 *            the plot.
+	 * @param dataArea
+	 *            the data area.
+	 * @param domainAxis
+	 *            the domain axis.
+	 * @param rangeAxis
+	 *            the range axis.
+	 * @param rendererIndex
+	 *            the renderer index.
+	 * @param info
+	 *            the plot rendering info.
+	 */
+	public void draw(Graphics2D g2, XYPlot plot, Rectangle2D dataArea, ValueAxis domainAxis, ValueAxis rangeAxis,
+			int rendererIndex, PlotRenderingInfo info) {
 
-    /**
-     * Provides serialization support.
-     *
-     * @param stream  the input stream.
-     *
-     * @throws IOException  if there is an I/O error.
-     * @throws ClassNotFoundException  if there is a classpath problem.
-     */
-    private void readObject(ObjectInputStream stream) 
-        throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        this.shape = SerialUtilities.readShape(stream);
-        this.stroke = SerialUtilities.readStroke(stream);
-        this.outlinePaint = SerialUtilities.readPaint(stream);
-        this.fillPaint = SerialUtilities.readPaint(stream);
-    }
+		PlotOrientation orientation = plot.getOrientation();
+		RectangleEdge domainEdge = Plot.resolveDomainAxisLocation(plot.getDomainAxisLocation(), orientation);
+		RectangleEdge rangeEdge = Plot.resolveRangeAxisLocation(plot.getRangeAxisLocation(), orientation);
+
+		// compute transform matrix elements via sample points. Assume no
+		// rotation or shear.
+		// x-axis translation
+		double m02 = domainAxis.valueToJava2D(0, dataArea, domainEdge);
+		// y-axis translation
+		double m12 = rangeAxis.valueToJava2D(0, dataArea, rangeEdge);
+		// x-axis scale
+		double m00 = domainAxis.valueToJava2D(1, dataArea, domainEdge) - m02;
+		// y-axis scale
+		double m11 = rangeAxis.valueToJava2D(1, dataArea, rangeEdge) - m12;
+
+		// create transform & transform shape
+		Shape s = null;
+		if (orientation == PlotOrientation.HORIZONTAL) {
+			AffineTransform t1 = new AffineTransform(0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f);
+			AffineTransform t2 = new AffineTransform(m11, 0.0f, 0.0f, m00, m12, m02);
+			s = t1.createTransformedShape(this.shape);
+			s = t2.createTransformedShape(s);
+		} else if (orientation == PlotOrientation.VERTICAL) {
+			AffineTransform t = new AffineTransform(m00, 0, 0, m11, m02, m12);
+			s = t.createTransformedShape(this.shape);
+		}
+
+		if (this.fillPaint != null) {
+			g2.setPaint(this.fillPaint);
+			g2.fill(s);
+		}
+
+		if (this.stroke != null && this.outlinePaint != null) {
+			g2.setPaint(this.outlinePaint);
+			g2.setStroke(this.stroke);
+			g2.draw(s);
+		}
+		addEntity(info, s, rendererIndex, getToolTipText(), getURL());
+
+	}
+
+	/**
+	 * Tests this annotation for equality with an arbitrary object.
+	 * 
+	 * @param obj
+	 *            the object (<code>null</code> permitted).
+	 * 
+	 * @return A boolean.
+	 */
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		// now try to reject equality
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (!(obj instanceof XYShapeAnnotation)) {
+			return false;
+		}
+		XYShapeAnnotation that = (XYShapeAnnotation) obj;
+		if (!this.shape.equals(that.shape)) {
+			return false;
+		}
+		if (!ObjectUtilities.equal(this.stroke, that.stroke)) {
+			return false;
+		}
+		if (!PaintUtilities.equal(this.outlinePaint, that.outlinePaint)) {
+			return false;
+		}
+		if (!PaintUtilities.equal(this.fillPaint, that.fillPaint)) {
+			return false;
+		}
+		// seem to be the same
+		return true;
+	}
+
+	/**
+	 * Returns a hash code for this instance.
+	 * 
+	 * @return A hash code.
+	 */
+	public int hashCode() {
+		// TODO: implement this properly.
+		return this.shape.hashCode();
+	}
+
+	/**
+	 * Returns a clone.
+	 * 
+	 * @return A clone.
+	 * 
+	 * @throws CloneNotSupportedException
+	 *             ???.
+	 */
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+
+	/**
+	 * Provides serialization support.
+	 *
+	 * @param stream
+	 *            the output stream.
+	 *
+	 * @throws IOException
+	 *             if there is an I/O error.
+	 */
+	private void writeObject(ObjectOutputStream stream) throws IOException {
+		stream.defaultWriteObject();
+		SerialUtilities.writeShape(this.shape, stream);
+		SerialUtilities.writeStroke(this.stroke, stream);
+		SerialUtilities.writePaint(this.outlinePaint, stream);
+		SerialUtilities.writePaint(this.fillPaint, stream);
+	}
+
+	/**
+	 * Provides serialization support.
+	 *
+	 * @param stream
+	 *            the input stream.
+	 *
+	 * @throws IOException
+	 *             if there is an I/O error.
+	 * @throws ClassNotFoundException
+	 *             if there is a classpath problem.
+	 */
+	private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+		stream.defaultReadObject();
+		this.shape = SerialUtilities.readShape(stream);
+		this.stroke = SerialUtilities.readStroke(stream);
+		this.outlinePaint = SerialUtilities.readPaint(stream);
+		this.fillPaint = SerialUtilities.readPaint(stream);
+	}
 
 }

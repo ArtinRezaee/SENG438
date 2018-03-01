@@ -49,75 +49,75 @@ import java.io.Serializable;
  */
 public final class LegendRenderingOrder implements Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = -3832486612685808616L;
-    
-    /** In order. */
-    public static final LegendRenderingOrder STANDARD 
-        = new LegendRenderingOrder("LegendRenderingOrder.STANDARD");
+	/** For serialization. */
+	private static final long serialVersionUID = -3832486612685808616L;
 
-    /** In reverse order. */
-    public static final LegendRenderingOrder REVERSE 
-        = new LegendRenderingOrder("LegendRenderingOrder.REVERSE");
+	/** In order. */
+	public static final LegendRenderingOrder STANDARD = new LegendRenderingOrder("LegendRenderingOrder.STANDARD");
 
-    /** The name. */
-    private String name;
+	/** In reverse order. */
+	public static final LegendRenderingOrder REVERSE = new LegendRenderingOrder("LegendRenderingOrder.REVERSE");
 
-    /**
-     * Private constructor.
-     *
-     * @param name  the name.
-     */
-    private LegendRenderingOrder(String name) {
-        this.name = name;
-    }
+	/** The name. */
+	private String name;
 
-    /**
-     * Returns a string representing the object.
-     *
-     * @return The string.
-     */
-    public String toString() {
-        return this.name;
-    }
+	/**
+	 * Private constructor.
+	 *
+	 * @param name
+	 *            the name.
+	 */
+	private LegendRenderingOrder(String name) {
+		this.name = name;
+	}
 
-    /**
-     * Returns <code>true</code> if this object is equal to the specified 
-     * object, and <code>false</code> otherwise.
-     *
-     * @param obj  the other object.
-     *
-     * @return A boolean.
-     */
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof LegendRenderingOrder)) {
-            return false;
-        }
-        LegendRenderingOrder order = (LegendRenderingOrder) obj;
-        if (!this.name.equals(order.toString())) {
-            return false;
-        }
-        return true;
-    }
-   
-    /**
-     * Ensures that serialization returns the unique instances.
-     *
-     * @return The object.
-     *
-     * @throws ObjectStreamException if there is a problem.
-     */
-    private Object readResolve() throws ObjectStreamException {
-        if (this.equals(LegendRenderingOrder.STANDARD)) {
-            return LegendRenderingOrder.STANDARD;
-        }
-        else if (this.equals(LegendRenderingOrder.REVERSE)) {
-            return LegendRenderingOrder.REVERSE;
-        }     
-        return null;
-    }
+	/**
+	 * Returns a string representing the object.
+	 *
+	 * @return The string.
+	 */
+	public String toString() {
+		return this.name;
+	}
+
+	/**
+	 * Returns <code>true</code> if this object is equal to the specified object,
+	 * and <code>false</code> otherwise.
+	 *
+	 * @param obj
+	 *            the other object.
+	 *
+	 * @return A boolean.
+	 */
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof LegendRenderingOrder)) {
+			return false;
+		}
+		LegendRenderingOrder order = (LegendRenderingOrder) obj;
+		if (!this.name.equals(order.toString())) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Ensures that serialization returns the unique instances.
+	 *
+	 * @return The object.
+	 *
+	 * @throws ObjectStreamException
+	 *             if there is a problem.
+	 */
+	private Object readResolve() throws ObjectStreamException {
+		if (this.equals(LegendRenderingOrder.STANDARD)) {
+			return LegendRenderingOrder.STANDARD;
+		} else if (this.equals(LegendRenderingOrder.REVERSE)) {
+			return LegendRenderingOrder.REVERSE;
+		}
+		return null;
+	}
 
 }

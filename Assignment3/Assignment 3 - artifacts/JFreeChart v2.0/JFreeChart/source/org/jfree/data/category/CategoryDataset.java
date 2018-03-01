@@ -57,7 +57,7 @@ import org.jfree.data.KeyedValues2D;
 import org.jfree.data.general.Dataset;
 
 /**
- * The interface for a dataset with one or more series, and values associated 
+ * The interface for a dataset with one or more series, and values associated
  * with categories.
  * <P>
  * The categories are represented by <code>Comparable</code> instance, with the
@@ -65,6 +65,6 @@ import org.jfree.data.general.Dataset;
  */
 public interface CategoryDataset extends KeyedValues2D, Dataset {
 
-    // no additional methods required
+	// no additional methods required
 
 }

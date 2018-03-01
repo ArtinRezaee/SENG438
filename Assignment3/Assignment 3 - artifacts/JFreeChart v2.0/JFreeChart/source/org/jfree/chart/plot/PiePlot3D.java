@@ -102,902 +102,735 @@ import org.jfree.data.general.PieDataset;
 import org.jfree.ui.RectangleInsets;
 
 /**
- * A plot that displays data in the form of a 3D pie chart, using data from
- * any class that implements the {@link PieDataset} interface.
+ * A plot that displays data in the form of a 3D pie chart, using data from any
+ * class that implements the {@link PieDataset} interface.
  * <P>
  * Although this class extends {@link PiePlot}, it does not currently support
  * exploded sections.
  */
 public class PiePlot3D extends PiePlot implements Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = 3408984188945161432L;
-    
-    /** The factor of the depth of the pie from the plot height */
-    private double depthFactor = 0.2;
-
-    /**
-     * Creates a new instance with no dataset.
-     */
-    public PiePlot3D() {
-        this(null);   
-    }
-    
-    /**
-     * Creates a pie chart with a three dimensional effect using the specified 
-     * dataset.
-     *
-     * @param dataset  the dataset (<code>null</code> permitted).
-     */
-    public PiePlot3D(PieDataset dataset) {
-        super(dataset);
-        setCircular(false, false);
-    }
-
-    /**
-     * Sets the pie depth as a percentage of the height of the plot area.
-     *
-     * @param factor  the depth factor (for example, 0.20 is twenty percent).
-     */
-    public void setDepthFactor(double factor) {
-        this.depthFactor = factor;
-    }
-
-    /**
-     * The depth factor for the chart.
-     *
-     * @return The depth factor.
-     */
-    public double getDepthFactor () {
-        return this.depthFactor;
-    }
-
-    /**
-     * Draws the plot on a Java 2D graphics device (such as the screen or a 
-     * printer).  This method is called by the 
-     * {@link org.jfree.chart.JFreeChart} class, you don't normally need 
-     * to call it yourself.
-     *
-     * @param g2  the graphics device.
-     * @param area  the area within which the plot should be drawn.
-     * @param anchor  the anchor (<code>null</code> permitted).
-     * @param parentState  the state from the parent plot, if there is one.
-     * @param info  collects info about the drawing 
-     *              (<code>null</code> permitted).
-     */
-    public void draw(Graphics2D g2, Rectangle2D area, 
-                     Point2D anchor,
-                     PlotState parentState,
-                     PlotRenderingInfo info) {
-
-        // adjust for outer margin...
-        RectangleInsets margin = getMargin();
-        margin.trim(area);
-
-        Rectangle2D originalPlotArea = (Rectangle2D) area.clone();
-        if (info != null) {
-            info.setPlotArea(area);
-            info.setDataArea(area);
-        }
-
-        drawBackground(g2, area);
-        drawBorder(g2, area);
-        getBorder().getInsets().trim(area);
-
-        Shape savedClip = g2.getClip();
-        g2.clip(area);
-        RectangleInsets padding = getPadding();
-        padding.trim(area);
-
-        // adjust the plot area by the interior spacing value
-        //double gapPercent = getInteriorGap();
-        double labelPercent = 0.0;
-        if (getLabelGenerator() != null) {
-            labelPercent = getLabelGap() + getMaximumLabelWidth() 
-                           + getLabelLinkMargin();   
-        }
-//        double gapHorizontal = plotArea.getWidth() 
-//                               * (gapPercent + labelPercent);
-//        double gapVertical = plotArea.getHeight() * gapPercent;
-
-        double gapHorizontal = area.getWidth() 
-            * (0.0 + labelPercent);
-        double gapVertical = area.getHeight() * 0.0;
-        double linkX = area.getX() + gapHorizontal / 2;
-        double linkY = area.getY() + gapVertical / 2;
-        double linkW = area.getWidth() - gapHorizontal;
-        double linkH = area.getHeight() - gapVertical;
-        
-        // make the link area a square if the pie chart is to be circular...
-        if (isCircular()) { // is circular?
-            double min = Math.min(linkW, linkH) / 2;
-            linkX = (linkX + linkX + linkW) / 2 - min;
-            linkY = (linkY + linkY + linkH) / 2 - min;
-            linkW = 2 * min;
-            linkH = 2 * min;
-        }
-        
-        PiePlotState state = initialise(g2, area, this, null, info);
-        // the explode area defines the max circle/ellipse for the exploded pie 
-        // sections.
-        // it is defined by shrinking the linkArea by the linkMargin factor.
-        double hh = linkW * getLabelLinkMargin();
-        double vv = linkH * getLabelLinkMargin();
-        Rectangle2D explodeArea = new Rectangle2D.Double(
-            linkX + hh / 2.0, linkY + vv / 2.0, linkW - hh, linkH - vv
-        );
-       
-        state.setExplodedPieArea(explodeArea);
-        
-        // the pie area defines the circle/ellipse for regular pie sections.
-        // it is defined by shrinking the explodeArea by the explodeMargin 
-        // factor. 
-        double maximumExplodePercent = getMaximumExplodePercent();
-        double percent = maximumExplodePercent / (1.0 + maximumExplodePercent);
-        
-        double h1 = explodeArea.getWidth() * percent;
-        double v1 = explodeArea.getHeight() * percent;
-        Rectangle2D pieArea = new Rectangle2D.Double(
-            explodeArea.getX() + h1 / 2.0, explodeArea.getY() + v1 / 2.0,
-            explodeArea.getWidth() - h1, explodeArea.getHeight() - v1
-        );
-
-        int depth = (int) (pieArea.getHeight() * this.depthFactor);
-        // the link area defines the dog-leg point for the linking lines to 
-        // the labels
-        Rectangle2D linkArea = new Rectangle2D.Double(
-            linkX, linkY, linkW, linkH - depth
-        );
-        state.setLinkArea(linkArea);   
-
-        state.setPieArea(pieArea);
-        state.setPieCenterX(pieArea.getCenterX());
-        state.setPieCenterY(pieArea.getCenterY() - depth / 2.0);
-        state.setPieWRadius(pieArea.getWidth() / 2.0);
-        state.setPieHRadius((pieArea.getHeight() - depth) / 2.0);
-
-        drawBackground(g2, area);
-        // get the data source - return if null;
-        PieDataset dataset = getDataset();
-        if (DatasetUtilities.isEmptyOrNull(getDataset())) {
-            drawNoDataMessage(g2, area);
-            g2.setClip(savedClip);
-            return;
-        }
-
-        // if too any elements
-        if (dataset.getKeys().size() > area.getWidth()) {
-            String text = "Too many elements";
-            Font sfont = new Font("dialog", Font.BOLD, 10);
-            g2.setFont(sfont);
-            FontMetrics fm = g2.getFontMetrics(sfont);
-            int stringWidth = fm.stringWidth(text);
-
-            g2.drawString(
-                text, 
-                (int) (area.getX() + (area.getWidth() - stringWidth) / 2),
-                (int) (area.getY() + (area.getHeight() / 2))
-            );
-            return;
-        }
-        // if we are drawing a perfect circle, we need to readjust the top left
-        // coordinates of the drawing area for the arcs to arrive at this
-        // effect.
-        if (isCircular()) {
-            double min = Math.min(area.getWidth(), area.getHeight()) / 2;
-            area = new Rectangle2D.Double(
-                area.getCenterX() - min, area.getCenterY() - min, 
-                2 * min, 2 * min
-            );
-        }
-        // get a list of keys...
-        List sectionKeys = dataset.getKeys();
-
-        if (sectionKeys.size() == 0) {
-            return;
-        }
-
-        // establish the coordinates of the top left corner of the drawing area
-        double arcX = pieArea.getX();
-        double arcY = pieArea.getY();
-
-        //g2.clip(clipArea);
-        Composite originalComposite = g2.getComposite();
-        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 
-                getForegroundAlpha()));
-
-        double totalValue = DatasetUtilities.calculatePieDatasetTotal(dataset);
-        double runningTotal = 0;
-        if (depth < 0) {
-            return;  // if depth is negative don't draw anything
-        }
-
-        ArrayList arcList = new ArrayList();
-        Arc2D.Double arc;
-        Paint paint;
-        Paint outlinePaint;
-        Stroke outlineStroke;
-
-        Iterator iterator = sectionKeys.iterator();
-        while (iterator.hasNext()) {
-
-            Comparable currentKey = (Comparable) iterator.next();
-            Number dataValue = dataset.getValue(currentKey);
-            if (dataValue == null) {
-                arcList.add(null);
-                continue;
-            }
-            double value = dataValue.doubleValue();
-            if (value <= 0) {
-                arcList.add(null);
-                continue;
-            }
-            double startAngle = getStartAngle();
-            double direction = getDirection().getFactor();
-            double angle1 = startAngle + (direction * (runningTotal * 360)) 
-            / totalValue;
-            double angle2 = startAngle + (direction * (runningTotal + value) 
-                    * 360) / totalValue;
-            if (Math.abs(angle2 - angle1) > getMinimumArcAngleToDraw()) {
-                arcList.add(
-                    new Arc2D.Double(
-                        arcX, arcY + depth, pieArea.getWidth(), 
-                        pieArea.getHeight() - depth,
-                        angle1, angle2 - angle1, Arc2D.PIE
-                    )
-                );
-            }
-            else {
-                arcList.add(null);
-            }
-            runningTotal += value;
-        }
-
-        Shape oldClip = g2.getClip();
-
-        Ellipse2D top = new Ellipse2D.Double(
-            pieArea.getX(), pieArea.getY(), pieArea.getWidth(), 
-            pieArea.getHeight() - depth
-        );
-
-        Ellipse2D bottom = new Ellipse2D.Double(
-            pieArea.getX(), pieArea.getY() + depth, pieArea.getWidth(), 
-            pieArea.getHeight() - depth
-        );
-
-        Rectangle2D lower = new Rectangle2D.Double(
-            top.getX(), top.getCenterY(), pieArea.getWidth(), 
-            bottom.getMaxY() - top.getCenterY()
-        );
-
-        Rectangle2D upper = new Rectangle2D.Double(
-            pieArea.getX(), top.getY(), pieArea.getWidth(),
-            bottom.getCenterY() - top.getY()
-        );
-
-        Area a = new Area(top);
-        a.add(new Area(lower));
-        Area b = new Area(bottom);
-        b.add(new Area(upper));
-        Area pie = new Area(a);
-        pie.intersect(b);
-
-        Area front = new Area(pie);
-        front.subtract(new Area(top));
-
-        Area back = new Area(pie);
-        back.subtract(new Area(bottom));
-
-        // draw the bottom circle
-        int[] xs;
-        int[] ys;
-        outlinePaint = getSectionOutlinePaint(0);
-        arc = new Arc2D.Double(
-            arcX, arcY + depth, pieArea.getWidth(), pieArea.getHeight() - depth,
-            0, 360, Arc2D.PIE
-        );
-
-        int categoryCount = arcList.size();
-        for (int categoryIndex = 0; categoryIndex < categoryCount; 
-             categoryIndex++) {
-            arc = (Arc2D.Double) arcList.get(categoryIndex);
-            if (arc == null) {
-                continue;
-            }
-            paint = getSectionPaint(categoryIndex);
-            outlinePaint = getSectionOutlinePaint(categoryIndex);
-            outlineStroke = getSectionOutlineStroke(categoryIndex);
-            g2.setPaint(paint);
-            g2.fill(arc);
-            g2.setPaint(outlinePaint);
-            g2.setStroke(outlineStroke);
-            g2.draw(arc);
-            g2.setPaint(paint);
-
-            Point2D p1 = arc.getStartPoint();
-
-            // draw the height
-            xs = new int[] {
-                (int) arc.getCenterX(), (int) arc.getCenterX(),
-                (int) p1.getX(), (int) p1.getX() 
-            };
-            ys = new int[] {
-                (int) arc.getCenterY(), (int) arc.getCenterY() - depth,
-                (int) p1.getY() - depth, (int) p1.getY() 
-            };
-            Polygon polygon = new Polygon(xs, ys, 4);
-            g2.setPaint(java.awt.Color.lightGray);
-            g2.fill(polygon);
-            g2.setPaint(outlinePaint);
-            g2.setStroke(outlineStroke);
-            g2.draw(polygon);
-            g2.setPaint(paint);
-
-        }
-
-        g2.setPaint(Color.gray);
-        g2.fill(back);
-        g2.fill(front);
-
-        // cycle through once drawing only the sides at the back...
-        int cat = 0;
-        iterator = arcList.iterator();
-        while (iterator.hasNext()) {
-            Arc2D segment = (Arc2D) iterator.next();
-            if (segment != null) {
-                paint = getSectionPaint(cat);
-                outlinePaint = getSectionOutlinePaint(cat);
-                outlineStroke = getSectionOutlineStroke(cat);
-                drawSide(
-                    g2, pieArea, segment, front, back, paint, 
-                    outlinePaint, outlineStroke, 
-                    false, true
-                );
-            }
-            cat++;
-        }
-
-        // cycle through again drawing only the sides at the front...
-        cat = 0;
-        iterator = arcList.iterator();
-        while (iterator.hasNext()) {
-            Arc2D segment = (Arc2D) iterator.next();
-            if (segment != null) {
-                paint = getSectionPaint(cat);
-                outlinePaint = getSectionOutlinePaint(cat);
-                outlineStroke = getSectionOutlineStroke(cat);
-                drawSide(
-                    g2, pieArea, segment, front, back, paint, 
-                    outlinePaint, outlineStroke, 
-                    true, false
-                );
-            }
-            cat++;
-        }
-
-        g2.setClip(oldClip);
-
-        // draw the sections at the top of the pie (and set up tooltips)...
-        Arc2D upperArc;
-        for (int sectionIndex = 0; sectionIndex < categoryCount; 
-             sectionIndex++) {
-            arc = (Arc2D.Double) arcList.get(sectionIndex);
-            if (arc == null) {
-                continue;
-            }
-            upperArc = new Arc2D.Double(
-                arcX, arcY, pieArea.getWidth(), pieArea.getHeight() - depth,
-                arc.getAngleStart(), arc.getAngleExtent(), Arc2D.PIE
-            );
-            
-            paint = getSectionPaint(sectionIndex);
-            outlinePaint = getSectionOutlinePaint(sectionIndex);
-            outlineStroke = getSectionOutlineStroke(sectionIndex);
-            g2.setPaint(paint);
-            g2.fill(upperArc);
-            g2.setStroke(outlineStroke);
-            g2.setPaint(outlinePaint);
-            g2.draw(upperArc);
-
-           // add a tooltip for the section...
-            Comparable currentKey = (Comparable) sectionKeys.get(sectionIndex);
-            if (info != null) {
-                EntityCollection entities 
-                    = info.getOwner().getEntityCollection();
-                if (entities != null) {
-                    String tip = null;
-                    PieToolTipGenerator tipster = getToolTipGenerator();
-                    if (tipster != null) {
-                        // @mgs: using the method's return value was missing 
-                        tip = tipster.generateToolTip(dataset, currentKey);
-                    }
-                    String url = null;
-                    if (getURLGenerator() != null) {
-                        url = getURLGenerator().generateURL(dataset, currentKey,
-                                getPieIndex());
-                    }
-                    PieSectionEntity entity = new PieSectionEntity(
-                        upperArc, dataset, getPieIndex(), sectionIndex, 
-                        currentKey, tip, url
-                    );
-                    entities.add(entity);
-                }
-            }
-            List keys = dataset.getKeys();
-            Rectangle2D adjustedPlotArea = new Rectangle2D.Double(
-                originalPlotArea.getX(), originalPlotArea.getY(), 
-                originalPlotArea.getWidth(), 
-                originalPlotArea.getHeight() - depth
-            );
-            drawLabels(g2, keys, totalValue, adjustedPlotArea, linkArea, state);
-        }
-
-        g2.setClip(savedClip);
-        g2.setComposite(originalComposite);
-
-    }
-
-    /**
-     * Draws the side of a pie section.
-     *
-     * @param g2  the graphics device.
-     * @param plotArea  the plot area.
-     * @param arc  the arc.
-     * @param front  the front of the pie.
-     * @param back  the back of the pie.
-     * @param paint  the color.
-     * @param outlinePaint  the outline paint.
-     * @param outlineStroke  the outline stroke.
-     * @param drawFront  draw the front?
-     * @param drawBack  draw the back?
-     */
-    protected void drawSide(Graphics2D g2,
-                            Rectangle2D plotArea, 
-                            Arc2D arc, 
-                            Area front, 
-                            Area back,
-                            Paint paint, 
-                            Paint outlinePaint,
-                            Stroke outlineStroke,
-                            boolean drawFront, 
-                            boolean drawBack) {
-
-        double start = arc.getAngleStart();
-        double extent = arc.getAngleExtent();
-        double end = start + extent;
-
-        g2.setStroke(outlineStroke);
-        
-        // for CLOCKWISE charts, the extent will be negative...
-        if (extent < 0.0) {
-
-            if (isAngleAtFront(start)) {  // start at front
-
-                if (!isAngleAtBack(end)) {
-
-                    if (extent > -180.0) {  // the segment is entirely at the 
-                                            // front of the chart
-                        if (drawFront) {
-                            Area side = new Area(
-                                new Rectangle2D.Double(
-                                    arc.getEndPoint().getX(), plotArea.getY(),
-                                    arc.getStartPoint().getX() 
-                                    - arc.getEndPoint().getX(),
-                                    plotArea.getHeight()
-                                )
-                            );
-                            side.intersect(front);
-                            g2.setPaint(paint);
-                            g2.fill(side);
-                            g2.setPaint(outlinePaint);
-                            g2.draw(side);
-                        }
-                    }
-                    else {  // the segment starts at the front, and wraps all 
-                            // the way around
-                            // the back and finishes at the front again
-                        Area side1 = new Area(
-                            new Rectangle2D.Double(
-                                plotArea.getX(), plotArea.getY(),
-                                arc.getStartPoint().getX() - plotArea.getX(), 
-                                plotArea.getHeight()
-                            )
-                        );
-                        side1.intersect(front);
-
-                        Area side2 = new Area(
-                            new Rectangle2D.Double(
-                                arc.getEndPoint().getX(), plotArea.getY(),
-                                plotArea.getMaxX() - arc.getEndPoint().getX(),
-                                plotArea.getHeight()
-                            )
-                        );
-
-                        side2.intersect(front);
-                        g2.setPaint(paint);
-                        if (drawFront) {
-                            g2.fill(side1);
-                            g2.fill(side2);
-                        }
-
-                        if (drawBack) {
-                            g2.fill(back);
-                        }
-
-                        g2.setPaint(outlinePaint);
-                        if (drawFront) {
-                            g2.draw(side1);
-                            g2.draw(side2);
-                        }
-
-                        if (drawBack) {
-                            g2.draw(back);
-                        }
-
-                    }
-                }
-                else {  // starts at the front, finishes at the back (going 
-                        // around the left side)
-
-                    if (drawBack) {
-                        Area side2 = new Area(
-                            new Rectangle2D.Double(
-                                plotArea.getX(), plotArea.getY(),
-                                arc.getEndPoint().getX() - plotArea.getX(), 
-                                plotArea.getHeight()
-                            )
-                        );
-                        side2.intersect(back);
-                        g2.setPaint(paint);
-                        g2.fill(side2);
-                        g2.setPaint(outlinePaint);
-                        g2.draw(side2);
-                    }
-
-                    if (drawFront) {
-                        Area side1 = new Area(
-                            new Rectangle2D.Double(
-                                plotArea.getX(), plotArea.getY(),
-                                arc.getStartPoint().getX() - plotArea.getX(),
-                                plotArea.getHeight()
-                            )
-                        );
-                        side1.intersect(front);
-                        g2.setPaint(paint);
-                        g2.fill(side1);
-                        g2.setPaint(outlinePaint);
-                        g2.draw(side1);
-                    }
-                }
-            }
-            else {  // the segment starts at the back (still extending 
-                    // CLOCKWISE)
-
-                if (!isAngleAtFront(end)) {
-                    if (extent > -180.0) {  // whole segment stays at the back
-                        if (drawBack) {
-                            Area side = new Area(
-                                new Rectangle2D.Double(
-                                    arc.getStartPoint().getX(), plotArea.getY(),
-                                    arc.getEndPoint().getX() 
-                                    - arc.getStartPoint().getX(),
-                                    plotArea.getHeight()
-                                )
-                            );
-                            side.intersect(back);
-                            g2.setPaint(paint);
-                            g2.fill(side);
-                            g2.setPaint(outlinePaint);
-                            g2.draw(side);
-                        }
-                    }
-                    else {  // starts at the back, wraps around front, and 
-                            // finishes at back again
-                        Area side1 = new Area(
-                            new Rectangle2D.Double(
-                                arc.getStartPoint().getX(), plotArea.getY(),
-                                plotArea.getMaxX() - arc.getStartPoint().getX(),
-                                plotArea.getHeight()
-                            )
-                        );
-                        side1.intersect(back);
-
-                        Area side2 = new Area(
-                            new Rectangle2D.Double(
-                                plotArea.getX(), plotArea.getY(),
-                                arc.getEndPoint().getX() - plotArea.getX(),
-                                plotArea.getHeight()
-                            )
-                        );
-
-                        side2.intersect(back);
-
-                        g2.setPaint(paint);
-                        if (drawBack) {
-                            g2.fill(side1);
-                            g2.fill(side2);
-                        }
-
-                        if (drawFront) {
-                            g2.fill(front);
-                        }
-
-                        g2.setPaint(outlinePaint);
-                        if (drawBack) {
-                            g2.draw(side1);
-                            g2.draw(side2);
-                        }
-
-                        if (drawFront) {
-                            g2.draw(front);
-                        }
-
-                    }
-                }
-                else {  // starts at back, finishes at front (CLOCKWISE)
-
-                    if (drawBack) {
-                        Area side1 = new Area(
-                            new Rectangle2D.Double(
-                                arc.getStartPoint().getX(), plotArea.getY(),
-                                plotArea.getMaxX() - arc.getStartPoint().getX(),
-                                plotArea.getHeight()
-                            )
-                        );
-                        side1.intersect(back);
-                        g2.setPaint(paint);
-                        g2.fill(side1);
-                        g2.setPaint(outlinePaint);
-                        g2.draw(side1);
-                    }
-
-                    if (drawFront) {
-                        Area side2 = new Area(
-                            new Rectangle2D.Double(
-                                arc.getEndPoint().getX(), plotArea.getY(),
-                                plotArea.getMaxX() - arc.getEndPoint().getX(),
-                                plotArea.getHeight()
-                            )
-                        );
-                        side2.intersect(front);
-                        g2.setPaint(paint);
-                        g2.fill(side2);
-                        g2.setPaint(outlinePaint);
-                        g2.draw(side2);
-                    }
-
-                }
-            }
-        }
-        else if (extent > 0.0) {  // the pie sections are arranged ANTICLOCKWISE
-
-            if (isAngleAtFront(start)) {  // segment starts at the front
-
-                if (!isAngleAtBack(end)) {  // and finishes at the front
-
-                    if (extent < 180.0) {  // segment only occupies the front
-                        if (drawFront) {
-                            Area side = new Area(
-                                new Rectangle2D.Double(
-                                    arc.getStartPoint().getX(), plotArea.getY(),
-                                    arc.getEndPoint().getX() 
-                                    - arc.getStartPoint().getX(),
-                                    plotArea.getHeight()
-                                )
-                            );
-                            side.intersect(front);
-                            g2.setPaint(paint);
-                            g2.fill(side);
-                            g2.setPaint(outlinePaint);
-                            g2.draw(side);
-                        }
-                    }
-                    else {  // segments wraps right around the back...
-                        Area side1 = new Area(
-                            new Rectangle2D.Double(
-                                arc.getStartPoint().getX(), plotArea.getY(),
-                                plotArea.getMaxX() - arc.getStartPoint().getX(),
-                                plotArea.getHeight()
-                            )
-                        );
-                        side1.intersect(front);
-
-                        Area side2 = new Area(
-                            new Rectangle2D.Double(
-                                plotArea.getX(), plotArea.getY(),
-                                arc.getEndPoint().getX() - plotArea.getX(),
-                                plotArea.getHeight()
-                            )
-                        );
-                        side2.intersect(front);
-
-                        g2.setPaint(paint);
-                        if (drawFront) {
-                            g2.fill(side1);
-                            g2.fill(side2);
-                        }
-
-                        if (drawBack) {
-                            g2.fill(back);
-                        }
-
-                        g2.setPaint(outlinePaint);
-                        if (drawFront) {
-                            g2.draw(side1);
-                            g2.draw(side2);
-                        }
-
-                        if (drawBack) {
-                            g2.draw(back);
-                        }
-
-                    }
-                }
-                else {  // segments starts at front and finishes at back...
-                    if (drawBack) {
-                        Area side2 = new Area(
-                            new Rectangle2D.Double(
-                                arc.getEndPoint().getX(), plotArea.getY(),
-                                plotArea.getMaxX() - arc.getEndPoint().getX(),
-                                plotArea.getHeight()
-                            )
-                        );
-                        side2.intersect(back);
-                        g2.setPaint(paint);
-                        g2.fill(side2);
-                        g2.setPaint(outlinePaint);
-                        g2.draw(side2);
-                    }
-
-                    if (drawFront) {
-                        Area side1 = new Area(
-                            new Rectangle2D.Double(
-                                arc.getStartPoint().getX(), plotArea.getY(),
-                                plotArea.getMaxX() - arc.getStartPoint().getX(),
-                                plotArea.getHeight()
-                            )
-                        );
-                        side1.intersect(front);
-                        g2.setPaint(paint);
-                        g2.fill(side1);
-                        g2.setPaint(outlinePaint);
-                        g2.draw(side1);
-                    }
-                }
-            }
-            else {  // segment starts at back
-
-                if (!isAngleAtFront(end)) {
-                    if (extent < 180.0) {  // and finishes at back
-                        if (drawBack) {
-                            Area side = new Area(
-                                new Rectangle2D.Double(
-                                    arc.getEndPoint().getX(), plotArea.getY(),
-                                    arc.getStartPoint().getX() 
-                                    - arc.getEndPoint().getX(),
-                                    plotArea.getHeight()
-                                )
-                            );
-                            side.intersect(back);
-                            g2.setPaint(paint);
-                            g2.fill(side);
-                            g2.setPaint(outlinePaint);
-                            g2.draw(side);
-                        }
-                    }
-                    else {  // starts at back and wraps right around to the 
-                            // back again
-                        Area side1 = new Area(
-                            new Rectangle2D.Double(
-                                arc.getStartPoint().getX(), plotArea.getY(),
-                                plotArea.getX() - arc.getStartPoint().getX(),
-                                plotArea.getHeight()
-                            )
-                        );
-                        side1.intersect(back);
-
-                        Area side2 = new Area(
-                            new Rectangle2D.Double(
-                                arc.getEndPoint().getX(), plotArea.getY(),
-                                plotArea.getMaxX() - arc.getEndPoint().getX(),
-                                plotArea.getHeight()
-                            )
-                        );
-                        side2.intersect(back);
-
-                        g2.setPaint(paint);
-                        if (drawBack) {
-                            g2.fill(side1);
-                            g2.fill(side2);
-                        }
-
-                        if (drawFront) {
-                            g2.fill(front);
-                        }
-
-                        g2.setPaint(outlinePaint);
-                        if (drawBack) {
-                            g2.draw(side1);
-                            g2.draw(side2);
-                        }
-
-                        if (drawFront) {
-                            g2.draw(front);
-                        }
-
-                    }
-                }
-                else {  // starts at the back and finishes at the front 
-                        // (wrapping the left side)
-                    if (drawBack) {
-                        Area side1 = new Area(
-                            new Rectangle2D.Double(
-                                plotArea.getX(), plotArea.getY(),
-                                arc.getStartPoint().getX() - plotArea.getX(),
-                                plotArea.getHeight()
-                            )
-                        );
-                        side1.intersect(back);
-                        g2.setPaint(paint);
-                        g2.fill(side1);
-                        g2.setPaint(outlinePaint);
-                        g2.draw(side1);
-                    }
-
-                    if (drawFront) {
-                        Area side2 = new Area(
-                            new Rectangle2D.Double(
-                                plotArea.getX(), plotArea.getY(),
-                                arc.getEndPoint().getX() - plotArea.getX(),
-                                plotArea.getHeight()
-                            )
-                        );
-                        side2.intersect(front);
-                        g2.setPaint(paint);
-                        g2.fill(side2);
-                        g2.setPaint(outlinePaint);
-                        g2.draw(side2);
-                    }
-                }
-            }
-
-        }
-
-    }
-
-    /**
-     * Returns a short string describing the type of plot.
-     *
-     * @return <i>Pie 3D Plot</i>.
-     */
-    public String getPlotType () {
-        return localizationResources.getString("Pie_3D_Plot");
-    }
-
-    /**
-     * A utility method that returns true if the angle represents a point at 
-     * the front of the 3D pie chart.  0 - 180 degrees is the back, 180 - 360 
-     * is the front.
-     *
-     * @param angle  the angle.
-     *
-     * @return A boolean.
-     */
-    private boolean isAngleAtFront(double angle) {
-        return (Math.sin(Math.toRadians(angle)) < 0.0);
-    }
-
-    /**
-     * A utility method that returns true if the angle represents a point at 
-     * the back of the 3D pie chart.  0 - 180 degrees is the back, 180 - 360 
-     * is the front.
-     *
-     * @param angle  the angle.
-     *
-     * @return <code>true</code> if the angle is at the back of the pie.
-     */
-    private boolean isAngleAtBack(double angle) {
-        return (Math.sin(Math.toRadians(angle)) > 0.0);
-    }
+	/** For serialization. */
+	private static final long serialVersionUID = 3408984188945161432L;
+
+	/** The factor of the depth of the pie from the plot height */
+	private double depthFactor = 0.2;
+
+	/**
+	 * Creates a new instance with no dataset.
+	 */
+	public PiePlot3D() {
+		this(null);
+	}
+
+	/**
+	 * Creates a pie chart with a three dimensional effect using the specified
+	 * dataset.
+	 *
+	 * @param dataset
+	 *            the dataset (<code>null</code> permitted).
+	 */
+	public PiePlot3D(PieDataset dataset) {
+		super(dataset);
+		setCircular(false, false);
+	}
+
+	/**
+	 * Sets the pie depth as a percentage of the height of the plot area.
+	 *
+	 * @param factor
+	 *            the depth factor (for example, 0.20 is twenty percent).
+	 */
+	public void setDepthFactor(double factor) {
+		this.depthFactor = factor;
+	}
+
+	/**
+	 * The depth factor for the chart.
+	 *
+	 * @return The depth factor.
+	 */
+	public double getDepthFactor() {
+		return this.depthFactor;
+	}
+
+	/**
+	 * Draws the plot on a Java 2D graphics device (such as the screen or a
+	 * printer). This method is called by the {@link org.jfree.chart.JFreeChart}
+	 * class, you don't normally need to call it yourself.
+	 *
+	 * @param g2
+	 *            the graphics device.
+	 * @param area
+	 *            the area within which the plot should be drawn.
+	 * @param anchor
+	 *            the anchor (<code>null</code> permitted).
+	 * @param parentState
+	 *            the state from the parent plot, if there is one.
+	 * @param info
+	 *            collects info about the drawing (<code>null</code> permitted).
+	 */
+	public void draw(Graphics2D g2, Rectangle2D area, Point2D anchor, PlotState parentState, PlotRenderingInfo info) {
+
+		// adjust for outer margin...
+		RectangleInsets margin = getMargin();
+		margin.trim(area);
+
+		Rectangle2D originalPlotArea = (Rectangle2D) area.clone();
+		if (info != null) {
+			info.setPlotArea(area);
+			info.setDataArea(area);
+		}
+
+		drawBackground(g2, area);
+		drawBorder(g2, area);
+		getBorder().getInsets().trim(area);
+
+		Shape savedClip = g2.getClip();
+		g2.clip(area);
+		RectangleInsets padding = getPadding();
+		padding.trim(area);
+
+		// adjust the plot area by the interior spacing value
+		// double gapPercent = getInteriorGap();
+		double labelPercent = 0.0;
+		if (getLabelGenerator() != null) {
+			labelPercent = getLabelGap() + getMaximumLabelWidth() + getLabelLinkMargin();
+		}
+		// double gapHorizontal = plotArea.getWidth()
+		// * (gapPercent + labelPercent);
+		// double gapVertical = plotArea.getHeight() * gapPercent;
+
+		double gapHorizontal = area.getWidth() * (0.0 + labelPercent);
+		double gapVertical = area.getHeight() * 0.0;
+		double linkX = area.getX() + gapHorizontal / 2;
+		double linkY = area.getY() + gapVertical / 2;
+		double linkW = area.getWidth() - gapHorizontal;
+		double linkH = area.getHeight() - gapVertical;
+
+		// make the link area a square if the pie chart is to be circular...
+		if (isCircular()) { // is circular?
+			double min = Math.min(linkW, linkH) / 2;
+			linkX = (linkX + linkX + linkW) / 2 - min;
+			linkY = (linkY + linkY + linkH) / 2 - min;
+			linkW = 2 * min;
+			linkH = 2 * min;
+		}
+
+		PiePlotState state = initialise(g2, area, this, null, info);
+		// the explode area defines the max circle/ellipse for the exploded pie
+		// sections.
+		// it is defined by shrinking the linkArea by the linkMargin factor.
+		double hh = linkW * getLabelLinkMargin();
+		double vv = linkH * getLabelLinkMargin();
+		Rectangle2D explodeArea = new Rectangle2D.Double(linkX + hh / 2.0, linkY + vv / 2.0, linkW - hh, linkH - vv);
+
+		state.setExplodedPieArea(explodeArea);
+
+		// the pie area defines the circle/ellipse for regular pie sections.
+		// it is defined by shrinking the explodeArea by the explodeMargin
+		// factor.
+		double maximumExplodePercent = getMaximumExplodePercent();
+		double percent = maximumExplodePercent / (1.0 + maximumExplodePercent);
+
+		double h1 = explodeArea.getWidth() * percent;
+		double v1 = explodeArea.getHeight() * percent;
+		Rectangle2D pieArea = new Rectangle2D.Double(explodeArea.getX() + h1 / 2.0, explodeArea.getY() + v1 / 2.0,
+				explodeArea.getWidth() - h1, explodeArea.getHeight() - v1);
+
+		int depth = (int) (pieArea.getHeight() * this.depthFactor);
+		// the link area defines the dog-leg point for the linking lines to
+		// the labels
+		Rectangle2D linkArea = new Rectangle2D.Double(linkX, linkY, linkW, linkH - depth);
+		state.setLinkArea(linkArea);
+
+		state.setPieArea(pieArea);
+		state.setPieCenterX(pieArea.getCenterX());
+		state.setPieCenterY(pieArea.getCenterY() - depth / 2.0);
+		state.setPieWRadius(pieArea.getWidth() / 2.0);
+		state.setPieHRadius((pieArea.getHeight() - depth) / 2.0);
+
+		drawBackground(g2, area);
+		// get the data source - return if null;
+		PieDataset dataset = getDataset();
+		if (DatasetUtilities.isEmptyOrNull(getDataset())) {
+			drawNoDataMessage(g2, area);
+			g2.setClip(savedClip);
+			return;
+		}
+
+		// if too any elements
+		if (dataset.getKeys().size() > area.getWidth()) {
+			String text = "Too many elements";
+			Font sfont = new Font("dialog", Font.BOLD, 10);
+			g2.setFont(sfont);
+			FontMetrics fm = g2.getFontMetrics(sfont);
+			int stringWidth = fm.stringWidth(text);
+
+			g2.drawString(text, (int) (area.getX() + (area.getWidth() - stringWidth) / 2),
+					(int) (area.getY() + (area.getHeight() / 2)));
+			return;
+		}
+		// if we are drawing a perfect circle, we need to readjust the top left
+		// coordinates of the drawing area for the arcs to arrive at this
+		// effect.
+		if (isCircular()) {
+			double min = Math.min(area.getWidth(), area.getHeight()) / 2;
+			area = new Rectangle2D.Double(area.getCenterX() - min, area.getCenterY() - min, 2 * min, 2 * min);
+		}
+		// get a list of keys...
+		List sectionKeys = dataset.getKeys();
+
+		if (sectionKeys.size() == 0) {
+			return;
+		}
+
+		// establish the coordinates of the top left corner of the drawing area
+		double arcX = pieArea.getX();
+		double arcY = pieArea.getY();
+
+		// g2.clip(clipArea);
+		Composite originalComposite = g2.getComposite();
+		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, getForegroundAlpha()));
+
+		double totalValue = DatasetUtilities.calculatePieDatasetTotal(dataset);
+		double runningTotal = 0;
+		if (depth < 0) {
+			return; // if depth is negative don't draw anything
+		}
+
+		ArrayList arcList = new ArrayList();
+		Arc2D.Double arc;
+		Paint paint;
+		Paint outlinePaint;
+		Stroke outlineStroke;
+
+		Iterator iterator = sectionKeys.iterator();
+		while (iterator.hasNext()) {
+
+			Comparable currentKey = (Comparable) iterator.next();
+			Number dataValue = dataset.getValue(currentKey);
+			if (dataValue == null) {
+				arcList.add(null);
+				continue;
+			}
+			double value = dataValue.doubleValue();
+			if (value <= 0) {
+				arcList.add(null);
+				continue;
+			}
+			double startAngle = getStartAngle();
+			double direction = getDirection().getFactor();
+			double angle1 = startAngle + (direction * (runningTotal * 360)) / totalValue;
+			double angle2 = startAngle + (direction * (runningTotal + value) * 360) / totalValue;
+			if (Math.abs(angle2 - angle1) > getMinimumArcAngleToDraw()) {
+				arcList.add(new Arc2D.Double(arcX, arcY + depth, pieArea.getWidth(), pieArea.getHeight() - depth,
+						angle1, angle2 - angle1, Arc2D.PIE));
+			} else {
+				arcList.add(null);
+			}
+			runningTotal += value;
+		}
+
+		Shape oldClip = g2.getClip();
+
+		Ellipse2D top = new Ellipse2D.Double(pieArea.getX(), pieArea.getY(), pieArea.getWidth(),
+				pieArea.getHeight() - depth);
+
+		Ellipse2D bottom = new Ellipse2D.Double(pieArea.getX(), pieArea.getY() + depth, pieArea.getWidth(),
+				pieArea.getHeight() - depth);
+
+		Rectangle2D lower = new Rectangle2D.Double(top.getX(), top.getCenterY(), pieArea.getWidth(),
+				bottom.getMaxY() - top.getCenterY());
+
+		Rectangle2D upper = new Rectangle2D.Double(pieArea.getX(), top.getY(), pieArea.getWidth(),
+				bottom.getCenterY() - top.getY());
+
+		Area a = new Area(top);
+		a.add(new Area(lower));
+		Area b = new Area(bottom);
+		b.add(new Area(upper));
+		Area pie = new Area(a);
+		pie.intersect(b);
+
+		Area front = new Area(pie);
+		front.subtract(new Area(top));
+
+		Area back = new Area(pie);
+		back.subtract(new Area(bottom));
+
+		// draw the bottom circle
+		int[] xs;
+		int[] ys;
+		outlinePaint = getSectionOutlinePaint(0);
+		arc = new Arc2D.Double(arcX, arcY + depth, pieArea.getWidth(), pieArea.getHeight() - depth, 0, 360, Arc2D.PIE);
+
+		int categoryCount = arcList.size();
+		for (int categoryIndex = 0; categoryIndex < categoryCount; categoryIndex++) {
+			arc = (Arc2D.Double) arcList.get(categoryIndex);
+			if (arc == null) {
+				continue;
+			}
+			paint = getSectionPaint(categoryIndex);
+			outlinePaint = getSectionOutlinePaint(categoryIndex);
+			outlineStroke = getSectionOutlineStroke(categoryIndex);
+			g2.setPaint(paint);
+			g2.fill(arc);
+			g2.setPaint(outlinePaint);
+			g2.setStroke(outlineStroke);
+			g2.draw(arc);
+			g2.setPaint(paint);
+
+			Point2D p1 = arc.getStartPoint();
+
+			// draw the height
+			xs = new int[] { (int) arc.getCenterX(), (int) arc.getCenterX(), (int) p1.getX(), (int) p1.getX() };
+			ys = new int[] { (int) arc.getCenterY(), (int) arc.getCenterY() - depth, (int) p1.getY() - depth,
+					(int) p1.getY() };
+			Polygon polygon = new Polygon(xs, ys, 4);
+			g2.setPaint(java.awt.Color.lightGray);
+			g2.fill(polygon);
+			g2.setPaint(outlinePaint);
+			g2.setStroke(outlineStroke);
+			g2.draw(polygon);
+			g2.setPaint(paint);
+
+		}
+
+		g2.setPaint(Color.gray);
+		g2.fill(back);
+		g2.fill(front);
+
+		// cycle through once drawing only the sides at the back...
+		int cat = 0;
+		iterator = arcList.iterator();
+		while (iterator.hasNext()) {
+			Arc2D segment = (Arc2D) iterator.next();
+			if (segment != null) {
+				paint = getSectionPaint(cat);
+				outlinePaint = getSectionOutlinePaint(cat);
+				outlineStroke = getSectionOutlineStroke(cat);
+				drawSide(g2, pieArea, segment, front, back, paint, outlinePaint, outlineStroke, false, true);
+			}
+			cat++;
+		}
+
+		// cycle through again drawing only the sides at the front...
+		cat = 0;
+		iterator = arcList.iterator();
+		while (iterator.hasNext()) {
+			Arc2D segment = (Arc2D) iterator.next();
+			if (segment != null) {
+				paint = getSectionPaint(cat);
+				outlinePaint = getSectionOutlinePaint(cat);
+				outlineStroke = getSectionOutlineStroke(cat);
+				drawSide(g2, pieArea, segment, front, back, paint, outlinePaint, outlineStroke, true, false);
+			}
+			cat++;
+		}
+
+		g2.setClip(oldClip);
+
+		// draw the sections at the top of the pie (and set up tooltips)...
+		Arc2D upperArc;
+		for (int sectionIndex = 0; sectionIndex < categoryCount; sectionIndex++) {
+			arc = (Arc2D.Double) arcList.get(sectionIndex);
+			if (arc == null) {
+				continue;
+			}
+			upperArc = new Arc2D.Double(arcX, arcY, pieArea.getWidth(), pieArea.getHeight() - depth,
+					arc.getAngleStart(), arc.getAngleExtent(), Arc2D.PIE);
+
+			paint = getSectionPaint(sectionIndex);
+			outlinePaint = getSectionOutlinePaint(sectionIndex);
+			outlineStroke = getSectionOutlineStroke(sectionIndex);
+			g2.setPaint(paint);
+			g2.fill(upperArc);
+			g2.setStroke(outlineStroke);
+			g2.setPaint(outlinePaint);
+			g2.draw(upperArc);
+
+			// add a tooltip for the section...
+			Comparable currentKey = (Comparable) sectionKeys.get(sectionIndex);
+			if (info != null) {
+				EntityCollection entities = info.getOwner().getEntityCollection();
+				if (entities != null) {
+					String tip = null;
+					PieToolTipGenerator tipster = getToolTipGenerator();
+					if (tipster != null) {
+						// @mgs: using the method's return value was missing
+						tip = tipster.generateToolTip(dataset, currentKey);
+					}
+					String url = null;
+					if (getURLGenerator() != null) {
+						url = getURLGenerator().generateURL(dataset, currentKey, getPieIndex());
+					}
+					PieSectionEntity entity = new PieSectionEntity(upperArc, dataset, getPieIndex(), sectionIndex,
+							currentKey, tip, url);
+					entities.add(entity);
+				}
+			}
+			List keys = dataset.getKeys();
+			Rectangle2D adjustedPlotArea = new Rectangle2D.Double(originalPlotArea.getX(), originalPlotArea.getY(),
+					originalPlotArea.getWidth(), originalPlotArea.getHeight() - depth);
+			drawLabels(g2, keys, totalValue, adjustedPlotArea, linkArea, state);
+		}
+
+		g2.setClip(savedClip);
+		g2.setComposite(originalComposite);
+
+	}
+
+	/**
+	 * Draws the side of a pie section.
+	 *
+	 * @param g2
+	 *            the graphics device.
+	 * @param plotArea
+	 *            the plot area.
+	 * @param arc
+	 *            the arc.
+	 * @param front
+	 *            the front of the pie.
+	 * @param back
+	 *            the back of the pie.
+	 * @param paint
+	 *            the color.
+	 * @param outlinePaint
+	 *            the outline paint.
+	 * @param outlineStroke
+	 *            the outline stroke.
+	 * @param drawFront
+	 *            draw the front?
+	 * @param drawBack
+	 *            draw the back?
+	 */
+	protected void drawSide(Graphics2D g2, Rectangle2D plotArea, Arc2D arc, Area front, Area back, Paint paint,
+			Paint outlinePaint, Stroke outlineStroke, boolean drawFront, boolean drawBack) {
+
+		double start = arc.getAngleStart();
+		double extent = arc.getAngleExtent();
+		double end = start + extent;
+
+		g2.setStroke(outlineStroke);
+
+		// for CLOCKWISE charts, the extent will be negative...
+		if (extent < 0.0) {
+
+			if (isAngleAtFront(start)) { // start at front
+
+				if (!isAngleAtBack(end)) {
+
+					if (extent > -180.0) { // the segment is entirely at the
+											// front of the chart
+						if (drawFront) {
+							Area side = new Area(new Rectangle2D.Double(arc.getEndPoint().getX(), plotArea.getY(),
+									arc.getStartPoint().getX() - arc.getEndPoint().getX(), plotArea.getHeight()));
+							side.intersect(front);
+							g2.setPaint(paint);
+							g2.fill(side);
+							g2.setPaint(outlinePaint);
+							g2.draw(side);
+						}
+					} else { // the segment starts at the front, and wraps all
+								// the way around
+								// the back and finishes at the front again
+						Area side1 = new Area(new Rectangle2D.Double(plotArea.getX(), plotArea.getY(),
+								arc.getStartPoint().getX() - plotArea.getX(), plotArea.getHeight()));
+						side1.intersect(front);
+
+						Area side2 = new Area(new Rectangle2D.Double(arc.getEndPoint().getX(), plotArea.getY(),
+								plotArea.getMaxX() - arc.getEndPoint().getX(), plotArea.getHeight()));
+
+						side2.intersect(front);
+						g2.setPaint(paint);
+						if (drawFront) {
+							g2.fill(side1);
+							g2.fill(side2);
+						}
+
+						if (drawBack) {
+							g2.fill(back);
+						}
+
+						g2.setPaint(outlinePaint);
+						if (drawFront) {
+							g2.draw(side1);
+							g2.draw(side2);
+						}
+
+						if (drawBack) {
+							g2.draw(back);
+						}
+
+					}
+				} else { // starts at the front, finishes at the back (going
+							// around the left side)
+
+					if (drawBack) {
+						Area side2 = new Area(new Rectangle2D.Double(plotArea.getX(), plotArea.getY(),
+								arc.getEndPoint().getX() - plotArea.getX(), plotArea.getHeight()));
+						side2.intersect(back);
+						g2.setPaint(paint);
+						g2.fill(side2);
+						g2.setPaint(outlinePaint);
+						g2.draw(side2);
+					}
+
+					if (drawFront) {
+						Area side1 = new Area(new Rectangle2D.Double(plotArea.getX(), plotArea.getY(),
+								arc.getStartPoint().getX() - plotArea.getX(), plotArea.getHeight()));
+						side1.intersect(front);
+						g2.setPaint(paint);
+						g2.fill(side1);
+						g2.setPaint(outlinePaint);
+						g2.draw(side1);
+					}
+				}
+			} else { // the segment starts at the back (still extending
+						// CLOCKWISE)
+
+				if (!isAngleAtFront(end)) {
+					if (extent > -180.0) { // whole segment stays at the back
+						if (drawBack) {
+							Area side = new Area(new Rectangle2D.Double(arc.getStartPoint().getX(), plotArea.getY(),
+									arc.getEndPoint().getX() - arc.getStartPoint().getX(), plotArea.getHeight()));
+							side.intersect(back);
+							g2.setPaint(paint);
+							g2.fill(side);
+							g2.setPaint(outlinePaint);
+							g2.draw(side);
+						}
+					} else { // starts at the back, wraps around front, and
+								// finishes at back again
+						Area side1 = new Area(new Rectangle2D.Double(arc.getStartPoint().getX(), plotArea.getY(),
+								plotArea.getMaxX() - arc.getStartPoint().getX(), plotArea.getHeight()));
+						side1.intersect(back);
+
+						Area side2 = new Area(new Rectangle2D.Double(plotArea.getX(), plotArea.getY(),
+								arc.getEndPoint().getX() - plotArea.getX(), plotArea.getHeight()));
+
+						side2.intersect(back);
+
+						g2.setPaint(paint);
+						if (drawBack) {
+							g2.fill(side1);
+							g2.fill(side2);
+						}
+
+						if (drawFront) {
+							g2.fill(front);
+						}
+
+						g2.setPaint(outlinePaint);
+						if (drawBack) {
+							g2.draw(side1);
+							g2.draw(side2);
+						}
+
+						if (drawFront) {
+							g2.draw(front);
+						}
+
+					}
+				} else { // starts at back, finishes at front (CLOCKWISE)
+
+					if (drawBack) {
+						Area side1 = new Area(new Rectangle2D.Double(arc.getStartPoint().getX(), plotArea.getY(),
+								plotArea.getMaxX() - arc.getStartPoint().getX(), plotArea.getHeight()));
+						side1.intersect(back);
+						g2.setPaint(paint);
+						g2.fill(side1);
+						g2.setPaint(outlinePaint);
+						g2.draw(side1);
+					}
+
+					if (drawFront) {
+						Area side2 = new Area(new Rectangle2D.Double(arc.getEndPoint().getX(), plotArea.getY(),
+								plotArea.getMaxX() - arc.getEndPoint().getX(), plotArea.getHeight()));
+						side2.intersect(front);
+						g2.setPaint(paint);
+						g2.fill(side2);
+						g2.setPaint(outlinePaint);
+						g2.draw(side2);
+					}
+
+				}
+			}
+		} else if (extent > 0.0) { // the pie sections are arranged ANTICLOCKWISE
+
+			if (isAngleAtFront(start)) { // segment starts at the front
+
+				if (!isAngleAtBack(end)) { // and finishes at the front
+
+					if (extent < 180.0) { // segment only occupies the front
+						if (drawFront) {
+							Area side = new Area(new Rectangle2D.Double(arc.getStartPoint().getX(), plotArea.getY(),
+									arc.getEndPoint().getX() - arc.getStartPoint().getX(), plotArea.getHeight()));
+							side.intersect(front);
+							g2.setPaint(paint);
+							g2.fill(side);
+							g2.setPaint(outlinePaint);
+							g2.draw(side);
+						}
+					} else { // segments wraps right around the back...
+						Area side1 = new Area(new Rectangle2D.Double(arc.getStartPoint().getX(), plotArea.getY(),
+								plotArea.getMaxX() - arc.getStartPoint().getX(), plotArea.getHeight()));
+						side1.intersect(front);
+
+						Area side2 = new Area(new Rectangle2D.Double(plotArea.getX(), plotArea.getY(),
+								arc.getEndPoint().getX() - plotArea.getX(), plotArea.getHeight()));
+						side2.intersect(front);
+
+						g2.setPaint(paint);
+						if (drawFront) {
+							g2.fill(side1);
+							g2.fill(side2);
+						}
+
+						if (drawBack) {
+							g2.fill(back);
+						}
+
+						g2.setPaint(outlinePaint);
+						if (drawFront) {
+							g2.draw(side1);
+							g2.draw(side2);
+						}
+
+						if (drawBack) {
+							g2.draw(back);
+						}
+
+					}
+				} else { // segments starts at front and finishes at back...
+					if (drawBack) {
+						Area side2 = new Area(new Rectangle2D.Double(arc.getEndPoint().getX(), plotArea.getY(),
+								plotArea.getMaxX() - arc.getEndPoint().getX(), plotArea.getHeight()));
+						side2.intersect(back);
+						g2.setPaint(paint);
+						g2.fill(side2);
+						g2.setPaint(outlinePaint);
+						g2.draw(side2);
+					}
+
+					if (drawFront) {
+						Area side1 = new Area(new Rectangle2D.Double(arc.getStartPoint().getX(), plotArea.getY(),
+								plotArea.getMaxX() - arc.getStartPoint().getX(), plotArea.getHeight()));
+						side1.intersect(front);
+						g2.setPaint(paint);
+						g2.fill(side1);
+						g2.setPaint(outlinePaint);
+						g2.draw(side1);
+					}
+				}
+			} else { // segment starts at back
+
+				if (!isAngleAtFront(end)) {
+					if (extent < 180.0) { // and finishes at back
+						if (drawBack) {
+							Area side = new Area(new Rectangle2D.Double(arc.getEndPoint().getX(), plotArea.getY(),
+									arc.getStartPoint().getX() - arc.getEndPoint().getX(), plotArea.getHeight()));
+							side.intersect(back);
+							g2.setPaint(paint);
+							g2.fill(side);
+							g2.setPaint(outlinePaint);
+							g2.draw(side);
+						}
+					} else { // starts at back and wraps right around to the
+								// back again
+						Area side1 = new Area(new Rectangle2D.Double(arc.getStartPoint().getX(), plotArea.getY(),
+								plotArea.getX() - arc.getStartPoint().getX(), plotArea.getHeight()));
+						side1.intersect(back);
+
+						Area side2 = new Area(new Rectangle2D.Double(arc.getEndPoint().getX(), plotArea.getY(),
+								plotArea.getMaxX() - arc.getEndPoint().getX(), plotArea.getHeight()));
+						side2.intersect(back);
+
+						g2.setPaint(paint);
+						if (drawBack) {
+							g2.fill(side1);
+							g2.fill(side2);
+						}
+
+						if (drawFront) {
+							g2.fill(front);
+						}
+
+						g2.setPaint(outlinePaint);
+						if (drawBack) {
+							g2.draw(side1);
+							g2.draw(side2);
+						}
+
+						if (drawFront) {
+							g2.draw(front);
+						}
+
+					}
+				} else { // starts at the back and finishes at the front
+							// (wrapping the left side)
+					if (drawBack) {
+						Area side1 = new Area(new Rectangle2D.Double(plotArea.getX(), plotArea.getY(),
+								arc.getStartPoint().getX() - plotArea.getX(), plotArea.getHeight()));
+						side1.intersect(back);
+						g2.setPaint(paint);
+						g2.fill(side1);
+						g2.setPaint(outlinePaint);
+						g2.draw(side1);
+					}
+
+					if (drawFront) {
+						Area side2 = new Area(new Rectangle2D.Double(plotArea.getX(), plotArea.getY(),
+								arc.getEndPoint().getX() - plotArea.getX(), plotArea.getHeight()));
+						side2.intersect(front);
+						g2.setPaint(paint);
+						g2.fill(side2);
+						g2.setPaint(outlinePaint);
+						g2.draw(side2);
+					}
+				}
+			}
+
+		}
+
+	}
+
+	/**
+	 * Returns a short string describing the type of plot.
+	 *
+	 * @return <i>Pie 3D Plot</i>.
+	 */
+	public String getPlotType() {
+		return localizationResources.getString("Pie_3D_Plot");
+	}
+
+	/**
+	 * A utility method that returns true if the angle represents a point at the
+	 * front of the 3D pie chart. 0 - 180 degrees is the back, 180 - 360 is the
+	 * front.
+	 *
+	 * @param angle
+	 *            the angle.
+	 *
+	 * @return A boolean.
+	 */
+	private boolean isAngleAtFront(double angle) {
+		return (Math.sin(Math.toRadians(angle)) < 0.0);
+	}
+
+	/**
+	 * A utility method that returns true if the angle represents a point at the
+	 * back of the 3D pie chart. 0 - 180 degrees is the back, 180 - 360 is the
+	 * front.
+	 *
+	 * @param angle
+	 *            the angle.
+	 *
+	 * @return <code>true</code> if the angle is at the back of the pie.
+	 */
+	private boolean isAngleAtBack(double angle) {
+		return (Math.sin(Math.toRadians(angle)) > 0.0);
+	}
 
 }

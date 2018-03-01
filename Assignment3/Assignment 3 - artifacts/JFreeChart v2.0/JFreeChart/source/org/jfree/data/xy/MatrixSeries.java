@@ -56,167 +56,170 @@ import org.jfree.data.general.Series;
  * @author Barak Naveh
  */
 public class MatrixSeries extends Series implements Serializable {
-    
-    /** For serialization. */
-    private static final long serialVersionUID = 7934188527308315704L;    
-    
-    /** Series matrix values */
-    protected double[][] data;
 
-    /**
-     * Constructs a new matrix series.
-     * <p>
-     * By default, all matrix items are initialzed to 0.
-     * </p>
-     *
-     * @param name  series name (<code>null</code> not permitted).
-     * @param rows  the number of rows.
-     * @param columns  the number of columns.
-     */
-    public MatrixSeries(String name, int rows, int columns) {
-        super(name);
-        this.data = new double[rows][columns];
-        zeroAll();
-    }
+	/** For serialization. */
+	private static final long serialVersionUID = 7934188527308315704L;
 
-    /**
-     * Returns the number of columns in this matrix series.
-     *
-     * @return The number of columns in this matrix series.
-     */
-    public int getColumnsCount() {
-        return this.data[0].length;
-    }
+	/** Series matrix values */
+	protected double[][] data;
 
+	/**
+	 * Constructs a new matrix series.
+	 * <p>
+	 * By default, all matrix items are initialzed to 0.
+	 * </p>
+	 *
+	 * @param name
+	 *            series name (<code>null</code> not permitted).
+	 * @param rows
+	 *            the number of rows.
+	 * @param columns
+	 *            the number of columns.
+	 */
+	public MatrixSeries(String name, int rows, int columns) {
+		super(name);
+		this.data = new double[rows][columns];
+		zeroAll();
+	}
 
-    /**
-     * Return the matrix item at the specified index.
-     *
-     * @param itemIndex item index.
-     *
-     * @return The matrix item at the specified index.
-     */
-    public Number getItem(int itemIndex) {
-        int i = getItemRow(itemIndex);
-        int j = getItemColumn(itemIndex);
+	/**
+	 * Returns the number of columns in this matrix series.
+	 *
+	 * @return The number of columns in this matrix series.
+	 */
+	public int getColumnsCount() {
+		return this.data[0].length;
+	}
 
-        Number n = new Double(get(i, j));
+	/**
+	 * Return the matrix item at the specified index.
+	 *
+	 * @param itemIndex
+	 *            item index.
+	 *
+	 * @return The matrix item at the specified index.
+	 */
+	public Number getItem(int itemIndex) {
+		int i = getItemRow(itemIndex);
+		int j = getItemColumn(itemIndex);
 
-        return n;
-    }
+		Number n = new Double(get(i, j));
 
+		return n;
+	}
 
-    /**
-     * Returns the column of the specified item.
-     *
-     * @param itemIndex the index of the item.
-     *
-     * @return The column of the specified item.
-     */
-    public int getItemColumn(int itemIndex) {
-        //assert itemIndex >= 0 && itemIndex < getItemCount();
-        return itemIndex % getColumnsCount();
-    }
+	/**
+	 * Returns the column of the specified item.
+	 *
+	 * @param itemIndex
+	 *            the index of the item.
+	 *
+	 * @return The column of the specified item.
+	 */
+	public int getItemColumn(int itemIndex) {
+		// assert itemIndex >= 0 && itemIndex < getItemCount();
+		return itemIndex % getColumnsCount();
+	}
 
+	/**
+	 * Returns the number of items in the series.
+	 *
+	 * @return The item count.
+	 */
+	public int getItemCount() {
+		return getRowCount() * getColumnsCount();
+	}
 
-    /**
-     * Returns the number of items in the series.
-     *
-     * @return The item count.
-     */
-    public int getItemCount() {
-        return getRowCount() * getColumnsCount();
-    }
+	/**
+	 * Returns the row of the specified item.
+	 *
+	 * @param itemIndex
+	 *            the index of the item.
+	 *
+	 * @return The row of the specified item.
+	 */
+	public int getItemRow(int itemIndex) {
+		// assert itemIndex >= 0 && itemIndex < getItemCount();
+		return itemIndex / getColumnsCount();
+	}
 
+	/**
+	 * Returns the number of rows in this matrix series.
+	 *
+	 * @return The number of rows in this matrix series.
+	 */
+	public int getRowCount() {
+		return this.data.length;
+	}
 
-    /**
-     * Returns the row of the specified item.
-     *
-     * @param itemIndex the index of the item.
-     *
-     * @return The row of the specified item.
-     */
-    public int getItemRow(int itemIndex) {
-        //assert itemIndex >= 0 && itemIndex < getItemCount();
-        return itemIndex / getColumnsCount();
-    }
+	/**
+	 * Returns the value of the specified item in this matrix series.
+	 *
+	 * @param i
+	 *            the row of the item.
+	 * @param j
+	 *            the column of the item.
+	 *
+	 * @return The value of the specified item in this matrix series.
+	 */
+	public double get(int i, int j) {
+		return this.data[i][j];
+	}
 
+	/**
+	 * Updates the value of the specified item in this matrix series.
+	 *
+	 * @param i
+	 *            the row of the item.
+	 * @param j
+	 *            the column of the item.
+	 * @param mij
+	 *            the new value for the item.
+	 */
+	public void update(int i, int j, double mij) {
+		this.data[i][j] = mij;
+		fireSeriesChanged();
+	}
 
-    /**
-     * Returns the number of rows in this matrix series.
-     *
-     * @return The number of rows in this matrix series.
-     */
-    public int getRowCount() {
-        return this.data.length;
-    }
+	/**
+	 * Sets all matrix values to zero and sends a
+	 * {@link org.jfree.data.general.SeriesChangeEvent} to all registered listeners.
+	 */
+	public void zeroAll() {
+		int rows = getRowCount();
+		int columns = getColumnsCount();
 
+		for (int row = 0; row < rows; row++) {
+			for (int column = 0; column < columns; column++) {
+				this.data[row][column] = 0.0;
+			}
+		}
+		fireSeriesChanged();
+	}
 
-    /**
-     * Returns the value of the specified item in this matrix series.
-     *
-     * @param i the row of the item.
-     * @param j the column of the item.
-     *
-     * @return The value of the specified item in this matrix series.
-     */
-    public double get(int i, int j) {
-        return this.data[i][j];
-    }
+	/**
+	 * Tests this object instance for equality with an arbitrary object.
+	 * 
+	 * @param obj
+	 *            the object (<code>null</code> permitted).
+	 * 
+	 * @return A boolean.
+	 */
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (obj instanceof MatrixSeries && super.equals(obj)) {
+			MatrixSeries m = (MatrixSeries) obj;
+			if (!(getRowCount() == m.getRowCount())) {
+				return false;
+			}
+			if (!(getColumnsCount() == m.getColumnsCount())) {
+				return false;
+			}
+			return true;
+		}
+		return false;
+	}
 
-
-    /**
-     * Updates the value of the specified item in this matrix series.
-     *
-     * @param i the row of the item.
-     * @param j the column of the item.
-     * @param mij the new value for the item.
-     */
-    public void update(int i, int j, double mij) {
-        this.data[i][j] = mij;
-        fireSeriesChanged();
-    }
-
-
-    /**
-     * Sets all matrix values to zero and sends a 
-     * {@link org.jfree.data.general.SeriesChangeEvent} to all registered 
-     * listeners.
-     */
-    public void zeroAll() {
-        int rows = getRowCount();
-        int columns = getColumnsCount();
-
-        for (int row = 0; row < rows; row++) {
-            for (int column = 0; column < columns; column++) {
-                this.data[row][column] = 0.0;
-            }
-        }
-        fireSeriesChanged();
-    }
-    
-    /**
-     * Tests this object instance for equality with an arbitrary object.
-     * 
-     * @param obj  the object (<code>null</code> permitted).
-     * 
-     * @return A boolean.
-     */
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;   
-        }
-        if (obj instanceof MatrixSeries && super.equals(obj)) {
-            MatrixSeries m = (MatrixSeries) obj;
-            if (!(getRowCount() == m.getRowCount())) {
-                return false;
-            }
-            if (!(getColumnsCount() == m.getColumnsCount())) {
-                return false;   
-            }
-            return true;   
-        }
-        return false;
-    }
-    
 }

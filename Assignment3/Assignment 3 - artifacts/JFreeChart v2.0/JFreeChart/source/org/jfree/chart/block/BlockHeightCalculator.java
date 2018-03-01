@@ -42,25 +42,26 @@
 package org.jfree.chart.block;
 
 /**
- * A block height calculator is used to determine the unconstrained height
- * of a block during layout.
+ * A block height calculator is used to determine the unconstrained height of a
+ * block during layout.
  */
 public interface BlockHeightCalculator {
-    
-    /** 
-     * Returns <code>true</code> if the calculator can provide a height for
-     * the given block.
-     */
-    public boolean canHandleBlock(Block block);
 
-    /**
-     * Returns the calculated height for the specified block.
-     * 
-     * @param block  the block.
-     * 
-     * @return The height (a negative value indicates that no valid height 
-     *         could be calculated).
-     */
-    public double calculateHeight(Block block);
-    
+	/**
+	 * Returns <code>true</code> if the calculator can provide a height for the
+	 * given block.
+	 */
+	public boolean canHandleBlock(Block block);
+
+	/**
+	 * Returns the calculated height for the specified block.
+	 * 
+	 * @param block
+	 *            the block.
+	 * 
+	 * @return The height (a negative value indicates that no valid height could be
+	 *         calculated).
+	 */
+	public double calculateHeight(Block block);
+
 }

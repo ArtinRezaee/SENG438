@@ -50,24 +50,24 @@ package org.jfree.data.general;
  */
 public interface CombinationDataset {
 
-    ///////////////////////////////////////////////////////////////////////////
-    // New methods from CombinationDataset
-    ///////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////
+	// New methods from CombinationDataset
+	///////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Returns the parent Dataset of this combination. If there is more than
-     * one parent, or a child is found that is not a combination, then returns
-     * <code>null</code>.
-     *
-     * @return The parent Dataset of this combination.
-     */
-    public SeriesDataset getParent();
+	/**
+	 * Returns the parent Dataset of this combination. If there is more than one
+	 * parent, or a child is found that is not a combination, then returns
+	 * <code>null</code>.
+	 *
+	 * @return The parent Dataset of this combination.
+	 */
+	public SeriesDataset getParent();
 
-    /**
-     * Returns a map or indirect indexing form our series into parent's series.
-     *
-     * @return A map or indirect indexing form our series into parent's series.
-     */
-    public int[] getMap();
+	/**
+	 * Returns a map or indirect indexing form our series into parent's series.
+	 *
+	 * @return A map or indirect indexing form our series into parent's series.
+	 */
+	public int[] getMap();
 
 }

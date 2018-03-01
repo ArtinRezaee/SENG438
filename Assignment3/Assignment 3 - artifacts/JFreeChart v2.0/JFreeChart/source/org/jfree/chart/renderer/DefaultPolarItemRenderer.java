@@ -74,239 +74,232 @@ import org.jfree.util.BooleanUtilities;
 /**
  * A renderer that can be used with the {@link PolarPlot} class.
  *
- * @author  Daniel Bridenbecker, Solution Engineering, Inc.
+ * @author Daniel Bridenbecker, Solution Engineering, Inc.
  */
-public class DefaultPolarItemRenderer extends AbstractRenderer  
-                                      implements PolarItemRenderer {
-       
-    /** The plot that the renderer is assigned to. */
-    private PolarPlot plot;
+public class DefaultPolarItemRenderer extends AbstractRenderer implements PolarItemRenderer {
 
-    /** Flags that control whether the renderer fills each series or not. */
-    private BooleanList seriesFilled;
-   
-    /**
-     * Creates a new instance of DefaultPolarItemRenderer
-     */
-    public DefaultPolarItemRenderer() {
-        this.seriesFilled = new BooleanList();
-    }
-   
-    // --------------------------------
-    // --- AbstractRenderer Methods ---
-    // --------------------------------
-   
-    /** 
-     * Returns the drawing supplier from the plot.
-     *
-     * @return The drawing supplier.
-     */
-    public DrawingSupplier getDrawingSupplier() {
-        DrawingSupplier result = null;
-        PolarPlot p = getPlot();
-        if (p != null) {
-            result = p.getDrawingSupplier();
-        }
-        return result;
-    }
-   
-    // ----------------------
-    // --- Public Methods ---
-    // ----------------------
-    /**
-     * Set the plot associated with this renderer.
-     * 
-     * @param plot  the plot.
-     */
-    public void setPlot(PolarPlot plot) {
-        this.plot = plot;
-    }
+	/** The plot that the renderer is assigned to. */
+	private PolarPlot plot;
 
-    /**
-     * Return the plot associated with this renderer.
-     * 
-     * @return The plot.
-     */
-    public PolarPlot getPlot() {
-        return this.plot;
-    }
+	/** Flags that control whether the renderer fills each series or not. */
+	private BooleanList seriesFilled;
 
-    /**
-     * Plots the data for a given series.
-     * 
-     * @param g2  the drawing surface.
-     * @param dataArea  the data area.
-     * @param info  collects plot rendering info.
-     * @param plot  the plot.
-     * @param dataset  the dataset.
-     * @param seriesIndex  the series index.
-     */
-    public void drawSeries(Graphics2D g2, 
-                           Rectangle2D dataArea, 
-                           PlotRenderingInfo info,
-                           PolarPlot plot,
-                           XYDataset dataset,
-                           int seriesIndex) {
-        
-        Polygon poly = new Polygon();
-        int numPoints = dataset.getItemCount(seriesIndex);
-        for (int i = 0; i < numPoints; i++) {
-            double theta = dataset.getXValue(seriesIndex, i);
-            double radius = dataset.getYValue(seriesIndex, i);
-            Point p = plot.translateValueThetaRadiusToJava2D(
-                theta, radius, dataArea
-            );
-            poly.addPoint(p.x, p.y);
-        }
-        g2.setPaint(getSeriesPaint(seriesIndex));
-        g2.setStroke(getSeriesStroke(seriesIndex));
-        if (isSeriesFilled(seriesIndex)) {
-            Composite savedComposite = g2.getComposite();
-            g2.setComposite(
-                AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f)
-            );
-            g2.fill(poly);
-            g2.setComposite(savedComposite);
-        }
-        else {
-            g2.draw(poly);
-        }
-    }
+	/**
+	 * Creates a new instance of DefaultPolarItemRenderer
+	 */
+	public DefaultPolarItemRenderer() {
+		this.seriesFilled = new BooleanList();
+	}
 
-    /**
-     * Returns <code>true</code> if the renderer should fill the specified 
-     * series, and <code>false</code> otherwise.
-     * 
-     * @param series  the series index (zero-based).
-     * 
-     * @return A boolean.
-     */
-    public boolean isSeriesFilled(int series) {
-        boolean result = false;
-        Boolean b = this.seriesFilled.getBoolean(series);
-        if (b != null) {
-            result = b.booleanValue();
-        }
-        return result;
-    }
+	// --------------------------------
+	// --- AbstractRenderer Methods ---
+	// --------------------------------
 
-    /**
-     * Sets a flag that controls whether or not a series is filled.
-     * 
-     * @param series  the series index.
-     * @param filled  the flag.
-     */
-    public void setSeriesFilled(int series, boolean filled) {
-        this.seriesFilled.setBoolean(series, BooleanUtilities.valueOf(filled));
-    }
-    
-    /**
-     * Draw the angular gridlines - the spokes.
-     * 
-     * @param g2  the drawing surface.
-     * @param plot  the plot.
-     * @param ticks  the ticks.
-     * @param dataArea  the data area.
-     */
-    public void drawAngularGridLines(Graphics2D g2, 
-                                     PolarPlot plot, 
-                                     List ticks,
-                                     Rectangle2D dataArea) {
-        
-        g2.setFont(plot.getAngleLabelFont());
-        g2.setStroke(plot.getAngleGridlineStroke());
-        g2.setPaint(plot.getAngleGridlinePaint());
-      
-        double axisMin = plot.getAxis().getLowerBound();
-        double maxRadius = plot.getMaxRadius();
+	/**
+	 * Returns the drawing supplier from the plot.
+	 *
+	 * @return The drawing supplier.
+	 */
+	public DrawingSupplier getDrawingSupplier() {
+		DrawingSupplier result = null;
+		PolarPlot p = getPlot();
+		if (p != null) {
+			result = p.getDrawingSupplier();
+		}
+		return result;
+	}
 
-        Point center = plot.translateValueThetaRadiusToJava2D(
-            axisMin, axisMin, dataArea
-        );
-        Iterator iterator = ticks.iterator();
-        while (iterator.hasNext()) {
-            NumberTick tick = (NumberTick) iterator.next();
-            Point p = plot.translateValueThetaRadiusToJava2D(
-                tick.getNumber().doubleValue(), maxRadius, dataArea
-            );
-            g2.setPaint(plot.getAngleGridlinePaint());
-            g2.drawLine(center.x, center.y, p.x, p.y);
-            if (plot.isAngleLabelsVisible()) {
-                int x = p.x;
-                int y = p.y;
-                g2.setPaint(plot.getAngleLabelPaint());
-                TextUtilities.drawAlignedString(
-                    tick.getText(), g2, x, y, TextAnchor.CENTER
-                );
-            }
-        }
-     }
+	// ----------------------
+	// --- Public Methods ---
+	// ----------------------
+	/**
+	 * Set the plot associated with this renderer.
+	 * 
+	 * @param plot
+	 *            the plot.
+	 */
+	public void setPlot(PolarPlot plot) {
+		this.plot = plot;
+	}
 
-    /**
-     * Draw the radial gridlines - the rings.
-     * 
-     * @param g2  the drawing surface.
-     * @param plot  the plot.
-     * @param radialAxis  the radial axis.
-     * @param ticks  the ticks.
-     * @param dataArea  the data area.
-     */
-    public void drawRadialGridLines(Graphics2D g2, 
-                                    PolarPlot plot,
-                                    ValueAxis radialAxis,
-                                    List ticks,
-                                    Rectangle2D dataArea) {
-        
-        g2.setFont(radialAxis.getTickLabelFont());
-        g2.setPaint(plot.getRadiusGridlinePaint());
-        g2.setStroke(plot.getRadiusGridlineStroke());
+	/**
+	 * Return the plot associated with this renderer.
+	 * 
+	 * @return The plot.
+	 */
+	public PolarPlot getPlot() {
+		return this.plot;
+	}
 
-        double axisMin = radialAxis.getLowerBound();
-        Point center = plot.translateValueThetaRadiusToJava2D(
-            axisMin, axisMin, dataArea
-        );
-        
-        Iterator iterator = ticks.iterator();
-        while (iterator.hasNext()) {
-            NumberTick tick = (NumberTick) iterator.next();
-            Point p = plot.translateValueThetaRadiusToJava2D(
-                90.0, tick.getNumber().doubleValue(), dataArea
-            );
-            int r = p.x - center.x;
-            int upperLeftX = center.x - r;
-            int upperLeftY = center.y - r;
-            int d = 2 * r;
-            Ellipse2D ring = new Ellipse2D.Double(upperLeftX, upperLeftY, d, d);
-            g2.setPaint(plot.getRadiusGridlinePaint());
-            g2.draw(ring);
-        }
-    }
+	/**
+	 * Plots the data for a given series.
+	 * 
+	 * @param g2
+	 *            the drawing surface.
+	 * @param dataArea
+	 *            the data area.
+	 * @param info
+	 *            collects plot rendering info.
+	 * @param plot
+	 *            the plot.
+	 * @param dataset
+	 *            the dataset.
+	 * @param seriesIndex
+	 *            the series index.
+	 */
+	public void drawSeries(Graphics2D g2, Rectangle2D dataArea, PlotRenderingInfo info, PolarPlot plot,
+			XYDataset dataset, int seriesIndex) {
 
-    /**
-     * Return the legend for the given series.
-     * 
-     * @param series  the series index.
-     * 
-     * @return The legend item.
-     */
-    public LegendItem getLegendItem(int series) {
-        LegendItem result = null;
-        PolarPlot polarPlot = getPlot();
-        if (polarPlot != null) {
-            XYDataset dataset;
-            dataset = polarPlot.getDataset();
-            if (dataset != null) {
-                String label = dataset.getSeriesKey(series).toString();
-                String description = label;
-                Shape shape = getSeriesShape(series);
-                Paint paint = getSeriesPaint(series);
-                Paint outlinePaint = getSeriesOutlinePaint(series);
-                Stroke outlineStroke = getSeriesOutlineStroke(series);
-                result = new LegendItem(label, description, null, null, 
-                        shape, paint, outlineStroke, outlinePaint);
-            }
-        }
-        return result;
-    }
+		Polygon poly = new Polygon();
+		int numPoints = dataset.getItemCount(seriesIndex);
+		for (int i = 0; i < numPoints; i++) {
+			double theta = dataset.getXValue(seriesIndex, i);
+			double radius = dataset.getYValue(seriesIndex, i);
+			Point p = plot.translateValueThetaRadiusToJava2D(theta, radius, dataArea);
+			poly.addPoint(p.x, p.y);
+		}
+		g2.setPaint(getSeriesPaint(seriesIndex));
+		g2.setStroke(getSeriesStroke(seriesIndex));
+		if (isSeriesFilled(seriesIndex)) {
+			Composite savedComposite = g2.getComposite();
+			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+			g2.fill(poly);
+			g2.setComposite(savedComposite);
+		} else {
+			g2.draw(poly);
+		}
+	}
+
+	/**
+	 * Returns <code>true</code> if the renderer should fill the specified series,
+	 * and <code>false</code> otherwise.
+	 * 
+	 * @param series
+	 *            the series index (zero-based).
+	 * 
+	 * @return A boolean.
+	 */
+	public boolean isSeriesFilled(int series) {
+		boolean result = false;
+		Boolean b = this.seriesFilled.getBoolean(series);
+		if (b != null) {
+			result = b.booleanValue();
+		}
+		return result;
+	}
+
+	/**
+	 * Sets a flag that controls whether or not a series is filled.
+	 * 
+	 * @param series
+	 *            the series index.
+	 * @param filled
+	 *            the flag.
+	 */
+	public void setSeriesFilled(int series, boolean filled) {
+		this.seriesFilled.setBoolean(series, BooleanUtilities.valueOf(filled));
+	}
+
+	/**
+	 * Draw the angular gridlines - the spokes.
+	 * 
+	 * @param g2
+	 *            the drawing surface.
+	 * @param plot
+	 *            the plot.
+	 * @param ticks
+	 *            the ticks.
+	 * @param dataArea
+	 *            the data area.
+	 */
+	public void drawAngularGridLines(Graphics2D g2, PolarPlot plot, List ticks, Rectangle2D dataArea) {
+
+		g2.setFont(plot.getAngleLabelFont());
+		g2.setStroke(plot.getAngleGridlineStroke());
+		g2.setPaint(plot.getAngleGridlinePaint());
+
+		double axisMin = plot.getAxis().getLowerBound();
+		double maxRadius = plot.getMaxRadius();
+
+		Point center = plot.translateValueThetaRadiusToJava2D(axisMin, axisMin, dataArea);
+		Iterator iterator = ticks.iterator();
+		while (iterator.hasNext()) {
+			NumberTick tick = (NumberTick) iterator.next();
+			Point p = plot.translateValueThetaRadiusToJava2D(tick.getNumber().doubleValue(), maxRadius, dataArea);
+			g2.setPaint(plot.getAngleGridlinePaint());
+			g2.drawLine(center.x, center.y, p.x, p.y);
+			if (plot.isAngleLabelsVisible()) {
+				int x = p.x;
+				int y = p.y;
+				g2.setPaint(plot.getAngleLabelPaint());
+				TextUtilities.drawAlignedString(tick.getText(), g2, x, y, TextAnchor.CENTER);
+			}
+		}
+	}
+
+	/**
+	 * Draw the radial gridlines - the rings.
+	 * 
+	 * @param g2
+	 *            the drawing surface.
+	 * @param plot
+	 *            the plot.
+	 * @param radialAxis
+	 *            the radial axis.
+	 * @param ticks
+	 *            the ticks.
+	 * @param dataArea
+	 *            the data area.
+	 */
+	public void drawRadialGridLines(Graphics2D g2, PolarPlot plot, ValueAxis radialAxis, List ticks,
+			Rectangle2D dataArea) {
+
+		g2.setFont(radialAxis.getTickLabelFont());
+		g2.setPaint(plot.getRadiusGridlinePaint());
+		g2.setStroke(plot.getRadiusGridlineStroke());
+
+		double axisMin = radialAxis.getLowerBound();
+		Point center = plot.translateValueThetaRadiusToJava2D(axisMin, axisMin, dataArea);
+
+		Iterator iterator = ticks.iterator();
+		while (iterator.hasNext()) {
+			NumberTick tick = (NumberTick) iterator.next();
+			Point p = plot.translateValueThetaRadiusToJava2D(90.0, tick.getNumber().doubleValue(), dataArea);
+			int r = p.x - center.x;
+			int upperLeftX = center.x - r;
+			int upperLeftY = center.y - r;
+			int d = 2 * r;
+			Ellipse2D ring = new Ellipse2D.Double(upperLeftX, upperLeftY, d, d);
+			g2.setPaint(plot.getRadiusGridlinePaint());
+			g2.draw(ring);
+		}
+	}
+
+	/**
+	 * Return the legend for the given series.
+	 * 
+	 * @param series
+	 *            the series index.
+	 * 
+	 * @return The legend item.
+	 */
+	public LegendItem getLegendItem(int series) {
+		LegendItem result = null;
+		PolarPlot polarPlot = getPlot();
+		if (polarPlot != null) {
+			XYDataset dataset;
+			dataset = polarPlot.getDataset();
+			if (dataset != null) {
+				String label = dataset.getSeriesKey(series).toString();
+				String description = label;
+				Shape shape = getSeriesShape(series);
+				Paint paint = getSeriesPaint(series);
+				Paint outlinePaint = getSeriesOutlinePaint(series);
+				Stroke outlineStroke = getSeriesOutlineStroke(series);
+				result = new LegendItem(label, description, null, null, shape, paint, outlineStroke, outlinePaint);
+			}
+		}
+		return result;
+	}
 
 }

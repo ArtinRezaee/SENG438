@@ -89,228 +89,196 @@ import org.jfree.util.PublicCloneable;
  *
  * @author Sylvain Vieujot
  */
-public class SignalRenderer extends AbstractXYItemRenderer 
-                            implements XYItemRenderer, 
-                                       Cloneable,
-                                       PublicCloneable,
-                                       Serializable {
+public class SignalRenderer extends AbstractXYItemRenderer
+		implements XYItemRenderer, Cloneable, PublicCloneable, Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = 1161092564576638268L;
-    
-    /** The mark offset. */
-    private double markOffset = 5;
+	/** For serialization. */
+	private static final long serialVersionUID = 1161092564576638268L;
 
-    /** The shape width. */
-    private double shapeWidth = 15;
+	/** The mark offset. */
+	private double markOffset = 5;
 
-    /** The shape height. */
-    private double shapeHeight = 25;
+	/** The shape width. */
+	private double shapeWidth = 15;
 
-    /**
-     * Creates a new renderer.
-     */
-    public SignalRenderer() {
-        super();
-    }
+	/** The shape height. */
+	private double shapeHeight = 25;
 
-    /**
-     * Returns the mark offset.
-     *
-     * @return The mark offset.
-     */
-    public double getMarkOffset() {
-        return this.markOffset;
-    }
+	/**
+	 * Creates a new renderer.
+	 */
+	public SignalRenderer() {
+		super();
+	}
 
-    /**
-     * Sets the mark offset.
-     *
-     * @param offset  the mark offset.
-     */
-    public void setMarkOffset(double offset) {
-        this.markOffset = offset;
-    }
+	/**
+	 * Returns the mark offset.
+	 *
+	 * @return The mark offset.
+	 */
+	public double getMarkOffset() {
+		return this.markOffset;
+	}
 
-    /**
-     * Returns the shape width.
-     *
-     * @return The shape width.
-     */
-    public double getShapeWidth() {
-        return this.shapeWidth;
-    }
+	/**
+	 * Sets the mark offset.
+	 *
+	 * @param offset
+	 *            the mark offset.
+	 */
+	public void setMarkOffset(double offset) {
+		this.markOffset = offset;
+	}
 
-    /**
-     * Sets the shape width.
-     *
-     * @param width  the shape width.
-     */
-    public void setShapeWidth(double width) {
-        this.shapeWidth = width;
-    }
+	/**
+	 * Returns the shape width.
+	 *
+	 * @return The shape width.
+	 */
+	public double getShapeWidth() {
+		return this.shapeWidth;
+	}
 
-    /**
-     * Returns the shape height.
-     *
-     * @return The shape height.
-     */
-    public double getShapeHeight() {
-        return this.shapeHeight;
-    }
+	/**
+	 * Sets the shape width.
+	 *
+	 * @param width
+	 *            the shape width.
+	 */
+	public void setShapeWidth(double width) {
+		this.shapeWidth = width;
+	}
 
-    /**
-     * Sets the shape height.
-     *
-     * @param height  the shape height.
-     */
-    public void setShapeHeight(double height) {
-        this.shapeHeight = height;
-    }
+	/**
+	 * Returns the shape height.
+	 *
+	 * @return The shape height.
+	 */
+	public double getShapeHeight() {
+		return this.shapeHeight;
+	}
 
-    /**
-     * Draws the visual representation of a single data item.
-     *
-     * @param g2  the graphics device.
-     * @param state  the renderer state.
-     * @param dataArea  the area within which the plot is being drawn.
-     * @param info  collects information about the drawing.
-     * @param plot  the plot (can be used to obtain standard color 
-     *              information etc).
-     * @param horizontalAxis  the horizontal axis.
-     * @param verticalAxis  the vertical axis.
-     * @param dataset  the dataset.
-     * @param series  the series index (zero-based).
-     * @param item  the item index (zero-based).
-     * @param crosshairState  crosshair information for the plot 
-     *                        (<code>null</code> permitted).
-     * @param pass  the pass index.
-     */
-    public void drawItem(Graphics2D g2, 
-                         XYItemRendererState state,
-                         Rectangle2D dataArea,
-                         PlotRenderingInfo info,
-                         XYPlot plot, 
-                         ValueAxis horizontalAxis, 
-                         ValueAxis verticalAxis,
-                         XYDataset dataset, 
-                         int series, 
-                         int item,
-                         CrosshairState crosshairState,
-                         int pass) {
+	/**
+	 * Sets the shape height.
+	 *
+	 * @param height
+	 *            the shape height.
+	 */
+	public void setShapeHeight(double height) {
+		this.shapeHeight = height;
+	}
 
-        // setup for collecting optional entity info...
-        EntityCollection entities = null;
-        if (info != null) {
-            entities = info.getOwner().getEntityCollection();
-        }
+	/**
+	 * Draws the visual representation of a single data item.
+	 *
+	 * @param g2
+	 *            the graphics device.
+	 * @param state
+	 *            the renderer state.
+	 * @param dataArea
+	 *            the area within which the plot is being drawn.
+	 * @param info
+	 *            collects information about the drawing.
+	 * @param plot
+	 *            the plot (can be used to obtain standard color information etc).
+	 * @param horizontalAxis
+	 *            the horizontal axis.
+	 * @param verticalAxis
+	 *            the vertical axis.
+	 * @param dataset
+	 *            the dataset.
+	 * @param series
+	 *            the series index (zero-based).
+	 * @param item
+	 *            the item index (zero-based).
+	 * @param crosshairState
+	 *            crosshair information for the plot (<code>null</code> permitted).
+	 * @param pass
+	 *            the pass index.
+	 */
+	public void drawItem(Graphics2D g2, XYItemRendererState state, Rectangle2D dataArea, PlotRenderingInfo info,
+			XYPlot plot, ValueAxis horizontalAxis, ValueAxis verticalAxis, XYDataset dataset, int series, int item,
+			CrosshairState crosshairState, int pass) {
 
-        SignalsDataset signalData = (SignalsDataset) dataset;
+		// setup for collecting optional entity info...
+		EntityCollection entities = null;
+		if (info != null) {
+			entities = info.getOwner().getEntityCollection();
+		}
 
-        Number x = signalData.getX(series, item);
-        Number y = signalData.getY(series, item);
-        int type = signalData.getType(series, item);
-        //double level = signalData.getLevel(series, item);
+		SignalsDataset signalData = (SignalsDataset) dataset;
 
-        double xx = horizontalAxis.valueToJava2D(
-            x.doubleValue(), dataArea, plot.getDomainAxisEdge()
-        );
-        double yy = verticalAxis.valueToJava2D(
-            y.doubleValue(), dataArea, plot.getRangeAxisEdge()
-        );
+		Number x = signalData.getX(series, item);
+		Number y = signalData.getY(series, item);
+		int type = signalData.getType(series, item);
+		// double level = signalData.getLevel(series, item);
 
-        Paint p = getItemPaint(series, item);
-        Stroke s = getItemStroke(series, item);
-        g2.setPaint(p);
-        g2.setStroke(s);
+		double xx = horizontalAxis.valueToJava2D(x.doubleValue(), dataArea, plot.getDomainAxisEdge());
+		double yy = verticalAxis.valueToJava2D(y.doubleValue(), dataArea, plot.getRangeAxisEdge());
 
-        int direction = 1;
-        if ((type == SignalsDataset.ENTER_LONG) 
-                || (type == SignalsDataset.EXIT_SHORT)) {
-            yy = yy + this.markOffset;
-            direction = -1;
-        }
-        else {
-            yy = yy - this.markOffset;
-        }
+		Paint p = getItemPaint(series, item);
+		Stroke s = getItemStroke(series, item);
+		g2.setPaint(p);
+		g2.setStroke(s);
 
-        GeneralPath path = new GeneralPath();
-        if ((type == SignalsDataset.ENTER_LONG) 
-                || (type == SignalsDataset.ENTER_SHORT)) {
-            path.moveTo((float) xx, (float) yy);
-            path.lineTo(
-                (float) (xx + this.shapeWidth / 2), 
-                (float) (yy - direction * this.shapeHeight / 3)
-            );
-            path.lineTo(
-                (float) (xx + this.shapeWidth / 6), 
-                (float) (yy - direction * this.shapeHeight / 3)
-            );
-            path.lineTo(
-                (float) (xx + this.shapeWidth / 6), 
-                (float) (yy - direction * this.shapeHeight)
-            );
-            path.lineTo(
-                (float) (xx - this.shapeWidth / 6), 
-                (float) (yy - direction * this.shapeHeight)
-            );
-            path.lineTo(
-                (float) (xx - this.shapeWidth / 6), 
-                (float) (yy - direction * this.shapeHeight / 3)
-            );
-            path.lineTo(
-                (float) (xx - this.shapeWidth / 2), 
-                (float) (yy - direction * this.shapeHeight / 3)
-            );
-            path.lineTo((float) xx, (float) yy);
-        }
-        else {
-            path.moveTo((float) xx, (float) yy);
-            path.lineTo(
-                (float) xx, (float) (yy - direction * this.shapeHeight)
-            );
-            Ellipse2D.Double ellipse = new Ellipse2D.Double(
-                xx - this.shapeWidth / 2,
-                yy + (direction == 1 ? -this.shapeHeight 
-                        : this.shapeHeight - this.shapeWidth),
-                this.shapeWidth, 
-                this.shapeWidth
-            );
-            path.append(ellipse, false);
-        }
+		int direction = 1;
+		if ((type == SignalsDataset.ENTER_LONG) || (type == SignalsDataset.EXIT_SHORT)) {
+			yy = yy + this.markOffset;
+			direction = -1;
+		} else {
+			yy = yy - this.markOffset;
+		}
 
-        g2.fill(path);
-        g2.setPaint(Color.black);
-        g2.draw(path);
+		GeneralPath path = new GeneralPath();
+		if ((type == SignalsDataset.ENTER_LONG) || (type == SignalsDataset.ENTER_SHORT)) {
+			path.moveTo((float) xx, (float) yy);
+			path.lineTo((float) (xx + this.shapeWidth / 2), (float) (yy - direction * this.shapeHeight / 3));
+			path.lineTo((float) (xx + this.shapeWidth / 6), (float) (yy - direction * this.shapeHeight / 3));
+			path.lineTo((float) (xx + this.shapeWidth / 6), (float) (yy - direction * this.shapeHeight));
+			path.lineTo((float) (xx - this.shapeWidth / 6), (float) (yy - direction * this.shapeHeight));
+			path.lineTo((float) (xx - this.shapeWidth / 6), (float) (yy - direction * this.shapeHeight / 3));
+			path.lineTo((float) (xx - this.shapeWidth / 2), (float) (yy - direction * this.shapeHeight / 3));
+			path.lineTo((float) xx, (float) yy);
+		} else {
+			path.moveTo((float) xx, (float) yy);
+			path.lineTo((float) xx, (float) (yy - direction * this.shapeHeight));
+			Ellipse2D.Double ellipse = new Ellipse2D.Double(xx - this.shapeWidth / 2,
+					yy + (direction == 1 ? -this.shapeHeight : this.shapeHeight - this.shapeWidth), this.shapeWidth,
+					this.shapeWidth);
+			path.append(ellipse, false);
+		}
 
-        // add an entity for the item...
-        if (entities != null) {
-            String tip = null;
-            XYToolTipGenerator generator = getToolTipGenerator(series, item);
-            if (generator != null) {
-                tip = generator.generateToolTip(dataset, series, item);
-            }
-            String url = null;
-            if (getURLGenerator() != null) {
-                url = getURLGenerator().generateURL(dataset, series, item);
-            }
-            XYItemEntity entity = new XYItemEntity(
-                path, dataset, series, item, tip, url
-            );
-            entities.add(entity);
-        }
+		g2.fill(path);
+		g2.setPaint(Color.black);
+		g2.draw(path);
 
-    }
+		// add an entity for the item...
+		if (entities != null) {
+			String tip = null;
+			XYToolTipGenerator generator = getToolTipGenerator(series, item);
+			if (generator != null) {
+				tip = generator.generateToolTip(dataset, series, item);
+			}
+			String url = null;
+			if (getURLGenerator() != null) {
+				url = getURLGenerator().generateURL(dataset, series, item);
+			}
+			XYItemEntity entity = new XYItemEntity(path, dataset, series, item, tip, url);
+			entities.add(entity);
+		}
 
-    /**
-     * Returns a clone of the renderer.
-     * 
-     * @return A clone.
-     * 
-     * @throws CloneNotSupportedException  if the renderer cannot be cloned.
-     */
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
+	}
+
+	/**
+	 * Returns a clone of the renderer.
+	 * 
+	 * @return A clone.
+	 * 
+	 * @throws CloneNotSupportedException
+	 *             if the renderer cannot be cloned.
+	 */
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
 
 }

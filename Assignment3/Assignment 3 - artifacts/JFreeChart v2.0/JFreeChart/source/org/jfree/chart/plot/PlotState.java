@@ -48,23 +48,23 @@ import java.util.Map;
  */
 public class PlotState {
 
-    /** The shared axis states. */
-    private Map sharedAxisStates;
-    
-    /**
-     * Creates a new state object.
-     */
-    public PlotState() {
-        this.sharedAxisStates = new HashMap();    
-    }
-    
-    /**
-     * Returns a map containing the shared axis states.
-     * 
-     * @return A map.
-     */
-    public Map getSharedAxisStates() {
-        return this.sharedAxisStates;
-    }
-    
+	/** The shared axis states. */
+	private Map sharedAxisStates;
+
+	/**
+	 * Creates a new state object.
+	 */
+	public PlotState() {
+		this.sharedAxisStates = new HashMap();
+	}
+
+	/**
+	 * Returns a map containing the shared axis states.
+	 * 
+	 * @return A map.
+	 */
+	public Map getSharedAxisStates() {
+		return this.sharedAxisStates;
+	}
+
 }

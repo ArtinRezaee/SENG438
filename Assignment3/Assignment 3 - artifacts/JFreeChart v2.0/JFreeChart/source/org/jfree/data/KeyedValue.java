@@ -49,12 +49,12 @@ package org.jfree.data;
  */
 public interface KeyedValue extends Value {
 
-    /**
-     * Returns the key associated with the value.  The key returned by this 
-     * method should be immutable.
-     *
-     * @return The key.
-     */
-    public Comparable getKey();
+	/**
+	 * Returns the key associated with the value. The key returned by this method
+	 * should be immutable.
+	 *
+	 * @return The key.
+	 */
+	public Comparable getKey();
 
 }

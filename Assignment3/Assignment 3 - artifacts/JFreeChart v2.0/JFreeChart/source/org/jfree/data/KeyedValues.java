@@ -53,45 +53,50 @@ import java.util.List;
  */
 public interface KeyedValues extends Values {
 
-    /**
-     * Returns the key associated with an item (value).
-     *
-     * @param index  the item index (zero-based).
-     *
-     * @return The key.
-     * 
-     * @throws IndexOutOfBoundsException if <code>index</code> is out of bounds.
-     */
-    public Comparable getKey(int index);
+	/**
+	 * Returns the key associated with an item (value).
+	 *
+	 * @param index
+	 *            the item index (zero-based).
+	 *
+	 * @return The key.
+	 * 
+	 * @throws IndexOutOfBoundsException
+	 *             if <code>index</code> is out of bounds.
+	 */
+	public Comparable getKey(int index);
 
-    /**
-     * Returns the index for a given key.
-     *
-     * @param key  the key.
-     *
-     * @return The index, or <code>-1</code> if the key is unrecognised.
-     */
-    public int getIndex(Comparable key);
+	/**
+	 * Returns the index for a given key.
+	 *
+	 * @param key
+	 *            the key.
+	 *
+	 * @return The index, or <code>-1</code> if the key is unrecognised.
+	 */
+	public int getIndex(Comparable key);
 
-    /**
-     * Returns the keys for the values in the collection.  Note that you can 
-     * access the values in this collection by key or by index.  For this 
-     * reason, the key order is important - this method should return the keys
-     * in order.  The returned list may be unmodifiable.
-     *
-     * @return The keys (never <code>null</code>).
-     */
-    public List getKeys();
+	/**
+	 * Returns the keys for the values in the collection. Note that you can access
+	 * the values in this collection by key or by index. For this reason, the key
+	 * order is important - this method should return the keys in order. The
+	 * returned list may be unmodifiable.
+	 *
+	 * @return The keys (never <code>null</code>).
+	 */
+	public List getKeys();
 
-    /**
-     * Returns the value for a given key.
-     *
-     * @param key  the key.
-     *
-     * @return The value (possibly <code>null</code>).
-     * 
-     * @throws UnknownKeyException if the key is not recognised.
-     */
-    public Number getValue(Comparable key);
+	/**
+	 * Returns the value for a given key.
+	 *
+	 * @param key
+	 *            the key.
+	 *
+	 * @return The value (possibly <code>null</code>).
+	 * 
+	 * @throws UnknownKeyException
+	 *             if the key is not recognised.
+	 */
+	public Number getValue(Comparable key);
 
 }

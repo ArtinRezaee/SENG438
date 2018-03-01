@@ -53,77 +53,75 @@ import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 
 /**
- * A needle in the shape of a ship, for use with the 
+ * A needle in the shape of a ship, for use with the
  * {@link org.jfree.chart.plot.CompassPlot} class.
  *
  * @author Bryan Scott
  */
-public class ShipNeedle extends MeterNeedle 
-                        implements Cloneable, Serializable {
+public class ShipNeedle extends MeterNeedle implements Cloneable, Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = 149554868169435612L;
-    
-    /**
-     * Draws the needle.
-     *
-     * @param g2  the graphics device.
-     * @param plotArea  the plot area.
-     * @param rotate  the rotation point.
-     * @param angle  the angle.
-     */
-    protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea, 
-                              Point2D rotate, double angle) {
+	/** For serialization. */
+	private static final long serialVersionUID = 149554868169435612L;
 
-        GeneralPath shape = new GeneralPath();
-        shape.append(new Arc2D.Double(
-            -9.0, -7.0, 10, 14, 0.0, 25.5,  Arc2D.OPEN), true
-        );
-        shape.append(new Arc2D.Double(
-            0.0, -7.0, 10, 14, 154.5, 25.5,  Arc2D.OPEN), true
-        );
-        shape.closePath();
-        getTransform().setToTranslation(plotArea.getMinX(), plotArea.getMaxY());
-        getTransform().scale(plotArea.getWidth(), plotArea.getHeight() / 3);
-        shape.transform(getTransform());
+	/**
+	 * Draws the needle.
+	 *
+	 * @param g2
+	 *            the graphics device.
+	 * @param plotArea
+	 *            the plot area.
+	 * @param rotate
+	 *            the rotation point.
+	 * @param angle
+	 *            the angle.
+	 */
+	protected void drawNeedle(Graphics2D g2, Rectangle2D plotArea, Point2D rotate, double angle) {
 
-        if ((rotate != null) && (angle != 0)) {
-            /// we have rotation
-            getTransform().setToRotation(angle, rotate.getX(), rotate.getY());
-            shape.transform(getTransform());
-        }
+		GeneralPath shape = new GeneralPath();
+		shape.append(new Arc2D.Double(-9.0, -7.0, 10, 14, 0.0, 25.5, Arc2D.OPEN), true);
+		shape.append(new Arc2D.Double(0.0, -7.0, 10, 14, 154.5, 25.5, Arc2D.OPEN), true);
+		shape.closePath();
+		getTransform().setToTranslation(plotArea.getMinX(), plotArea.getMaxY());
+		getTransform().scale(plotArea.getWidth(), plotArea.getHeight() / 3);
+		shape.transform(getTransform());
 
-        defaultDisplay(g2, shape);
-    }
+		if ((rotate != null) && (angle != 0)) {
+			/// we have rotation
+			getTransform().setToRotation(angle, rotate.getX(), rotate.getY());
+			shape.transform(getTransform());
+		}
 
-    /**
-     * Tests another object for equality with this object.
-     * 
-     * @param object  the object to test.
-     * 
-     * @return A boolean.
-     */
-    public boolean equals(Object object) {
-        if (object == null) {
-            return false;
-        }
-        if (object == this) {
-            return true;
-        }
-        if (super.equals(object) && object instanceof ShipNeedle) {
-            return true;
-        }
-        return false;
-    }
+		defaultDisplay(g2, shape);
+	}
 
-    /**
-     * Returns a clone of this needle.
-     * 
-     * @return A clone.
-     */
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();   
-    }
+	/**
+	 * Tests another object for equality with this object.
+	 * 
+	 * @param object
+	 *            the object to test.
+	 * 
+	 * @return A boolean.
+	 */
+	public boolean equals(Object object) {
+		if (object == null) {
+			return false;
+		}
+		if (object == this) {
+			return true;
+		}
+		if (super.equals(object) && object instanceof ShipNeedle) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Returns a clone of this needle.
+	 * 
+	 * @return A clone.
+	 */
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
 
 }
-

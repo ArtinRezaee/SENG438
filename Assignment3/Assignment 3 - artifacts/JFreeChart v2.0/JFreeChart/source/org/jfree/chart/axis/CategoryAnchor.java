@@ -45,89 +45,87 @@ import java.io.ObjectStreamException;
 import java.io.Serializable;
 
 /**
- * Used to indicate one of three positions within a category: 
+ * Used to indicate one of three positions within a category:
  * <code>START</code>, <code>MIDDLE</code> and <code>END</code>.
  */
 public final class CategoryAnchor implements Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = -2604142742210173810L;
-    
-    /** Start of period. */
-    public static final CategoryAnchor START 
-        = new CategoryAnchor("CategoryAnchor.START");
+	/** For serialization. */
+	private static final long serialVersionUID = -2604142742210173810L;
 
-    /** Middle of period. */
-    public static final CategoryAnchor MIDDLE 
-        = new CategoryAnchor("CategoryAnchor.MIDDLE");
+	/** Start of period. */
+	public static final CategoryAnchor START = new CategoryAnchor("CategoryAnchor.START");
 
-    /** End of period. */
-    public static final CategoryAnchor END 
-        = new CategoryAnchor("CategoryAnchor.END");
+	/** Middle of period. */
+	public static final CategoryAnchor MIDDLE = new CategoryAnchor("CategoryAnchor.MIDDLE");
 
-    /** The name. */
-    private String name;
+	/** End of period. */
+	public static final CategoryAnchor END = new CategoryAnchor("CategoryAnchor.END");
 
-    /**
-     * Private constructor.
-     *
-     * @param name  the name.
-     */
-    private CategoryAnchor(String name) {
-        this.name = name;
-    }
+	/** The name. */
+	private String name;
 
-    /**
-     * Returns a string representing the object.
-     *
-     * @return The string.
-     */
-    public String toString() {
-        return this.name;
-    }
+	/**
+	 * Private constructor.
+	 *
+	 * @param name
+	 *            the name.
+	 */
+	private CategoryAnchor(String name) {
+		this.name = name;
+	}
 
-    /**
-     * Returns <code>true</code> if this object is equal to the specified 
-     * object, and <code>false</code> otherwise.
-     *
-     * @param obj  the other object.
-     *
-     * @return A boolean.
-     */
-    public boolean equals(Object obj) {
+	/**
+	 * Returns a string representing the object.
+	 *
+	 * @return The string.
+	 */
+	public String toString() {
+		return this.name;
+	}
 
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof CategoryAnchor)) {
-            return false;
-        }
-        CategoryAnchor position = (CategoryAnchor) obj;
-        if (!this.name.equals(position.toString())) {
-            return false;
-        }
-        return true;
+	/**
+	 * Returns <code>true</code> if this object is equal to the specified object,
+	 * and <code>false</code> otherwise.
+	 *
+	 * @param obj
+	 *            the other object.
+	 *
+	 * @return A boolean.
+	 */
+	public boolean equals(Object obj) {
 
-    }
-    
-    /**
-     * Ensures that serialization returns the unique instances.
-     * 
-     * @return The object.
-     * 
-     * @throws ObjectStreamException if there is a problem.
-     */
-    private Object readResolve() throws ObjectStreamException {
-        if (this.equals(CategoryAnchor.START)) {
-            return CategoryAnchor.START;
-        }
-        else if (this.equals(CategoryAnchor.MIDDLE)) {
-            return CategoryAnchor.MIDDLE;
-        }    
-        else if (this.equals(CategoryAnchor.END)) {
-            return CategoryAnchor.END;
-        }    
-        return null;
-    }
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof CategoryAnchor)) {
+			return false;
+		}
+		CategoryAnchor position = (CategoryAnchor) obj;
+		if (!this.name.equals(position.toString())) {
+			return false;
+		}
+		return true;
+
+	}
+
+	/**
+	 * Ensures that serialization returns the unique instances.
+	 * 
+	 * @return The object.
+	 * 
+	 * @throws ObjectStreamException
+	 *             if there is a problem.
+	 */
+	private Object readResolve() throws ObjectStreamException {
+		if (this.equals(CategoryAnchor.START)) {
+			return CategoryAnchor.START;
+		} else if (this.equals(CategoryAnchor.MIDDLE)) {
+			return CategoryAnchor.MIDDLE;
+		} else if (this.equals(CategoryAnchor.END)) {
+			return CategoryAnchor.END;
+		}
+		return null;
+	}
 
 }

@@ -50,115 +50,115 @@ import java.io.Serializable;
 import org.jfree.util.PublicCloneable;
 
 /**
- * A (key, value) pair.  This class provides a default implementation 
- * of the {@link KeyedValue} interface.
+ * A (key, value) pair. This class provides a default implementation of the
+ * {@link KeyedValue} interface.
  */
-public class DefaultKeyedValue implements KeyedValue, 
-                                          Cloneable, PublicCloneable, 
-                                          Serializable {
+public class DefaultKeyedValue implements KeyedValue, Cloneable, PublicCloneable, Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = -7388924517460437712L;
-    
-    /** The key. */
-    private Comparable key;
+	/** For serialization. */
+	private static final long serialVersionUID = -7388924517460437712L;
 
-    /** The value. */
-    private Number value;
+	/** The key. */
+	private Comparable key;
 
-    /**
-     * Creates a new (key, value) item.
-     *
-     * @param key  the key (should be immutable).
-     * @param value  the value (<code>null</code> permitted).
-     */
-    public DefaultKeyedValue(Comparable key, Number value) {
-        this.key = key;
-        this.value = value;
-    }
+	/** The value. */
+	private Number value;
 
-    /**
-     * Returns the key.
-     *
-     * @return The key.
-     */
-    public Comparable getKey() {
-        return this.key;
-    }
+	/**
+	 * Creates a new (key, value) item.
+	 *
+	 * @param key
+	 *            the key (should be immutable).
+	 * @param value
+	 *            the value (<code>null</code> permitted).
+	 */
+	public DefaultKeyedValue(Comparable key, Number value) {
+		this.key = key;
+		this.value = value;
+	}
 
-    /**
-     * Returns the value.
-     *
-     * @return The value (possibly <code>null</code>).
-     */
-    public Number getValue() {
-        return this.value;
-    }
+	/**
+	 * Returns the key.
+	 *
+	 * @return The key.
+	 */
+	public Comparable getKey() {
+		return this.key;
+	}
 
-    /**
-     * Sets the value.
-     *
-     * @param value  the value (<code>null</code> permitted).
-     */
-    public synchronized void setValue(Number value) {
-        this.value = value;
-    }
+	/**
+	 * Returns the value.
+	 *
+	 * @return The value (possibly <code>null</code>).
+	 */
+	public Number getValue() {
+		return this.value;
+	}
 
-    /**
-     * Tests this key-value pair for equality with an arbitrary object.
-     *
-     * @param obj  the object (<code>null</code> permitted).
-     *
-     * @return A boolean.
-     */
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof DefaultKeyedValue)) {
-            return false;
-        }
-        // TODO: modify this so that we check for equality with any KeyedValue
-        // rather than specifically a DefaultKeyedValue
-        DefaultKeyedValue that = (DefaultKeyedValue) obj;
-        
-        // TODO: the following checks for null should be handled in a utility 
-        // method
-        if (this.key != null ? !this.key.equals(that.key) : that.key != null) {
-            return false;
-        }
-        if (this.value != null 
-                ? !this.value.equals(that.value) : that.key != null) {
-            return false;
-        }
-        return true;
-    }
+	/**
+	 * Sets the value.
+	 *
+	 * @param value
+	 *            the value (<code>null</code> permitted).
+	 */
+	public synchronized void setValue(Number value) {
+		this.value = value;
+	}
 
-    /**
-     * Returns a hash code.
-     * 
-     * @return A hash code.
-     */
-    public int hashCode() {
-        int result;
-        result = (this.key != null ? this.key.hashCode() : 0);
-        result = 29 * result + (this.value != null ? this.value.hashCode() : 0);
-        return result;
-    }
+	/**
+	 * Tests this key-value pair for equality with an arbitrary object.
+	 *
+	 * @param obj
+	 *            the object (<code>null</code> permitted).
+	 *
+	 * @return A boolean.
+	 */
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof DefaultKeyedValue)) {
+			return false;
+		}
+		// TODO: modify this so that we check for equality with any KeyedValue
+		// rather than specifically a DefaultKeyedValue
+		DefaultKeyedValue that = (DefaultKeyedValue) obj;
 
-    /**
-     * Returns a clone.  It is assumed that both the key and value are 
-     * immutable objects, so only the references are cloned, not the objects 
-     * themselves.
-     * 
-     * @return A clone.
-     * 
-     * @throws CloneNotSupportedException Not thrown by this class, but 
-     *         subclasses (if any) might.
-     */
-    public Object clone() throws CloneNotSupportedException {
-        DefaultKeyedValue clone = (DefaultKeyedValue) super.clone();
-        return clone;
-    }
+		// TODO: the following checks for null should be handled in a utility
+		// method
+		if (this.key != null ? !this.key.equals(that.key) : that.key != null) {
+			return false;
+		}
+		if (this.value != null ? !this.value.equals(that.value) : that.key != null) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Returns a hash code.
+	 * 
+	 * @return A hash code.
+	 */
+	public int hashCode() {
+		int result;
+		result = (this.key != null ? this.key.hashCode() : 0);
+		result = 29 * result + (this.value != null ? this.value.hashCode() : 0);
+		return result;
+	}
+
+	/**
+	 * Returns a clone. It is assumed that both the key and value are immutable
+	 * objects, so only the references are cloned, not the objects themselves.
+	 * 
+	 * @return A clone.
+	 * 
+	 * @throws CloneNotSupportedException
+	 *             Not thrown by this class, but subclasses (if any) might.
+	 */
+	public Object clone() throws CloneNotSupportedException {
+		DefaultKeyedValue clone = (DefaultKeyedValue) super.clone();
+		return clone;
+	}
 
 }

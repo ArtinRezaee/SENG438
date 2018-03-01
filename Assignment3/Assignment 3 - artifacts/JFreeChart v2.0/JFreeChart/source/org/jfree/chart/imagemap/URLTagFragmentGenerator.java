@@ -37,7 +37,7 @@
  * 12-Aug-2003 : Version 1 (RA);
  * 
  */
- 
+
 package org.jfree.chart.imagemap;
 
 /**
@@ -47,13 +47,14 @@ package org.jfree.chart.imagemap;
  */
 public interface URLTagFragmentGenerator {
 
-    /**
-     * Generates a URL string to go in an HTML image map.
-     *
-     * @param urlText the URL.
-     * 
-     * @return The formatted HTML area tag attribute(s).
-     */
-    public String generateURLFragment(String urlText);
+	/**
+	 * Generates a URL string to go in an HTML image map.
+	 *
+	 * @param urlText
+	 *            the URL.
+	 * 
+	 * @return The formatted HTML area tag attribute(s).
+	 */
+	public String generateURLFragment(String urlText);
 
 }

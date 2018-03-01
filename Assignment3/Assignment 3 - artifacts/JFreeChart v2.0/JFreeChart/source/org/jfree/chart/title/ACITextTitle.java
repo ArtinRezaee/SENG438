@@ -67,458 +67,454 @@ import org.jfree.ui.VerticalAlignment;
 import org.jfree.util.ObjectUtilities;
 
 /**
- * A chart title that displays a title based on an 
+ * A chart title that displays a title based on an
  * {@link AttributedCharacterIterator}.
  */
-public class ACITextTitle extends Title 
-                          implements Serializable, Cloneable {
+public class ACITextTitle extends Title implements Serializable, Cloneable {
 
-    // TODO: this class could do with a better name
-    
-    /** For serialization. */
-    //private static final long serialVersionUID = ???L;
+	// TODO: this class could do with a better name
 
-    /** The title text. */
-    private AttributedCharacterIterator text;
+	/** For serialization. */
+	// private static final long serialVersionUID = ???L;
 
-    /** The tool tip text (can be <code>null</code>). */
-    private String toolTipText;
-    
-    /** The URL text (can be <code>null</code>). */
-    private String urlText;
-    
-    /** The content. */
-    private TextLayout content;
-    
-    /**
-     * Creates a new title, using default attributes where necessary.
-     */
-    public ACITextTitle() {
-        this((AttributedCharacterIterator) new AttributedString(""));
-    }
+	/** The title text. */
+	private AttributedCharacterIterator text;
 
-    /**
-     * Creates a new title, using default attributes where necessary.
-     *
-     * @param text  the title text (<code>null</code> not permitted).
-     */
-    public ACITextTitle(AttributedCharacterIterator text) {
-        this(
-            text,
-            Title.DEFAULT_POSITION,
-            Title.DEFAULT_HORIZONTAL_ALIGNMENT,
-            Title.DEFAULT_VERTICAL_ALIGNMENT,
-            Title.DEFAULT_PADDING
-        );
-    }
+	/** The tool tip text (can be <code>null</code>). */
+	private String toolTipText;
 
-    /**
-     * Creates a new title.
-     *
-     * @param text  the text for the title (<code>null</code> not permitted).
-     * @param position  the title position (<code>null</code> not permitted).
-     * @param horizontalAlignment  the horizontal alignment (<code>null</code> 
-     *                             not permitted).
-     * @param verticalAlignment  the vertical alignment (<code>null</code> not 
-     *                           permitted).
-     * @param padding  the space to leave around the outside of the title.
-     */
-    public ACITextTitle(AttributedCharacterIterator text, 
-                        RectangleEdge position,
-                        HorizontalAlignment horizontalAlignment, 
-                        VerticalAlignment verticalAlignment,
-                        RectangleInsets padding) {
+	/** The URL text (can be <code>null</code>). */
+	private String urlText;
 
-        super(position, horizontalAlignment, verticalAlignment, padding);
-        
-        if (text == null) {
-            throw new NullPointerException("Null 'text' argument.");
-        }
-        this.text = text;
-        this.content = null;
-        this.toolTipText = null;
-        this.urlText = null;
-        
-    }
+	/** The content. */
+	private TextLayout content;
 
-    /**
-     * Returns the title text.
-     *
-     * @return The text (never <code>null</code>).
-     */
-    public AttributedCharacterIterator getText() {
-        return this.text;
-    }
+	/**
+	 * Creates a new title, using default attributes where necessary.
+	 */
+	public ACITextTitle() {
+		this((AttributedCharacterIterator) new AttributedString(""));
+	}
 
-    /**
-     * Sets the title to the specified text and sends a 
-     * {@link TitleChangeEvent} to all registered listeners.
-     *
-     * @param text  the text (<code>null</code> not permitted).
-     */
-    public void setText(AttributedCharacterIterator text) {
-        if (text == null) {
-            throw new NullPointerException("Null 'text' argument.");
-        }
-        this.text = text;
-        notifyListeners(new TitleChangeEvent(this));
-    }
+	/**
+	 * Creates a new title, using default attributes where necessary.
+	 *
+	 * @param text
+	 *            the title text (<code>null</code> not permitted).
+	 */
+	public ACITextTitle(AttributedCharacterIterator text) {
+		this(text, Title.DEFAULT_POSITION, Title.DEFAULT_HORIZONTAL_ALIGNMENT, Title.DEFAULT_VERTICAL_ALIGNMENT,
+				Title.DEFAULT_PADDING);
+	}
 
-    /**
-     * Returns the tool tip text.
-     *
-     * @return The tool tip text (possibly <code>null</code>).
-     */
-    public String getToolTipText() {
-        return this.toolTipText;
-    }
+	/**
+	 * Creates a new title.
+	 *
+	 * @param text
+	 *            the text for the title (<code>null</code> not permitted).
+	 * @param position
+	 *            the title position (<code>null</code> not permitted).
+	 * @param horizontalAlignment
+	 *            the horizontal alignment (<code>null</code> not permitted).
+	 * @param verticalAlignment
+	 *            the vertical alignment (<code>null</code> not permitted).
+	 * @param padding
+	 *            the space to leave around the outside of the title.
+	 */
+	public ACITextTitle(AttributedCharacterIterator text, RectangleEdge position,
+			HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment, RectangleInsets padding) {
 
-    /**
-     * Sets the tool tip text to the specified text and sends a 
-     * {@link TitleChangeEvent} to all registered listeners.
-     *
-     * @param text  the text (<code>null</code> permitted).
-     */
-    public void setToolTipText(String text) {
-        this.toolTipText = text;
-        notifyListeners(new TitleChangeEvent(this));
-    }
+		super(position, horizontalAlignment, verticalAlignment, padding);
 
-    /**
-     * Returns the URL text.
-     *
-     * @return The URL text (possibly <code>null</code>).
-     */
-    public String getURLText() {
-        return this.toolTipText;
-    }
+		if (text == null) {
+			throw new NullPointerException("Null 'text' argument.");
+		}
+		this.text = text;
+		this.content = null;
+		this.toolTipText = null;
+		this.urlText = null;
 
-    /**
-     * Sets the URL text to the specified text and sends a 
-     * {@link TitleChangeEvent} to all registered listeners.
-     *
-     * @param text  the text (<code>null</code> permitted).
-     */
-    public void setURLText(String text) {
-        this.urlText = text;
-        notifyListeners(new TitleChangeEvent(this));
-    }
-    
-    /**
-     * Calculates the size of the title content (excludes margin, border and 
-     * padding) if there is no constraint.  This is either the natural size
-     * of the text, or the block size if this has been specified manually.
-     * 
-     * @param g2  the graphics device.
-     * @param params  the layout parameters (<code>null</code> not permitted).
-     * 
-     * @return The layout result.
-     */
-    protected ArrangeResult arrangeNN(Graphics2D g2, ArrangeParams params) {
-        double w = getDefaultWidth();
-        double h = getDefaultHeight();
-        CharterAttributedCharacterIterator it 
-            = new CharterAttributedCharacterIterator(this.text, 
-                    g2.getFontRenderContext());
-        this.content = new TextLayout(it, g2.getFontRenderContext());
-        Rectangle2D naturalSize = this.content.getBounds();
-        if (w < 0.0) {
-            w = naturalSize.getWidth();   
-        }
-        else {
-            w = trimToContentWidth(w);
-        }
-        if (h < 0.0) {
-            h = naturalSize.getHeight();   
-        }
-        else {
-            h = trimToContentHeight(h);   
-        }
-        ArrangeResult result = params.getRecyclableResult();
-        if (result != null) {
-            result.setSize(w, h);
-        }
-        else {
-            result = new ArrangeResult(w, h, null);
-        }
-        return result;
-    }
- 
-    /**
-     * Arranges the block with no width constraint and a fixed height, 
-     * returning the size of the content.
-     * 
-     * @param g2  the graphics device.
-     * @param fixedHeight  the fixed height.
-     * @param params  the layout parameters (<code>null</code> not permitted).
-     * 
-     * @return The layout result.
-     */
-    protected ArrangeResult arrangeNF(Graphics2D g2, double fixedHeight, 
-            ArrangeParams params) {
-        
-        List messages = null;
-        boolean logging = params.isLogEnabled();
-        if (logging) {
-            messages = new java.util.LinkedList();
-        }
-        
-        //TODO: if the fixed height is too small, this should generate a
-        // warning
-        ArrangeResult r = arrangeNN(g2, params);
-        double w = r.getWidth();
-        double h = r.getHeight();
-        if (messages != null) {
-            if (fixedHeight < h) {
-                messages.add(new Message(this, 
-                        "Title taller than fixed height."));    
-            }
-        }
-        return new ArrangeResult(w, fixedHeight, messages);
-    }
-    
-    /**
-     * Arranges the block with a fixed width and no height constraint, 
-     * returning the size of the content.
-     * 
-     * @param g2  the graphics device.
-     * @param fixedWidth  the fixed width.
-     * @param params  the layout parameters (<code>null</code> not permitted).
-     * 
-     * @return The layout result.
-     */
-    protected ArrangeResult arrangeFN(Graphics2D g2, double fixedWidth, 
-            ArrangeParams params) {
-        
-        // TODO: no wrapping occurs here to meet the fixed width constraint.
-        // we should return some kind of warning if the text is too wide
-        CharterAttributedCharacterIterator it 
-            = new CharterAttributedCharacterIterator(this.text, 
-                    g2.getFontRenderContext());
-        this.content = new TextLayout(it, g2.getFontRenderContext());
-        double h = getDefaultHeight();
-        if (h < 0.0) {
-            Rectangle2D naturalSize = this.content.getBounds();
-            h = naturalSize.getHeight();   
-        }
-        else {
-            h = trimToContentHeight(h);   
-        }
-        
-        ArrangeResult result = params.getRecyclableResult();
-        if (result != null) {
-            result.setSize(fixedWidth, h);
-        }
-        else {
-            result = new ArrangeResult(fixedWidth, h, null);
-        }
-        return result;
-    }
-    
-    /**
-     * Arranges the title with a fixed width and height.
-     * 
-     * @param g2  the graphics device.
-     * @param fixedWidth  the fixed (content) width.
-     * @param fixedHeight  the fixed (content) height.
-     * @param params  the layout parameters (<code>null</code> not permitted).
-     * 
-     * @return The layout result.
-     */
-    protected ArrangeResult arrangeFF(Graphics2D g2, double fixedWidth, 
-                               double fixedHeight, ArrangeParams params) {
-        //TODO: if the content doesn't fit the given dimensions, we need to 
-        // (a) truncate the text and (b) return a warning.
-        CharterAttributedCharacterIterator it 
-            = new CharterAttributedCharacterIterator(this.text, 
-                    g2.getFontRenderContext());
-        this.content = new TextLayout(it, g2.getFontRenderContext());
-        ArrangeResult result = params.getRecyclableResult();
-        if (result != null) {
-            result.setSize(fixedWidth, fixedHeight);
-        }
-        else {
-            result = new ArrangeResult(fixedWidth, fixedHeight, null);
-        }
-        return result;   
-    }
-    
-    /**
-     * Draws the title on a Java 2D graphics device (such as the screen or a 
-     * printer).
-     *
-     * @param g2  the graphics device.
-     * @param area  the area allocated for the title.
-     */
-    public void draw(Graphics2D g2, Rectangle2D area) {
-        draw(g2, area, null);
-    }
-    
-    /**
-     * Draws the block within the specified area.
-     * 
-     * @param g2  the graphics device.
-     * @param area  the area.
-     * @param params  if this is an instance of {@link EntityBlockParams} it
-     *                is used to determine whether or not an 
-     *                {@link EntityCollection} is returned by this method.
-     * 
-     * @return An {@link EntityCollection} containing a chart entity for the
-     *         title, or <code>null</code>.
-     */
-    public Object draw(Graphics2D g2, Rectangle2D area, Object params) {
-        if (this.content == null) {
-            return null;   
-        }
-        area = (Rectangle2D) area.clone();
-        Paint backgroundPaint = getBackgroundPaint();
-        if (backgroundPaint != null) {
-            g2.setPaint(backgroundPaint);
-            g2.fill(area);
-        }
-        area = trimMargin(area);
-        Rectangle2D interior = (Rectangle2D) area.clone();
-        if (this.text.equals("")) {
-            return null;
-        }
-        ChartEntity entity = null;
-        if (params instanceof EntityBlockParams) {
-            EntityBlockParams p = (EntityBlockParams) params;
-            if (p.getGenerateEntities()) {
-                entity = new ChartEntity(area, this.toolTipText, this.urlText);    
-            }
-        }
-        interior = trimBorder(interior);
-        Paint interiorBackgroundPaint = getInteriorBackgroundPaint();
-        if (interiorBackgroundPaint != null) {
-            g2.setPaint(interiorBackgroundPaint);
-            g2.fill(interior);
-        }
-        drawBorder(g2, area);
-        interior = trimPadding(interior);
-        RectangleEdge position = getPosition();
-        if (position == RectangleEdge.TOP || position == RectangleEdge.BOTTOM) {
-            drawHorizontal(g2, interior);
-        }
-        else if (position == RectangleEdge.LEFT 
-                 || position == RectangleEdge.RIGHT) {
-            drawVertical(g2, interior);
-        }
-        BlockResult result = new BlockResult();
-        if (entity != null) {
-            StandardEntityCollection sec = new StandardEntityCollection();
-            sec.add(entity);
-            result.setEntityCollection(sec);
-        }
-        return result;
-    }
+	}
 
-    /**
-     * Draws a the title horizontally within the specified area.  This method 
-     * will be called from the {@link #draw(Graphics2D, Rectangle2D) draw} 
-     * method.
-     * 
-     * @param g2  the graphics device.
-     * @param area  the area for the title.
-     */
-    protected void drawHorizontal(Graphics2D g2, Rectangle2D area) {
-        Rectangle2D titleArea = (Rectangle2D) area.clone();
-        float x = 0.0f;
-        HorizontalAlignment horizontalAlignment = getHorizontalAlignment();
-        if (horizontalAlignment == HorizontalAlignment.LEFT) {
-            x = (float) titleArea.getX();
-        }
-        else if (horizontalAlignment == HorizontalAlignment.RIGHT) {
-            x = (float) titleArea.getMaxX();
-        }
-        else if (horizontalAlignment == HorizontalAlignment.CENTER) {
-            x = (float) titleArea.getCenterX() 
-                - this.content.getAdvance() / 2.0f;
-        }
-        float y = (float) titleArea.getMaxY() - this.content.getDescent() 
-                - this.content.getLeading();
-        this.content.draw(g2, x, y);
-    }
-    
-    /**
-     * Draws a the title vertically within the specified area.  This method 
-     * will be called from the {@link #draw(Graphics2D, Rectangle2D) draw} 
-     * method.
-     * 
-     * @param g2  the graphics device.
-     * @param area  the area for the title.
-     */
-    protected void drawVertical(Graphics2D g2, Rectangle2D area) {
-        Rectangle2D titleArea = (Rectangle2D) area.clone();
-        float y = 0.0f;
-        VerticalAlignment verticalAlignment = getVerticalAlignment();
-        if (verticalAlignment == VerticalAlignment.TOP) {
-            y = (float) titleArea.getY();
-        }
-        else if (verticalAlignment == VerticalAlignment.BOTTOM) {
-            y = (float) titleArea.getMaxY();
-        }
-        else if (verticalAlignment == VerticalAlignment.CENTER) {
-            y = (float) titleArea.getCenterY();
-        }
-        float x = 0.0f;
-        RectangleEdge position = getPosition();
-        if (position == RectangleEdge.LEFT) {
-            x = (float) titleArea.getX();
-        }
-        else if (position == RectangleEdge.RIGHT) {
-            x = (float) titleArea.getMaxX();
-        }
-        // TODO: fix this
-        this.content.draw(g2, x, y);
-    }
+	/**
+	 * Returns the title text.
+	 *
+	 * @return The text (never <code>null</code>).
+	 */
+	public AttributedCharacterIterator getText() {
+		return this.text;
+	}
 
-    /**
-     * Tests this title for equality with another object.
-     *
-     * @param obj  the object (<code>null</code> permitted).
-     *
-     * @return <code>true</code> or <code>false</code>.
-     */
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof ACITextTitle)) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        ACITextTitle that = (ACITextTitle) obj;
-        if (!ObjectUtilities.equal(this.text, that.text)) {
-            return false;
-        }
-        return true;
+	/**
+	 * Sets the title to the specified text and sends a {@link TitleChangeEvent} to
+	 * all registered listeners.
+	 *
+	 * @param text
+	 *            the text (<code>null</code> not permitted).
+	 */
+	public void setText(AttributedCharacterIterator text) {
+		if (text == null) {
+			throw new NullPointerException("Null 'text' argument.");
+		}
+		this.text = text;
+		notifyListeners(new TitleChangeEvent(this));
+	}
 
-    }
+	/**
+	 * Returns the tool tip text.
+	 *
+	 * @return The tool tip text (possibly <code>null</code>).
+	 */
+	public String getToolTipText() {
+		return this.toolTipText;
+	}
 
-    /**
-     * Returns a hash code.
-     * 
-     * @return A hash code.
-     */
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 29 * result + (this.text != null ? this.text.hashCode() : 0);
-        return result;
-    }
+	/**
+	 * Sets the tool tip text to the specified text and sends a
+	 * {@link TitleChangeEvent} to all registered listeners.
+	 *
+	 * @param text
+	 *            the text (<code>null</code> permitted).
+	 */
+	public void setToolTipText(String text) {
+		this.toolTipText = text;
+		notifyListeners(new TitleChangeEvent(this));
+	}
 
-    /**
-     * Returns a clone of this object.
-     * 
-     * @return A clone.
-     * 
-     * @throws CloneNotSupportedException never.
-     */
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
+	/**
+	 * Returns the URL text.
+	 *
+	 * @return The URL text (possibly <code>null</code>).
+	 */
+	public String getURLText() {
+		return this.toolTipText;
+	}
+
+	/**
+	 * Sets the URL text to the specified text and sends a {@link TitleChangeEvent}
+	 * to all registered listeners.
+	 *
+	 * @param text
+	 *            the text (<code>null</code> permitted).
+	 */
+	public void setURLText(String text) {
+		this.urlText = text;
+		notifyListeners(new TitleChangeEvent(this));
+	}
+
+	/**
+	 * Calculates the size of the title content (excludes margin, border and
+	 * padding) if there is no constraint. This is either the natural size of the
+	 * text, or the block size if this has been specified manually.
+	 * 
+	 * @param g2
+	 *            the graphics device.
+	 * @param params
+	 *            the layout parameters (<code>null</code> not permitted).
+	 * 
+	 * @return The layout result.
+	 */
+	protected ArrangeResult arrangeNN(Graphics2D g2, ArrangeParams params) {
+		double w = getDefaultWidth();
+		double h = getDefaultHeight();
+		CharterAttributedCharacterIterator it = new CharterAttributedCharacterIterator(this.text,
+				g2.getFontRenderContext());
+		this.content = new TextLayout(it, g2.getFontRenderContext());
+		Rectangle2D naturalSize = this.content.getBounds();
+		if (w < 0.0) {
+			w = naturalSize.getWidth();
+		} else {
+			w = trimToContentWidth(w);
+		}
+		if (h < 0.0) {
+			h = naturalSize.getHeight();
+		} else {
+			h = trimToContentHeight(h);
+		}
+		ArrangeResult result = params.getRecyclableResult();
+		if (result != null) {
+			result.setSize(w, h);
+		} else {
+			result = new ArrangeResult(w, h, null);
+		}
+		return result;
+	}
+
+	/**
+	 * Arranges the block with no width constraint and a fixed height, returning the
+	 * size of the content.
+	 * 
+	 * @param g2
+	 *            the graphics device.
+	 * @param fixedHeight
+	 *            the fixed height.
+	 * @param params
+	 *            the layout parameters (<code>null</code> not permitted).
+	 * 
+	 * @return The layout result.
+	 */
+	protected ArrangeResult arrangeNF(Graphics2D g2, double fixedHeight, ArrangeParams params) {
+
+		List messages = null;
+		boolean logging = params.isLogEnabled();
+		if (logging) {
+			messages = new java.util.LinkedList();
+		}
+
+		// TODO: if the fixed height is too small, this should generate a
+		// warning
+		ArrangeResult r = arrangeNN(g2, params);
+		double w = r.getWidth();
+		double h = r.getHeight();
+		if (messages != null) {
+			if (fixedHeight < h) {
+				messages.add(new Message(this, "Title taller than fixed height."));
+			}
+		}
+		return new ArrangeResult(w, fixedHeight, messages);
+	}
+
+	/**
+	 * Arranges the block with a fixed width and no height constraint, returning the
+	 * size of the content.
+	 * 
+	 * @param g2
+	 *            the graphics device.
+	 * @param fixedWidth
+	 *            the fixed width.
+	 * @param params
+	 *            the layout parameters (<code>null</code> not permitted).
+	 * 
+	 * @return The layout result.
+	 */
+	protected ArrangeResult arrangeFN(Graphics2D g2, double fixedWidth, ArrangeParams params) {
+
+		// TODO: no wrapping occurs here to meet the fixed width constraint.
+		// we should return some kind of warning if the text is too wide
+		CharterAttributedCharacterIterator it = new CharterAttributedCharacterIterator(this.text,
+				g2.getFontRenderContext());
+		this.content = new TextLayout(it, g2.getFontRenderContext());
+		double h = getDefaultHeight();
+		if (h < 0.0) {
+			Rectangle2D naturalSize = this.content.getBounds();
+			h = naturalSize.getHeight();
+		} else {
+			h = trimToContentHeight(h);
+		}
+
+		ArrangeResult result = params.getRecyclableResult();
+		if (result != null) {
+			result.setSize(fixedWidth, h);
+		} else {
+			result = new ArrangeResult(fixedWidth, h, null);
+		}
+		return result;
+	}
+
+	/**
+	 * Arranges the title with a fixed width and height.
+	 * 
+	 * @param g2
+	 *            the graphics device.
+	 * @param fixedWidth
+	 *            the fixed (content) width.
+	 * @param fixedHeight
+	 *            the fixed (content) height.
+	 * @param params
+	 *            the layout parameters (<code>null</code> not permitted).
+	 * 
+	 * @return The layout result.
+	 */
+	protected ArrangeResult arrangeFF(Graphics2D g2, double fixedWidth, double fixedHeight, ArrangeParams params) {
+		// TODO: if the content doesn't fit the given dimensions, we need to
+		// (a) truncate the text and (b) return a warning.
+		CharterAttributedCharacterIterator it = new CharterAttributedCharacterIterator(this.text,
+				g2.getFontRenderContext());
+		this.content = new TextLayout(it, g2.getFontRenderContext());
+		ArrangeResult result = params.getRecyclableResult();
+		if (result != null) {
+			result.setSize(fixedWidth, fixedHeight);
+		} else {
+			result = new ArrangeResult(fixedWidth, fixedHeight, null);
+		}
+		return result;
+	}
+
+	/**
+	 * Draws the title on a Java 2D graphics device (such as the screen or a
+	 * printer).
+	 *
+	 * @param g2
+	 *            the graphics device.
+	 * @param area
+	 *            the area allocated for the title.
+	 */
+	public void draw(Graphics2D g2, Rectangle2D area) {
+		draw(g2, area, null);
+	}
+
+	/**
+	 * Draws the block within the specified area.
+	 * 
+	 * @param g2
+	 *            the graphics device.
+	 * @param area
+	 *            the area.
+	 * @param params
+	 *            if this is an instance of {@link EntityBlockParams} it is used to
+	 *            determine whether or not an {@link EntityCollection} is returned
+	 *            by this method.
+	 * 
+	 * @return An {@link EntityCollection} containing a chart entity for the title,
+	 *         or <code>null</code>.
+	 */
+	public Object draw(Graphics2D g2, Rectangle2D area, Object params) {
+		if (this.content == null) {
+			return null;
+		}
+		area = (Rectangle2D) area.clone();
+		Paint backgroundPaint = getBackgroundPaint();
+		if (backgroundPaint != null) {
+			g2.setPaint(backgroundPaint);
+			g2.fill(area);
+		}
+		area = trimMargin(area);
+		Rectangle2D interior = (Rectangle2D) area.clone();
+		if (this.text.equals("")) {
+			return null;
+		}
+		ChartEntity entity = null;
+		if (params instanceof EntityBlockParams) {
+			EntityBlockParams p = (EntityBlockParams) params;
+			if (p.getGenerateEntities()) {
+				entity = new ChartEntity(area, this.toolTipText, this.urlText);
+			}
+		}
+		interior = trimBorder(interior);
+		Paint interiorBackgroundPaint = getInteriorBackgroundPaint();
+		if (interiorBackgroundPaint != null) {
+			g2.setPaint(interiorBackgroundPaint);
+			g2.fill(interior);
+		}
+		drawBorder(g2, area);
+		interior = trimPadding(interior);
+		RectangleEdge position = getPosition();
+		if (position == RectangleEdge.TOP || position == RectangleEdge.BOTTOM) {
+			drawHorizontal(g2, interior);
+		} else if (position == RectangleEdge.LEFT || position == RectangleEdge.RIGHT) {
+			drawVertical(g2, interior);
+		}
+		BlockResult result = new BlockResult();
+		if (entity != null) {
+			StandardEntityCollection sec = new StandardEntityCollection();
+			sec.add(entity);
+			result.setEntityCollection(sec);
+		}
+		return result;
+	}
+
+	/**
+	 * Draws a the title horizontally within the specified area. This method will be
+	 * called from the {@link #draw(Graphics2D, Rectangle2D) draw} method.
+	 * 
+	 * @param g2
+	 *            the graphics device.
+	 * @param area
+	 *            the area for the title.
+	 */
+	protected void drawHorizontal(Graphics2D g2, Rectangle2D area) {
+		Rectangle2D titleArea = (Rectangle2D) area.clone();
+		float x = 0.0f;
+		HorizontalAlignment horizontalAlignment = getHorizontalAlignment();
+		if (horizontalAlignment == HorizontalAlignment.LEFT) {
+			x = (float) titleArea.getX();
+		} else if (horizontalAlignment == HorizontalAlignment.RIGHT) {
+			x = (float) titleArea.getMaxX();
+		} else if (horizontalAlignment == HorizontalAlignment.CENTER) {
+			x = (float) titleArea.getCenterX() - this.content.getAdvance() / 2.0f;
+		}
+		float y = (float) titleArea.getMaxY() - this.content.getDescent() - this.content.getLeading();
+		this.content.draw(g2, x, y);
+	}
+
+	/**
+	 * Draws a the title vertically within the specified area. This method will be
+	 * called from the {@link #draw(Graphics2D, Rectangle2D) draw} method.
+	 * 
+	 * @param g2
+	 *            the graphics device.
+	 * @param area
+	 *            the area for the title.
+	 */
+	protected void drawVertical(Graphics2D g2, Rectangle2D area) {
+		Rectangle2D titleArea = (Rectangle2D) area.clone();
+		float y = 0.0f;
+		VerticalAlignment verticalAlignment = getVerticalAlignment();
+		if (verticalAlignment == VerticalAlignment.TOP) {
+			y = (float) titleArea.getY();
+		} else if (verticalAlignment == VerticalAlignment.BOTTOM) {
+			y = (float) titleArea.getMaxY();
+		} else if (verticalAlignment == VerticalAlignment.CENTER) {
+			y = (float) titleArea.getCenterY();
+		}
+		float x = 0.0f;
+		RectangleEdge position = getPosition();
+		if (position == RectangleEdge.LEFT) {
+			x = (float) titleArea.getX();
+		} else if (position == RectangleEdge.RIGHT) {
+			x = (float) titleArea.getMaxX();
+		}
+		// TODO: fix this
+		this.content.draw(g2, x, y);
+	}
+
+	/**
+	 * Tests this title for equality with another object.
+	 *
+	 * @param obj
+	 *            the object (<code>null</code> permitted).
+	 *
+	 * @return <code>true</code> or <code>false</code>.
+	 */
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof ACITextTitle)) {
+			return false;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		ACITextTitle that = (ACITextTitle) obj;
+		if (!ObjectUtilities.equal(this.text, that.text)) {
+			return false;
+		}
+		return true;
+
+	}
+
+	/**
+	 * Returns a hash code.
+	 * 
+	 * @return A hash code.
+	 */
+	public int hashCode() {
+		int result = super.hashCode();
+		result = 29 * result + (this.text != null ? this.text.hashCode() : 0);
+		return result;
+	}
+
+	/**
+	 * Returns a clone of this object.
+	 * 
+	 * @return A clone.
+	 * 
+	 * @throws CloneNotSupportedException
+	 *             never.
+	 */
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
 
 }
-

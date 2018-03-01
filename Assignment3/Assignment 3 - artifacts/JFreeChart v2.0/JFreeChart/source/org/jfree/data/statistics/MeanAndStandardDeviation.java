@@ -47,84 +47,86 @@ import java.io.Serializable;
 import org.jfree.util.ObjectUtilities;
 
 /**
- * A simple data structure that holds a mean value and a standard deviation 
- * value.  This is used in the 
+ * A simple data structure that holds a mean value and a standard deviation
+ * value. This is used in the
  * {@link org.jfree.data.statistics.DefaultStatisticalCategoryDataset} class.
  */
 public class MeanAndStandardDeviation implements Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = 7413468697315721515L;
-    
-    /** The mean. */
-    private Number mean;
+	/** For serialization. */
+	private static final long serialVersionUID = 7413468697315721515L;
 
-    /** The standard deviation. */
-    private Number standardDeviation;
+	/** The mean. */
+	private Number mean;
 
-    /**
-     * Creates a new mean and standard deviation record.
-     * 
-     * @param mean  the mean.
-     * @param standardDeviation  the standard deviation.
-     */
-    public MeanAndStandardDeviation(double mean, double standardDeviation) {
-        this(new Double(mean), new Double(standardDeviation));   
-    }
-    
-    /**
-     * Creates a new mean and standard deviation record.
-     *
-     * @param mean  the mean (<code>null</code> permitted).
-     * @param standardDeviation  the standard deviation (<code>null</code>
-     *                           permitted.
-     */
-    public MeanAndStandardDeviation(Number mean, Number standardDeviation) {
-        this.mean = mean;
-        this.standardDeviation = standardDeviation;
-    }
+	/** The standard deviation. */
+	private Number standardDeviation;
 
-    /**
-     * Returns the mean.
-     *
-     * @return The mean.
-     */
-    public Number getMean() {
-        return this.mean;
-    }
+	/**
+	 * Creates a new mean and standard deviation record.
+	 * 
+	 * @param mean
+	 *            the mean.
+	 * @param standardDeviation
+	 *            the standard deviation.
+	 */
+	public MeanAndStandardDeviation(double mean, double standardDeviation) {
+		this(new Double(mean), new Double(standardDeviation));
+	}
 
-    /**
-     * Returns the standard deviation.
-     *
-     * @return The standard deviation.
-     */
-    public Number getStandardDeviation() {
-        return this.standardDeviation;
-    }
+	/**
+	 * Creates a new mean and standard deviation record.
+	 *
+	 * @param mean
+	 *            the mean (<code>null</code> permitted).
+	 * @param standardDeviation
+	 *            the standard deviation (<code>null</code> permitted.
+	 */
+	public MeanAndStandardDeviation(Number mean, Number standardDeviation) {
+		this.mean = mean;
+		this.standardDeviation = standardDeviation;
+	}
 
-    /**
-     * Tests this instance for equality with an arbitrary object.
-     * 
-     * @param obj  the object (<code>null</code> permitted).
-     * 
-     * @return A boolean.
-     */
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;   
-        }
-        if (!(obj instanceof MeanAndStandardDeviation)) {
-            return false;   
-        }
-        MeanAndStandardDeviation that = (MeanAndStandardDeviation) obj;
-        if (!ObjectUtilities.equal(this.mean, that.mean)) {
-            return false;   
-        }
-        if (!ObjectUtilities.equal(
-            this.standardDeviation, that.standardDeviation)
-        ) {
-            return false;   
-        }
-        return true;
-    }
+	/**
+	 * Returns the mean.
+	 *
+	 * @return The mean.
+	 */
+	public Number getMean() {
+		return this.mean;
+	}
+
+	/**
+	 * Returns the standard deviation.
+	 *
+	 * @return The standard deviation.
+	 */
+	public Number getStandardDeviation() {
+		return this.standardDeviation;
+	}
+
+	/**
+	 * Tests this instance for equality with an arbitrary object.
+	 * 
+	 * @param obj
+	 *            the object (<code>null</code> permitted).
+	 * 
+	 * @return A boolean.
+	 */
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof MeanAndStandardDeviation)) {
+			return false;
+		}
+		MeanAndStandardDeviation that = (MeanAndStandardDeviation) obj;
+		if (!ObjectUtilities.equal(this.mean, that.mean)) {
+			return false;
+		}
+		if (!ObjectUtilities.equal(this.standardDeviation, that.standardDeviation)) {
+			return false;
+		}
+		return true;
+	}
 }

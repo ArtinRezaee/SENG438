@@ -51,41 +51,41 @@ import java.io.Serializable;
  */
 public class GreyPalette extends ColorPalette implements Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = -2120941170159987395L;
-    
-    /**
-     * Creates a new palette.
-     */
-    public GreyPalette() {
-        super();
-        initialize();
-    }
+	/** For serialization. */
+	private static final long serialVersionUID = -2120941170159987395L;
 
-    /**
-     * Intializes the palette's indices.
-     */
-    public void initialize() {
+	/**
+	 * Creates a new palette.
+	 */
+	public GreyPalette() {
+		super();
+		initialize();
+	}
 
-        setPaletteName("Grey");
+	/**
+	 * Intializes the palette's indices.
+	 */
+	public void initialize() {
 
-        this.r = new int[256];
-        this.g = new int[256];
-        this.b = new int[256];
+		setPaletteName("Grey");
 
-        this.r[0] = 255;
-        this.g[0] = 255;
-        this.b[0] = 255;
-        this.r[1] = 0;
-        this.g[1] = 0;
-        this.b[1] = 0;
+		this.r = new int[256];
+		this.g = new int[256];
+		this.b = new int[256];
 
-        for (int i = 2; i < 256; i++) {
-            this.r[i] = i;
-            this.g[i] = i;
-            this.b[i] = i;
-        }
+		this.r[0] = 255;
+		this.g[0] = 255;
+		this.b[0] = 255;
+		this.r[1] = 0;
+		this.g[1] = 0;
+		this.b[1] = 0;
 
-    }
+		for (int i = 2; i < 256; i++) {
+			this.r[i] = i;
+			this.g[i] = i;
+			this.b[i] = i;
+		}
+
+	}
 
 }

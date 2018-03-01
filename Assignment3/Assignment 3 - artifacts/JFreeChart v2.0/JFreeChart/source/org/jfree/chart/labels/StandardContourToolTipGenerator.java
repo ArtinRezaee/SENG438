@@ -52,83 +52,75 @@ import java.util.Date;
 import org.jfree.data.contour.ContourDataset;
 
 /**
- * A standard tooltip generator for plots that use data from an 
+ * A standard tooltip generator for plots that use data from an
  * {@link ContourDataset}.
  *
  * @author David M. O'Donnell
  */
-public class StandardContourToolTipGenerator implements ContourToolTipGenerator,
-                                                        Serializable {
+public class StandardContourToolTipGenerator implements ContourToolTipGenerator, Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = -1881659351247502711L;
-    
-    /** The number formatter. */
-    private DecimalFormat valueForm = new DecimalFormat("##.###");
+	/** For serialization. */
+	private static final long serialVersionUID = -1881659351247502711L;
 
-    /**
-     * Generates a tooltip text item for a particular item within a series.
-     *
-     * @param data  the dataset.
-     * @param item  the item index (zero-based).
-     *
-     * @return The tooltip text.
-     */
-    public String generateToolTip(ContourDataset data, int item) {
+	/** The number formatter. */
+	private DecimalFormat valueForm = new DecimalFormat("##.###");
 
-        double x = data.getXValue(0, item);
-        double y = data.getYValue(0, item);
-        double z = data.getZValue(0, item);
-        String xString = null;
+	/**
+	 * Generates a tooltip text item for a particular item within a series.
+	 *
+	 * @param data
+	 *            the dataset.
+	 * @param item
+	 *            the item index (zero-based).
+	 *
+	 * @return The tooltip text.
+	 */
+	public String generateToolTip(ContourDataset data, int item) {
 
-        if (data.isDateAxis(0)) {
-            SimpleDateFormat formatter 
-                = new java.text.SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
-            StringBuffer strbuf = new StringBuffer();
-            strbuf = formatter.format(
-                new Date((long) x), strbuf, new java.text.FieldPosition(0)
-            );
-            xString = strbuf.toString();
-        }
-        else {
-            xString = this.valueForm.format(x);
-        }
-        if (!Double.isNaN(z)) {
-            return "X: " + xString
-                   + ", Y: " + this.valueForm.format(y)
-                   + ", Z: " + this.valueForm.format(z);
-        }
-        else {
-            return "X: " + xString
-                 + ", Y: " + this.valueForm.format(y)
-                 + ", Z: no data";
-        }
+		double x = data.getXValue(0, item);
+		double y = data.getYValue(0, item);
+		double z = data.getZValue(0, item);
+		String xString = null;
 
-    }
+		if (data.isDateAxis(0)) {
+			SimpleDateFormat formatter = new java.text.SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
+			StringBuffer strbuf = new StringBuffer();
+			strbuf = formatter.format(new Date((long) x), strbuf, new java.text.FieldPosition(0));
+			xString = strbuf.toString();
+		} else {
+			xString = this.valueForm.format(x);
+		}
+		if (!Double.isNaN(z)) {
+			return "X: " + xString + ", Y: " + this.valueForm.format(y) + ", Z: " + this.valueForm.format(z);
+		} else {
+			return "X: " + xString + ", Y: " + this.valueForm.format(y) + ", Z: no data";
+		}
 
-    /**
-     * Tests if this object is equal to another.
-     *
-     * @param obj  the other object.
-     *
-     * @return A boolean.
-     */
-    public boolean equals(Object obj) {
+	}
 
-        if (obj == this) {
-            return true;
-        }
+	/**
+	 * Tests if this object is equal to another.
+	 *
+	 * @param obj
+	 *            the other object.
+	 *
+	 * @return A boolean.
+	 */
+	public boolean equals(Object obj) {
 
-        if (!(obj instanceof StandardContourToolTipGenerator)) {
-            return false;
-        }
-        StandardContourToolTipGenerator that 
-            = (StandardContourToolTipGenerator) obj;
-        if (this.valueForm != null) {
-            return this.valueForm.equals(that.valueForm);
-        }
-        return false;
+		if (obj == this) {
+			return true;
+		}
 
-    }
+		if (!(obj instanceof StandardContourToolTipGenerator)) {
+			return false;
+		}
+		StandardContourToolTipGenerator that = (StandardContourToolTipGenerator) obj;
+		if (this.valueForm != null) {
+			return this.valueForm.equals(that.valueForm);
+		}
+		return false;
+
+	}
 
 }

@@ -60,155 +60,163 @@ import org.jfree.util.ObjectUtilities;
 /**
  * A chart entity that represents one item within a category plot.
  */
-public class CategoryItemEntity extends ChartEntity 
-                                implements Cloneable, Serializable {
+public class CategoryItemEntity extends ChartEntity implements Cloneable, Serializable {
 
-    /** For serialization. */
-    private static final long serialVersionUID = -8657249457902337349L;
-    
-    /** The dataset. */
-    private transient CategoryDataset dataset;
-    
-    /** The series (zero-based index). */
-    private int series;
+	/** For serialization. */
+	private static final long serialVersionUID = -8657249457902337349L;
 
-    /** The category. */
-    private Object category;
+	/** The dataset. */
+	private transient CategoryDataset dataset;
 
-    /** The category index. */
-    private int categoryIndex;
+	/** The series (zero-based index). */
+	private int series;
 
-    /**
-     * Creates a new category item entity.
-     *
-     * @param area  the area.
-     * @param toolTipText  the tool tip text.
-     * @param urlText  the URL text for HTML image maps.
-     * @param dataset  the dataset.
-     * @param series  the series (zero-based index).
-     * @param category  the category.
-     * @param categoryIndex  the category index.
-     */
-    public CategoryItemEntity(Shape area, String toolTipText, String urlText,
-                              CategoryDataset dataset,
-                              int series, Object category, int categoryIndex) {
+	/** The category. */
+	private Object category;
 
-        super(area, toolTipText, urlText);
-        this.dataset = dataset;
-        this.series = series;
-        this.category = category;
-        this.categoryIndex = categoryIndex;
+	/** The category index. */
+	private int categoryIndex;
 
-    }
+	/**
+	 * Creates a new category item entity.
+	 *
+	 * @param area
+	 *            the area.
+	 * @param toolTipText
+	 *            the tool tip text.
+	 * @param urlText
+	 *            the URL text for HTML image maps.
+	 * @param dataset
+	 *            the dataset.
+	 * @param series
+	 *            the series (zero-based index).
+	 * @param category
+	 *            the category.
+	 * @param categoryIndex
+	 *            the category index.
+	 */
+	public CategoryItemEntity(Shape area, String toolTipText, String urlText, CategoryDataset dataset, int series,
+			Object category, int categoryIndex) {
 
-    /**
-     * Returns the datset this entity refers to.
-     *
-     * @return The dataset (possibly <code>null</code>).
-     */
-    public CategoryDataset getDataset() {
-        return this.dataset; 
-    }
+		super(area, toolTipText, urlText);
+		this.dataset = dataset;
+		this.series = series;
+		this.category = category;
+		this.categoryIndex = categoryIndex;
 
-    /**
-     * Sets the datset this entity refers to.
-     *
-     * @param dataset  the dataset (<code>null</code> permited).
-     */
-    public void setDataset(CategoryDataset dataset) {
-        this.dataset = dataset;
-    }
+	}
 
-    /**
-     * Returns the series index.
-     *
-     * @return The series index.
-     */
-    public int getSeries() {
-        return this.series;
-    }
+	/**
+	 * Returns the datset this entity refers to.
+	 *
+	 * @return The dataset (possibly <code>null</code>).
+	 */
+	public CategoryDataset getDataset() {
+		return this.dataset;
+	}
 
-    /**
-     * Sets the series index.
-     *
-     * @param series  the series index (zero-based).
-     */
-    public void setSeries(int series) {
-        this.series = series;
-    }
+	/**
+	 * Sets the datset this entity refers to.
+	 *
+	 * @param dataset
+	 *            the dataset (<code>null</code> permited).
+	 */
+	public void setDataset(CategoryDataset dataset) {
+		this.dataset = dataset;
+	}
 
-    /**
-     * Returns the category.
-     *
-     * @return The category (possibly <code>null</code>).
-     */
-    public Object getCategory() {
-        return this.category;
-    }
+	/**
+	 * Returns the series index.
+	 *
+	 * @return The series index.
+	 */
+	public int getSeries() {
+		return this.series;
+	}
 
-    /**
-     * Sets the category.
-     *
-     * @param category  the category (<code>null</code> permitted).
-     */
-    public void setCategory(Object category) {
-        this.category = category;
-    }
+	/**
+	 * Sets the series index.
+	 *
+	 * @param series
+	 *            the series index (zero-based).
+	 */
+	public void setSeries(int series) {
+		this.series = series;
+	}
 
-    /**
-     * Returns the category index.
-     *
-     * @return The index.
-     */
-    public int getCategoryIndex() {
-        return this.categoryIndex;
-    }
+	/**
+	 * Returns the category.
+	 *
+	 * @return The category (possibly <code>null</code>).
+	 */
+	public Object getCategory() {
+		return this.category;
+	}
 
-    /**
-     * Sets the category index.
-     *
-     * @param index  the category index.
-     */
-    public void setCategoryIndex(int index) {
-        this.categoryIndex = index;
-    }
+	/**
+	 * Sets the category.
+	 *
+	 * @param category
+	 *            the category (<code>null</code> permitted).
+	 */
+	public void setCategory(Object category) {
+		this.category = category;
+	}
 
-    /**
-     * Returns a string representing this object (useful for debugging 
-     * purposes).
-     *
-     * @return A string.
-     */
-    public String toString() {
-        return "Category Item: series=" + this.series 
-               + ", category=" + this.category.toString();
-    }
+	/**
+	 * Returns the category index.
+	 *
+	 * @return The index.
+	 */
+	public int getCategoryIndex() {
+		return this.categoryIndex;
+	}
 
-    /**
-     * Tests the entity for equality with an arbitrary object.
-     * 
-     * @param obj  the object (<code>null</code> permitted).
-     * 
-     * @return A boolean.
-     */
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;      
-        }
-        if (obj instanceof CategoryItemEntity && super.equals(obj)) {
-            CategoryItemEntity cie = (CategoryItemEntity) obj;
-            if (this.categoryIndex != cie.categoryIndex) {
-                return false;   
-            }
-            if (this.series != cie.series) {
-                return false;   
-            }
-            if (!ObjectUtilities.equal(this.category, cie.category)) {
-                return false;   
-            }
-            return true;
-        }
-        return false;
-    }
+	/**
+	 * Sets the category index.
+	 *
+	 * @param index
+	 *            the category index.
+	 */
+	public void setCategoryIndex(int index) {
+		this.categoryIndex = index;
+	}
+
+	/**
+	 * Returns a string representing this object (useful for debugging purposes).
+	 *
+	 * @return A string.
+	 */
+	public String toString() {
+		return "Category Item: series=" + this.series + ", category=" + this.category.toString();
+	}
+
+	/**
+	 * Tests the entity for equality with an arbitrary object.
+	 * 
+	 * @param obj
+	 *            the object (<code>null</code> permitted).
+	 * 
+	 * @return A boolean.
+	 */
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (obj instanceof CategoryItemEntity && super.equals(obj)) {
+			CategoryItemEntity cie = (CategoryItemEntity) obj;
+			if (this.categoryIndex != cie.categoryIndex) {
+				return false;
+			}
+			if (this.series != cie.series) {
+				return false;
+			}
+			if (!ObjectUtilities.equal(this.category, cie.category)) {
+				return false;
+			}
+			return true;
+		}
+		return false;
+	}
 
 }
