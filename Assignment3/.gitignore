@@ -26,6 +26,7 @@ target/
 */.classpath
 */.project
 */.settings/
+*/out/
 
 # Intellij
 */.idea/
