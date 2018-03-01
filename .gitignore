@@ -1,8 +1,41 @@
-/.metadata/
-/.recommenders/
+*/.metadata/
+*/.recommenders/
 RemoteSystemsTempFiles/
-**/.DS_Store
-**/.classpath
-**/.project
-**/.settings
+*/RemoteSystemsTempFiles/
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Mac
+.DS_Store
+
+# Maven
+log/
+target/
+
+
+
+# Eclipse
+*/.classpath
+*/.project
+*/.settings/
+
+# Intellij
+*/.idea/
+*/*.iml
+*/*.iws
+
+# Mac
+*/.DS_Store
+
+# Maven
+*/log/
+*/target/
 
