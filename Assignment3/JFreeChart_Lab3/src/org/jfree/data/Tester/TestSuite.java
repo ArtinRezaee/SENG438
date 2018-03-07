@@ -1,12 +1,12 @@
-package jfree.Tester;
+package org.jfree.data.Tester;
 
 import java.util.List;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 
-import jfree.DataUtilitiesTest.*;
-import jfree.RangeTest.*;
+import org.jfree.data.DataUtilitiesTest.*;
+import org.jfree.data.RangeTest.*;
 
 /**
  * Class that runs all the tests

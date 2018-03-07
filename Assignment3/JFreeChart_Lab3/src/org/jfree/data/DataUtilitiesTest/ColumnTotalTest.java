@@ -1,4 +1,4 @@
-package jfree.DataUtilitiesTest;
+package org.jfree.data.DataUtilitiesTest;
 
 import static org.junit.Assert.*;
 import org.junit.*;

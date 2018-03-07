@@ -1,4 +1,4 @@
-package jfree.RangeTest;
+package org.jfree.data.RangeTest;
 
 import static org.junit.Assert.*;
 import org.jfree.data.Range;
