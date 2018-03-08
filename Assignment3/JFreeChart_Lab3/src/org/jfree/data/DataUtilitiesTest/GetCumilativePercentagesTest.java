@@ -18,7 +18,7 @@ public class GetCumilativePercentagesTest{
 	 * Test if a null parameter will result the method to fail
 	 */
 	@Test
-	public void nullCumalativePercentageTest() {
+	public void nullCumulativePercentageTest() {
 		try {
 			DataUtilities.getCumulativePercentages(null);
 			fail("Cannot pass in null as a variable");
@@ -31,7 +31,7 @@ public class GetCumilativePercentagesTest{
 	 * Test if a null parameter will cause the method to throw and InvalidPrameterException
 	 */
 	@Test
-	public void nullCumilativePercentageExceptionTest() {
+	public void nullCumulativePercentageExceptionTest() {
 		try {
 			DataUtilities.getCumulativePercentages(null);
 			fail("Method does not throw and InvalidParameterException error");
@@ -45,7 +45,7 @@ public class GetCumilativePercentagesTest{
 	 * Test if the correct cumulative percentage of an all positive KeyedValues is returned 
 	 */
 	@Test
-	public void AllPositiveCumilativePercentageTest() {
+	public void AllPositiveCumulativePercentageTest() {
 		Mockery mockingContext1 = new Mockery(); 
 		final KeyedValues keyvals = mockingContext1.mock(KeyedValues.class);
 		mockingContext1.checking(new Expectations() { 
@@ -109,7 +109,7 @@ public class GetCumilativePercentagesTest{
 	 * Test if the correct cumulative percentage of KeyedValues with both positive and negative values is returned
 	 */
 	@Test
-	public void MixedCumilativePercentageTest() {
+	public void MixedCumulativePercentageTest() {
 		Mockery mockingContext1 = new Mockery(); 
 		final KeyedValues keyvals = mockingContext1.mock(KeyedValues.class);
 		mockingContext1.checking(new Expectations() { 
@@ -162,6 +162,54 @@ public class GetCumilativePercentagesTest{
 				
 				atLeast(1).of(result).getValue(2);
 				will(returnValue(1.0));
+			} 
+		});
+		
+		assertTrue("Objects are not equal", DataUtilities.getCumulativePercentages(keyvals).equals(result));
+	}
+	
+	@Test
+	public void ValuesAreNullPercentageTest() {
+		Mockery mockingContext1 = new Mockery(); 
+		final KeyedValues keyvals = mockingContext1.mock(KeyedValues.class);
+		mockingContext1.checking(new Expectations() { 
+			{
+				atLeast(1).of(keyvals).getItemCount();
+				will(returnValue(2));
+				
+				atLeast(1).of(keyvals).getKey(0);
+				will(returnValue(0));
+				
+				atLeast(1).of(keyvals).getValue(0);
+				will(returnValue(null));
+				
+				atLeast(1).of(keyvals).getKey(1);
+				will(returnValue(1));
+				
+				atLeast(1).of(keyvals).getValue(1);
+				will(returnValue(null));
+				
+			} 
+		});
+		
+		Mockery mockingContext2 = new Mockery();
+		final KeyedValues result = mockingContext2.mock(KeyedValues.class);
+		mockingContext2.checking(new Expectations() {
+			{
+				atLeast(1).of(result).getItemCount(); 
+				will(returnValue(2));
+			
+				atLeast(1).of(result).getKey(0);
+				will(returnValue(0));
+				
+				atLeast(1).of(result).getValue(0);
+				will(returnValue(null));
+				
+				atLeast(1).of(result).getKey(1);
+				will(returnValue(1));
+				
+				atLeast(1).of(result).getValue(1);
+				will(returnValue(null));
 			} 
 		});
 		

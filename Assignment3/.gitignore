@@ -39,3 +39,5 @@ target/
 # Maven
 */log/
 */target/
+/bin/
+/.clover/
