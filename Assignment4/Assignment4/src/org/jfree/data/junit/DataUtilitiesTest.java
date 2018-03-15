@@ -2,13 +2,19 @@ package org.jfree.data.junit;
 
 import static org.junit.Assert.*;
 
+import java.security.InvalidParameterException;
+
+import org.junit.*;
 import org.jfree.data.*;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import junit.framework.TestCase;
 
 public class DataUtilitiesTest
 {
+	@Before
 	public void setUp()
 	{
 		DefaultKeyedValues2D testValues = new DefaultKeyedValues2D();
@@ -18,6 +24,7 @@ public class DataUtilitiesTest
 		testValues.addValue(4, 1, 0);
 	}
 	
+	@After
 	public void tearDown()
 	{
 		values = null;
@@ -26,7 +33,13 @@ public class DataUtilitiesTest
 	@Test
 	public void testNullDataColumnTotal()
 	{
-		assertEquals(0.0, DataUtilities.calculateColumnTotal(null, 0), 0.0000001d);
+		try {
+			DataUtilities.calculateColumnTotal(null, 0);
+			fail("When data is null, method should throw an exception");
+		}catch(Exception err) {
+			assertEquals("The Exception was not correct", InvalidParameterException.class, err.getClass());
+		}
+
 	}
 	
 	@Test
@@ -38,7 +51,12 @@ public class DataUtilitiesTest
 	@Test
 	public void testValidDataInvalidColumnColumnTotal()
 	{
-		assertEquals(0.0, DataUtilities.calculateColumnTotal(null, 1), 0.0000001d);
+		try {
+			DataUtilities.calculateColumnTotal(values, 1);
+			fail("When coloumn data is incorrect, method should throw an exception");
+		}catch(Exception err) {
+			assertEquals("The Exception was not correct", InvalidParameterException.class, err.getClass());
+		}
 	}
 	
 	private Values2D values;
