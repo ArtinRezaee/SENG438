@@ -25,7 +25,7 @@ public class ShiftWithoutZeroCrossingTest {
 			fail("When the base is null, shift should return exception.");
 		}
 		catch(Exception e) {
-			assertEquals("Exception thrown should be: ", InvalidParameterException.class, e.getClass());
+			assertEquals("Wrong type of exception was thrown ", NullPointerException.class, e.getClass());
 		}
 	}
 	
