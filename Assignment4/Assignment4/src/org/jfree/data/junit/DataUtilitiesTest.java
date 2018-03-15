@@ -30,15 +30,10 @@ public class DataUtilitiesTest
 		values = null;
 	}
 	
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void testNullDataColumnTotal()
 	{
-		try {
-			DataUtilities.calculateColumnTotal(null, 0);
-			fail("When data is null, method should throw an exception");
-		}catch(Exception err) {
-			assertEquals("The Exception was not correct", InvalidParameterException.class, err.getClass());
-		}
+			assertEquals(0.0, DataUtilities.calculateColumnTotal(null, 0), 0.0000001d);
 
 	}
 	
@@ -55,7 +50,7 @@ public class DataUtilitiesTest
 			DataUtilities.calculateColumnTotal(values, 1);
 			fail("When coloumn data is incorrect, method should throw an exception");
 		}catch(Exception err) {
-			assertEquals("The Exception was not correct", InvalidParameterException.class, err.getClass());
+			assertEquals("The Exception was not correct", IndexOutOfBoundsException.class, err.getClass());
 		}
 	}
 	
