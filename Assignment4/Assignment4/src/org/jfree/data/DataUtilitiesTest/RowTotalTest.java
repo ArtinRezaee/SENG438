@@ -27,7 +27,7 @@ public class RowTotalTest {
 			fail("When Values2D is null, method should throw exception.");
 		}
 		catch(Exception err) {
-			assertNotEquals("Wrong type of exception is thrown", InvalidParameterException.class, err.getClass());
+			assertEquals("Wrong type of exception is thrown", InvalidParameterException.class, err.getClass());
 		}
 	}
 

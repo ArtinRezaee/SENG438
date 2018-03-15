@@ -31,7 +31,7 @@ public class CreateNumberArrayTest {
 			fail("Cannot pass null as a paramter");
 		}
 		catch(Exception e) {
-			assertNotEquals("Method does not throw the right exception",InvalidParameterException .class, e.getClass());
+			assertEquals("Method does not throw the right exception",InvalidParameterException .class, e.getClass());
 		}
 	}
 	
