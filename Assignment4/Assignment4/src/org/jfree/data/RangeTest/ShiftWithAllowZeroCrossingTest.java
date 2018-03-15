@@ -26,8 +26,8 @@ public class ShiftWithAllowZeroCrossingTest {
 			fail("The shift method should have thrown an InvalidParameterException");
 		}
 		catch(Exception e) {
-			assertEquals("Wrong type of exception was thrown", 
-					NullPointerException.class, e.getClass());
+			assertEquals("The shift method did not throw an InvalidParameterException", 
+					InvalidParameterException.class, e.getClass());
 		}
 	}
 	

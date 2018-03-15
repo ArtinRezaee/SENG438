@@ -36,7 +36,7 @@ public class GetCumilativePercentagesTest{
 			DataUtilities.getCumulativePercentages(null);
 			fail("Method does not throw and InvalidParameterException error");
 		}catch(Exception e) {
-			assertEquals("Exceptions are not equal", InvalidParameterException .class, e.getClass());
+			assertEquals("Exceptions are not equal", InvalidParameterException.class, e.getClass());
 		}
 
 	}
@@ -101,7 +101,7 @@ public class GetCumilativePercentagesTest{
 			} 
 		});
 		
-		assertFalse("Objects are not equal", DataUtilities.getCumulativePercentages(keyvals).equals(result));
+		assertTrue("Objects are not equal", DataUtilities.getCumulativePercentages(keyvals).equals(result));
 	}
 	
 	
@@ -165,7 +165,7 @@ public class GetCumilativePercentagesTest{
 			} 
 		});
 		
-		assertFalse("Objects are not equal", DataUtilities.getCumulativePercentages(keyvals).equals(result));
+		assertTrue("Objects are not equal", DataUtilities.getCumulativePercentages(keyvals).equals(result));
 	}
 	
 	@Test
@@ -213,7 +213,7 @@ public class GetCumilativePercentagesTest{
 			} 
 		});
 		
-		assertFalse("Objects are not equal", DataUtilities.getCumulativePercentages(keyvals).equals(result));
+		assertTrue("Objects are not equal", DataUtilities.getCumulativePercentages(keyvals).equals(result));
 	}
 
 }
