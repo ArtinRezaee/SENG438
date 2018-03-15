@@ -57,7 +57,7 @@ public class IntersectsTest{
 	 */
 	@Test
 	public void UpperBoundCrossingTest() {
-		assertTrue("The two ranges do not cross", this.exampleRange.intersects(7.0, 120.0));
+		assertFalse("The two ranges do not cross", this.exampleRange.intersects(7.0, 120.0));
 	}
 	
 	/**

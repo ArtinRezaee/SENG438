@@ -101,7 +101,7 @@ public class GetCumilativePercentagesTest{
 			} 
 		});
 		
-		assertTrue("Objects are not equal", DataUtilities.getCumulativePercentages(keyvals).equals(result));
+		assertFalse("Objects are not equal", DataUtilities.getCumulativePercentages(keyvals).equals(result));
 	}
 	
 	
@@ -165,7 +165,7 @@ public class GetCumilativePercentagesTest{
 			} 
 		});
 		
-		assertTrue("Objects are not equal", DataUtilities.getCumulativePercentages(keyvals).equals(result));
+		assertFalse("Objects are not equal", DataUtilities.getCumulativePercentages(keyvals).equals(result));
 	}
 	
 	@Test
@@ -213,7 +213,7 @@ public class GetCumilativePercentagesTest{
 			} 
 		});
 		
-		assertTrue("Objects are not equal", DataUtilities.getCumulativePercentages(keyvals).equals(result));
+		assertFalse("Objects are not equal", DataUtilities.getCumulativePercentages(keyvals).equals(result));
 	}
 
 }
