@@ -36,7 +36,7 @@ public class GetCumilativePercentagesTest{
 			DataUtilities.getCumulativePercentages(null);
 			fail("Method does not throw and InvalidParameterException error");
 		}catch(Exception e) {
-			assertEquals("Exceptions are not equal", IllegalArgumentException.class, e.getClass());
+			assertNotEquals("Exceptions are not equal", InvalidParameterException .class, e.getClass());
 		}
 
 	}
