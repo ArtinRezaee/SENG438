@@ -179,25 +179,30 @@ public abstract class DataUtilities {
      * @return The cumulative percentages.
      */
     public static KeyedValues getCumulativePercentages(KeyedValues data) {
-        if (data == null) {
+        if (data == null)
             throw new InvalidParameterException("Null 'data' argument.");   
-        }
+        
         DefaultKeyedValues result = new DefaultKeyedValues();
-        double total = 0.0;
+        
+        double total = 0.0;        
         for (int i = 0; i < data.getItemCount(); i++) {
             Number v = data.getValue(i);
             if (v != null) {
                 total = total + v.doubleValue();
             }
         }
+        
         double runningTotal = 0.0;
         for (int i = 0; i < data.getItemCount(); i++) {
             Number v = data.getValue(i);
             if (v != null) {
                 runningTotal = runningTotal + v.doubleValue();
+                result.addValue(data.getKey(i), new Double(runningTotal / total));
             }
-            result.addValue(data.getKey(i), new Double(runningTotal / total));
+            else
+                result.addValue(data.getKey(i), null);
         }
+        
         return result;
     }
 

@@ -57,19 +57,19 @@ public class GetCumilativePercentagesTest{
 				will(returnValue(0));
 				
 				atLeast(1).of(keyvals).getValue(0);
-				will(returnValue(1));
+				will(returnValue(5));
 				
 				atLeast(1).of(keyvals).getKey(1);
 				will(returnValue(1));
 				
 				atLeast(1).of(keyvals).getValue(1);
-				will(returnValue(2));
+				will(returnValue(9));
 				
 				atLeast(1).of(keyvals).getKey(2);
-				will(returnValue(3));
+				will(returnValue(2));
 				
 				atLeast(1).of(keyvals).getValue(2);
-				will(returnValue(3));
+				will(returnValue(2));
 				
 			} 
 		});
@@ -85,13 +85,13 @@ public class GetCumilativePercentagesTest{
 				will(returnValue(0));
 				
 				atLeast(1).of(result).getValue(0);
-				will(returnValue(0.166));
+				will(returnValue(0.3125));
 				
 				atLeast(1).of(result).getKey(1);
 				will(returnValue(1));
 				
 				atLeast(1).of(result).getValue(1);
-				will(returnValue(0.500));
+				will(returnValue(0.875));
 				
 				atLeast(1).of(result).getKey(2);
 				will(returnValue(2));
@@ -130,7 +130,7 @@ public class GetCumilativePercentagesTest{
 				will(returnValue(2));
 				
 				atLeast(1).of(keyvals).getKey(2);
-				will(returnValue(3));
+				will(returnValue(2));
 				
 				atLeast(1).of(keyvals).getValue(2);
 				will(returnValue(3));
@@ -149,13 +149,13 @@ public class GetCumilativePercentagesTest{
 				will(returnValue(0));
 				
 				atLeast(1).of(result).getValue(0);
-				will(returnValue(-0.250));
+				will(returnValue(-0.25));
 				
 				atLeast(1).of(result).getKey(1);
 				will(returnValue(1));
 				
 				atLeast(1).of(result).getValue(1);
-				will(returnValue(0.250));
+				will(returnValue(0.25));
 				
 				atLeast(1).of(result).getKey(2);
 				will(returnValue(2));
