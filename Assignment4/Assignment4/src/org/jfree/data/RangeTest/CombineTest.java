@@ -44,12 +44,7 @@ public class CombineTest {
 	 */
 	@Test
 	public void RangesAreContinous() {
-		try {
-			assertEquals("The combined Ranges of [0,2] and [2,3] should be [0,3]", new Range(0, 3), Range.combine(new Range(0, 2), new Range(2, 3)));		
-		}
-		catch(Exception e) {
-			fail("Method should not throw error, but completed with " + e.getClass() + e.getMessage());
-		}
+		assertEquals("The combined Ranges of [10,20] and [20,30] should be [10,30]", new Range(10, 30), Range.combine(new Range(10, 20), new Range(20, 30)));		
 	}
 	
 	/**
@@ -59,11 +54,6 @@ public class CombineTest {
 	 */
 	@Test
 	public void RangesAreNotContinous() {	
-		try {
-			assertEquals("The combined Ranges of [0,2] and [10,20] should be [0,20]", new Range(0, 20), Range.combine(new Range(0, 2), new Range(10, 20)));	
-		}
-		catch(Exception e) {
-			fail("Method should not throw error, but completed with " + e.getClass() + e.getMessage());
-		}
+		assertEquals("The combined Ranges of [10,20] and [25,35] should be [10,35]", new Range(10, 35), Range.combine(new Range(25, 35), new Range(10, 20)));	
 	}
 }

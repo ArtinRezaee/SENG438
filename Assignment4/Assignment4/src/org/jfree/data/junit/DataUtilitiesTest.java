@@ -33,8 +33,8 @@ public class DataUtilitiesTest
 	@Test(expected = NullPointerException.class)
 	public void testNullDataColumnTotal()
 	{
-			assertEquals(0.0, DataUtilities.calculateColumnTotal(null, 0), 0.0000001d);
-
+		assertEquals(0.0, DataUtilities.calculateColumnTotal(null, 0), 0.0000001d);
+		
 	}
 	
 	@Test

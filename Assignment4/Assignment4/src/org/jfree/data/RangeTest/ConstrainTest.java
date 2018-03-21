@@ -11,7 +11,7 @@ public class ConstrainTest{
 	private Range range;
 	
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		range = new Range(0.0, 10.0);
 	}
 	
@@ -22,7 +22,7 @@ public class ConstrainTest{
 	@Test
 	public void constrainNumberLowerThanLowerBoundTest() {
 		assertEquals("The constrain method does not return the closest value within the range"
-				+ "for a number lower than the lower bound.", 0.0, range.constrain(-9991.0),
+				+ "for a number lower than the lower bound.", 0.0, range.constrain(-10.0),
 				.000000001d);
 	}
 	
@@ -33,7 +33,7 @@ public class ConstrainTest{
 	@Test
 	public void constrainNumberHigherThanUpperBoundTest() {
 		assertEquals("The constrain method does not return the closest value within the range"
-				+ "for a number higher than the upper bound.", 10.0, range.constrain(8684.0),
+				+ "for a number higher than the upper bound.", 10.0, range.constrain(100.0),
 				.000000001d);
 	}
 	

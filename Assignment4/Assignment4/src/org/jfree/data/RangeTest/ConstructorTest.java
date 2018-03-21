@@ -15,15 +15,29 @@ import org.junit.*;
 public class ConstructorTest {
 	
 	/**
-	 * Testing function lower is greater than higher
+	 * Testing constructor when lower bound is greater than higher bound
 	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test()
 	public void LowerGreaterThanHigher() { 
-		Range range = new Range(10.0, 5.0);
+		try {
+			Range range = new Range(10.0, 5.0);
+			fail("IllegalArgumentException not thrown.");
+		}
+		catch(Exception err) {
+			boolean test1 = err.getClass() == IllegalArgumentException.class;
+			boolean test2 = err.getMessage().equals("Range(double, double): require lower (10.0) <= upper (5.0).");
+			
+			if(!test1)
+				fail("Incorrect Exception thrown. Expected: IllegalArgumentException, Actual: " + err.getClass());
+			else if(!test2)
+				fail("Incorrect Exception message. Expected: Range(double, double): require lower (10.0) <= upper (5.0), Actual: " + err.getMessage());
+			else
+				return;
+		}
 	} 
 	
 	/**
-	 * Testing function higher is greater than lower
+	 * Testing constructor when higher bound is greater than lower bound
 	 */
 	@Test
 	public void HigherGreaterThanLower() { 
@@ -31,7 +45,7 @@ public class ConstructorTest {
 	} 
 	
 	/**
-	 * Testing function lower and higher are equal
+	 * Testing constructor when higher bound lower bound are equal
 	 */
 	@Test
 	public void BoundsAreTheSame() { 

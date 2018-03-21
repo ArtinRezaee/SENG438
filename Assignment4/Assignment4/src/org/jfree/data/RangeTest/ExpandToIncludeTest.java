@@ -15,16 +15,12 @@ public class ExpandToIncludeTest{
 
 	private Range exampleRange;
 	
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-	
 	/**
 	 * Create a range of 2-10 for each test
 	 * @throws Exception
 	 */
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		exampleRange = new Range(2.0, 10.0);
 	}
 	
@@ -33,7 +29,7 @@ public class ExpandToIncludeTest{
 	 */
 	@Test
 	public void ExpandToIncludeNumberLessThanLowerBoundTest() {
-		assertEquals("The returned object is not equal to what was expected ", new Range(1.0,10.0), Range.expandToInclude(this.exampleRange, 1.0));
+		assertEquals("The returned object is not equal to what was expected ", new Range(1.0, 10.0), Range.expandToInclude(this.exampleRange, 1.0));
 	}
 	
 	/**
@@ -41,7 +37,7 @@ public class ExpandToIncludeTest{
 	 */
 	@Test
 	public void ExpandToIncludeNumberMoreThanUpperBoundTest() {
-		assertEquals("The returned object is not equal to what was expected ", new Range(2.0,100.0), Range.expandToInclude(this.exampleRange, 100.0));
+		assertEquals("The returned object is not equal to what was expected ", new Range(2.0, 100.0), Range.expandToInclude(this.exampleRange, 100.0));
 	}
 	
 	/**
@@ -57,7 +53,7 @@ public class ExpandToIncludeTest{
 	 */
 	@Test
 	public void RangeIsNullTest() {
-		assertEquals("Ranges are not equal", new Range(5.0,5.0), Range.expandToInclude(null, 5.0));
+		assertEquals("Ranges are not equal", new Range(5.0, 5.0), Range.expandToInclude(null, 5.0));
 	}
 	
 
