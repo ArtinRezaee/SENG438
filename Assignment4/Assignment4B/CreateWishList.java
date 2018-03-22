@@ -24,11 +24,23 @@ public class CreateWishList {
 
   @Test
   public void testCreateWishList() throws Exception {
-    driver.get("https://www.amazon.ca/hz/wishlist/ls");
+    driver.get("https://www.amazon.ca/");
+    driver.findElement(By.xpath("//a[@id='nav-link-yourAccount']/span[2]")).click();
+    driver.findElement(By.id("ap_email")).clear();
+    driver.findElement(By.id("ap_email")).sendKeys("artin.rezaee@deliverus.ca");
+    driver.findElement(By.xpath("//input[@id='continue']")).click();
+    driver.findElement(By.id("ap_password")).clear();
+    driver.findElement(By.id("ap_password")).sendKeys("Helloworld438");
+    driver.findElement(By.id("signInSubmit")).click();
+    driver.findElement(By.xpath("//a[@id='nav-link-wishlist']/span")).click();
     driver.findElement(By.id("createList-announce")).click();
     driver.findElement(By.id("editYourList")).click();
+    driver.findElement(By.id("list-settings-name")).click();
+    driver.findElement(By.id("list-settings-name")).click();
+    // ERROR: Caught exception [ERROR: Unsupported command [doubleClick | id=list-settings-name | ]]
+    driver.findElement(By.id("list-settings-name")).click();
     driver.findElement(By.id("list-settings-name")).clear();
-    driver.findElement(By.id("list-settings-name")).sendKeys("New Wish List");
+    driver.findElement(By.id("list-settings-name")).sendKeys("New List");
     driver.findElement(By.id("submitForm")).click();
   }
 
