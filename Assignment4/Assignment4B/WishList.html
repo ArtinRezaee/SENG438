@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+	<title>WishList</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">CreateWishList</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>https://www.amazon.ca/hz/wishlist/ls<datalist><option>https://www.amazon.ca/hz/wishlist/ls</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=createList-announce<datalist><option>id=createList-announce</option><option>link=Create a List</option><option>//a[contains(text(),'Create a List')]</option><option>//a[@id='createList-announce']</option><option>//span[@id='createList']/span/a</option><option>//a[contains(@href, '/hz/wishlist/create')]</option><option>//span/span/a</option><option>css=#createList-announce</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=editYourList<datalist><option>id=editYourList</option><option>link=Edit this list</option><option>//a[contains(text(),'Edit this list')]</option><option>//a[@id='editYourList']</option><option>//div[@id='wl-list-info']/div/div/div/span[4]/span[4]/a</option><option>//a[contains(@href, '/hz/wishlist/settings/DOSBE0PNTEQQ?type=wishlist')]</option><option>//span[4]/a</option><option>css=#editYourList</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=list-settings-name<datalist><option>id=list-settings-name</option><option>name=listName</option><option>//input[@id='list-settings-name']</option><option>//div[@id='list-settings-container']/div[2]/div[2]/input</option><option>//div[2]/input</option><option>css=#list-settings-name</option></datalist></td><td>New Wish List</td>
+</tr>
+<tr><td>click</td><td>id=submitForm<datalist><option>id=submitForm</option><option>name=submit.save</option><option>//input[@id='submitForm']</option><option>//span[@id='list-settings-save']/span/input</option><option>//span[3]/span/span/input</option><option>css=#submitForm</option></datalist></td><td></td>
+</tr>
+</tbody></table>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">AddItemToList</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>https://www.amazon.ca/<datalist><option>https://www.amazon.ca/</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=twotabsearchtextbox<datalist><option>id=twotabsearchtextbox</option><option>name=field-keywords</option><option>//input[@id='twotabsearchtextbox']</option><option>//div[@id='nav-search']/form/div[3]/div/input</option><option>//div[3]/div/input</option><option>css=#twotabsearchtextbox</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=twotabsearchtextbox<datalist><option>id=twotabsearchtextbox</option><option>name=field-keywords</option><option>//input[@id='twotabsearchtextbox']</option><option>//div[@id='nav-search']/form/div[3]/div/input</option><option>//div[3]/div/input</option><option>css=#twotabsearchtextbox</option></datalist></td><td>iphone</td>
+</tr>
+<tr><td>submit</td><td>name=site-search<datalist><option>name=site-search</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//img[@alt='Apple iPhone 7 Factory Unlocked Phone - 4.7Inch Screen - 32GB - Black (Certified Refurbished)']<datalist><option>//img[@alt='Apple iPhone 7 Factory Unlocked Phone - 4.7Inch Screen - 32GB - Black (Certified Refurbished)']</option><option>//li[@id='result_3']/div/div[2]/div/div/a/img</option><option>//li[4]/div/div[2]/div/div/a/img</option><option>css=#result_3 &gt; div.s-item-container &gt; div.a-row.a-spacing-base &gt; div.a-column.a-span12.a-text-left &gt; div.a-section.a-spacing-none.a-inline-block.s-position-relative &gt; a.a-link-normal.a-text-normal &gt; img.s-access-image.cfMarker</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=add-to-wishlist-button-submit<datalist><option>id=add-to-wishlist-button-submit</option><option>name=submit.add-to-registry.wishlist</option><option>//input[@id='add-to-wishlist-button-submit']</option><option>//span[@id='wishListMainButton']/span/input</option><option>//div[3]/div/span/span/input</option><option>css=#add-to-wishlist-button-submit</option></datalist></td><td></td>
+</tr>
+</tbody></table>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">RemoveItemFromList</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>https://www.amazon.ca/gp/registry/wishlist/ref=nav_wishlist_btn/134-7438201-2005550<datalist><option>https://www.amazon.ca/gp/registry/wishlist/ref=nav_wishlist_btn/134-7438201-2005550</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>link=Delete Item<datalist><option>link=Delete Item</option><option>//a[contains(text(),'Delete Item')]</option><option>//div[@id='itemAction_I2PHBR3STRKA76']/div/div/div/span/a</option><option>//a[contains(@href, '/gp/registry/wishlist/1DZEO3DS7QYOC/ref=cm_wl_it_del_hz')]</option><option>//div[2]/div/div/div/span/a</option><option>css=div.a-column.a-span12.g-move-delete-buttons &gt; span.a-declarative &gt; a.a-link-normal.a-declarative.g-visible-js</option></datalist></td><td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
